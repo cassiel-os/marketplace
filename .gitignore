@@ -19,3 +19,4 @@ Thumbs.db
 
 # temporary files when using git subrepo
 .git-rewrite/
+build/

@@ -235,7 +235,7 @@ function Handles(options) {
 		};
 
 		$handles_container.on("update resize scroll", update_handle);
-		$G.on("resize theme-load", update_handle);
+		$G.on("resize", update_handle);
 		setTimeout(update_handle, 50);
 
 		handles.push($h[0], $grab_region[0]);

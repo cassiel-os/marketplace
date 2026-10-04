@@ -20,7 +20,7 @@ class OnCanvasObject {
 		if (this.hideMainCanvasHandles) {
 			canvas_handles.hide();
 		}
-		$G.on("resize theme-load", this._global_resize_handler = () => {
+		$G.on("resize", this._global_resize_handler = () => {
 			this.position();
 		});
 	}
@@ -49,7 +49,7 @@ class OnCanvasObject {
 		if (this.hideMainCanvasHandles) {
 			canvas_handles.show();
 		}
-		$G.off("resize theme-load", this._global_resize_handler);
+		$G.off("resize", this._global_resize_handler);
 	}
 }
 

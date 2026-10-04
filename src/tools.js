@@ -1,11 +1,11 @@
 // @ts-check
 /* global selection:writable, stroke_size:writable, textbox:writable */
-/* global $canvas, $canvas_area, $status_size, airbrush_size, brush_shape, brush_size, button, canvas_handles, ctrl, eraser_size, fill_color, pick_color_slot, get_language, localize, magnification, main_canvas, main_ctx, pencil_size, pointer, pointer_active, pointer_over_canvas, pointer_previous, pointer_start, return_to_magnification, selected_colors, shift, stroke_color, transparency */
+/* global $canvas, $canvas_area, $status_size, airbrush_size, brush_shape, brush_size, button, canvas_handles, ctrl, eraser_size, fill_color, pick_color_slot, localize, magnification, main_canvas, main_ctx, pencil_size, pointer, pointer_active, pointer_over_canvas, pointer_previous, pointer_start, return_to_magnification, selected_colors, shift, stroke_color, transparency */
 import { OnCanvasSelection } from "./OnCanvasSelection.js";
 import { OnCanvasTextBox } from "./OnCanvasTextBox.js";
-// import { get_language, localize } from "./app-localization.js";
-import { deselect, get_tool_by_id, meld_selection_into_canvas, meld_textbox_into_canvas, set_magnification, show_error_message, undoable, update_helper_layer } from "./functions.js";
-import { $G, E, get_icon_for_tool, get_icon_for_tools, get_rgba_from_color, make_canvas, make_css_cursor } from "./helpers.js";
+// import { localize } from "./app-localization.js";
+import { deselect, meld_selection_into_canvas, meld_textbox_into_canvas, set_magnification, show_error_message, undoable, update_helper_layer } from "./functions.js";
+import { $G, E, get_rgba_from_color, make_canvas, make_css_cursor } from "./helpers.js";
 import { bresenham_dense_line, bresenham_line, copy_contents_within_polygon, draw_bezier_curve, draw_ellipse, draw_fill, draw_line, draw_line_strip, draw_noncontiguous_fill, draw_polygon, draw_quadratic_curve, draw_rounded_rectangle, draw_selection_box, get_circumference_points_for_brush, replace_colors_with_swatch, stamp_brush_canvas, update_brush_for_drawing_lines } from "./image-manipulation.js";
 import { $ChooseShapeStyle, $choose_airbrush_size, $choose_brush, $choose_eraser_size, $choose_magnification, $choose_stroke_size, $choose_transparent_mode } from "./tool-options.js";
 
@@ -145,7 +145,6 @@ const tools = [{
 		"lasso selecting", "freeform selecting", "free-form selecting", "free form selecting", "polygonal selecting", "polygon selecting", "shape selecting", "outline selecting", "selecting by outline", "selecting by outlining", "star selecting", "shape selecting", "selecting by shape", "selecting by drawing a shape", "selecting by drawing shape",
 		"lasso selector", "freeform selector", "free-form selector", "free form selector", "polygonal selector", "polygon selector", "shape selector", "outline selector", "by outline selector", "outlining selector", "star selector", "shape selector", "by shape selector", "by drawing a shape selector", "by drawing shape selector",
 	],
-	help_icon: "p_free.gif",
 	description: localize("Selects a free-form part of the picture to move, copy, or edit."),
 	cursor: ["precise", [16, 16], "crosshair"],
 
@@ -244,7 +243,6 @@ const tools = [{
 
 		undoable({
 			name: localize("Free-Form Select"),
-			icon: get_icon_for_tool(get_tool_by_id(TOOL_FREE_FORM_SELECT)),
 			soft: true,
 		}, () => {
 			selection = new OnCanvasSelection(
@@ -285,7 +283,6 @@ const tools = [{
 		"part of image", "part of picture", "part of canvas", "part of the image", "part of the picture", "part of the canvas",
 		"create selection", "create a selection", "selection maker", "selection box maker",
 	],
-	help_icon: "p_sel.gif",
 	description: localize("Selects a rectangular part of the picture to move, copy, or edit."),
 	cursor: ["precise", [16, 16], "crosshair"],
 	selectBox(rect_x, rect_y, rect_width, rect_height) {
@@ -344,10 +341,6 @@ const tools = [{
 
 				undoable({
 					name: `${localize("Free-Form Select")}⊕${localize("Select")}`,
-					icon: get_icon_for_tools([
-						get_tool_by_id(TOOL_FREE_FORM_SELECT),
-						get_tool_by_id(TOOL_SELECT),
-					]),
 					soft: true,
 				}, () => {
 					selection = new OnCanvasSelection(
@@ -362,7 +355,6 @@ const tools = [{
 			} else {
 				undoable({
 					name: localize("Select"),
-					icon: get_icon_for_tool(get_tool_by_id(TOOL_SELECT)),
 					soft: true,
 				}, () => {
 					selection = new OnCanvasSelection(rect_x, rect_y, rect_width, rect_height);
@@ -379,7 +371,6 @@ const tools = [{
 		"color eraser", "color replacer", "replace color", "replace colors",
 		"erasing", "erasing tool", "color erasing", "color replacing", "replacing color", "replacing colors", "wiping tool", "rubbing tool", "clearing tool", "mark removing tool", "removal tool", "obliterating tool", "obliteration tool", "expunging tool",
 	],
-	help_icon: "p_erase.gif",
 	description: localize("Erases a portion of the picture, using the selected eraser shape."),
 	cursor: ["precise", [16, 16], "crosshair"],
 
@@ -474,8 +465,7 @@ const tools = [{
 			return; // not sure why this would happen per se
 		}
 		undoable({
-			name: get_language().match(/^en\b/) ? (this.color_eraser_mode ? "Color Eraser" : "Eraser") : localize("Eraser/Color Eraser"),
-			icon: get_icon_for_tool(this),
+			name: this.color_eraser_mode ? "Color Eraser" : "Eraser",
 		}, () => {
 			this.render_from_mask(main_ctx);
 
@@ -538,14 +528,12 @@ const tools = [{
 		"fill region with color", "flood fill region", "fill region", "color region", "region fill", "region filling", "filling region",
 		"fill bucket", "paint bucket", "paint can", "dump", "splash", "paintbucket", "bucket", "dumping", "paint dumping", "paint dumper", "dumper", "dump bucket", "color filler", "filler",
 	],
-	help_icon: "p_paint.gif",
 	description: "Fills an area with the selected drawing color.",
 	cursor: ["fill-bucket", [8, 22], "crosshair"],
 	pointerdown(ctx, x, y) {
 		if (shift) {
 			undoable({
 				name: "Replace Color",
-				icon: get_icon_for_tool(this),
 			}, () => {
 				// Perform global color replacement
 				draw_noncontiguous_fill(ctx, x, y, fill_color);
@@ -553,7 +541,6 @@ const tools = [{
 		} else {
 			undoable({
 				name: localize("Fill With Color"),
-				icon: get_icon_for_tool(this),
 			}, () => {
 				// Perform a normal fill operation
 				draw_fill(ctx, x, y, fill_color);
@@ -579,7 +566,6 @@ const tools = [{
 		"pick a color from canvas", "pick a color from document", "pick a color from page", "pick a color from image", "pick a color from picture",
 		"pick a color from the canvas", "pick a color from the document", "pick a color from the page", "pick a color from the image", "pick a color from the picture",
 	],
-	help_icon: "p_eye.gif",
 	description: localize("Picks up a color from the picture for drawing."),
 	cursor: ["eye-dropper", [9, 22], "crosshair"],
 	deselect: true,
@@ -619,7 +605,6 @@ const tools = [{
 		"magnifier", "magnifying glass", "loupe", "hand lens", "hand glass", "eyeglass", "eye glass", "lens", "simple microscope", "microscope", "glass", "spyglass", "telescope",
 		"magnification", "zoom", "zoom in", "zoom out", "zoomer", "magnifying", "zooming", "enlarging tool",
 	],
-	help_icon: "p_zoom.gif",
 	description: localize("Changes the magnification."),
 	cursor: ["magnifier", [16, 16], "zoom-in"], // overridden below
 	deselect: true,
@@ -746,7 +731,6 @@ const tools = [{
 	speech_recognition: [
 		"pencil", "lead", "graphite", "pen", "pixel", "pixel art", "penciling", "penning", "pixeling",
 	],
-	help_icon: "p_pencil.gif",
 	description: localize("Draws a free-form line one pixel wide."),
 	cursor: ["pencil", [13, 23], "crosshair"],
 	stroke_only: true,
@@ -764,7 +748,6 @@ const tools = [{
 		// @TODO: specific brush shapes:
 		// "calligraphy", "nib", "slanted brush", "square brush", "circle brush", "circular brush",
 	],
-	help_icon: "p_brush.gif",
 	description: localize("Draws using a brush with the selected shape and size."),
 	cursor: ["precise-dotted", [16, 16], "crosshair"],
 	dynamic_preview_cursor: true,
@@ -781,7 +764,6 @@ const tools = [{
 		"spray paint can", "spraypaint can", "spraycan", "spray-can", "spray can",
 		"graffiti", "scatter", "splatter", "scattering", "splattering", "aerosol", "aerosol can", "throwie", "flamethrower",
 	],
-	help_icon: "p_airb.gif",
 	description: localize("Draws using an airbrush of the selected size."),
 	cursor: ["airbrush", [7, 22], "crosshair"],
 	paint_on_time_interval: 5,
@@ -804,7 +786,6 @@ const tools = [{
 	speech_recognition: [
 		"text", "type", "typography", "write", "writing", "words", "text box", "text-box", "textbox", "word", "lettering", "font", "fonts", "texts",
 	],
-	help_icon: "p_txt.gif",
 	description: localize("Inserts text into the picture."),
 	cursor: ["precise", [16, 16], "crosshair"],
 	preload() {
@@ -823,7 +804,6 @@ const tools = [{
 		"line", "line segment", "straight line",
 		"lines", "line segments", "straight lines",
 	],
-	help_icon: "p_line.gif",
 	description: localize("Draws a straight line with the selected line width."),
 	cursor: ["precise", [16, 16], "crosshair"],
 	stroke_only: true,
@@ -839,7 +819,6 @@ const tools = [{
 		"curve", "curved line", "curvy", "curvy line", "Bezier", "Bezier curve", "spline", "curves", "splines", "curved", "curving",
 		"wave", "wavy line", "rounded line", "round line", "oscilloscope", "sine wave", "cosine", "cosine wave",
 	],
-	help_icon: "p_curve.gif",
 	description: localize("Draws a curved line with the selected line width."),
 	cursor: ["precise", [16, 16], "crosshair"],
 	stroke_only: true,
@@ -849,7 +828,6 @@ const tools = [{
 		if (this.points.length >= 4) {
 			undoable({
 				name: localize("Curve"),
-				icon: get_icon_for_tool(this),
 			}, () => {
 				ctx.drawImage(this.preview_canvas, 0, 0);
 			});
@@ -960,7 +938,6 @@ const tools = [{
 		"sharp cornered rectangles", "sharp cornered squares", "sharp cornered boxes", "sharp cornered rects",
 		"rectangles with sharp corners", "squares with sharp corners", "boxes with sharp corners", "rects with sharp corners",
 	],
-	help_icon: "p_rect.gif",
 	description: localize("Draws a rectangle with the selected fill style."),
 	cursor: ["precise", [16, 16], "crosshair"],
 	shape(ctx, x, y, w, h) {
@@ -998,7 +975,6 @@ const tools = [{
 		"polygons", "polys", "shapes", "n-gons", "free-form polygons", "freeform polygons", "free form polygons",
 		"triangles", "quadrangles", "pentagons", "hexagons", "heptagons", "octagons", "nonagons", "decagons", "undecagons", "dodecagons",
 	],
-	help_icon: "p_poly.gif",
 	description: localize("Draws a polygon with the selected fill style."),
 	cursor: ["precise", [16, 16], "crosshair"],
 
@@ -1118,7 +1094,6 @@ const tools = [{
 		if (this.points.length >= 3) {
 			undoable({
 				name: localize("Polygon"),
-				icon: get_icon_for_tool(this),
 			}, () => {
 				ctx.fillStyle = fill_color;
 				ctx.strokeStyle = stroke_color;
@@ -1183,7 +1158,6 @@ const tools = [{
 		"ellipse", "circle", "oval", "ovoid", "ovaloid", "oviform", "elliptical", "oblong circle", "stretched circle", "ball", "sphere", "round tool", "rounded tool",
 		"ellipses", "circles", "ovals", "ovoids", "ovaloids", "oviforms", "ellipticals", "oblong circles", "stretched circles", "balls", "spheres",
 	],
-	help_icon: "p_oval.gif",
 	description: localize("Draws an ellipse with the selected fill style."),
 	cursor: ["precise", [16, 16], "crosshair"],
 	shape(ctx, x, y, w, h) {
@@ -1240,7 +1214,6 @@ const tools = [{
 		"rectangles with soft corners", "squares with soft corners", "boxes with soft corners",
 		"round rects", "roundrects",
 	],
-	help_icon: "p_rrect.gif",
 	description: localize("Draws a rounded rectangle with the selected fill style."),
 	cursor: ["precise", [16, 16], "crosshair"],
 	shape(ctx, x, y, w, h) {
@@ -1360,7 +1333,6 @@ tools.forEach((tool) => {
 			if (!tool.shape_canvas) { return; }
 			undoable({
 				name: tool.name,
-				icon: get_icon_for_tool(tool),
 			}, () => {
 				main_ctx.drawImage(tool.shape_canvas, 0, 0);
 				tool.shape_canvas = null;
@@ -1399,7 +1371,6 @@ tools.forEach((tool) => {
 			}
 			undoable({
 				name: tool.name,
-				icon: get_icon_for_tool(tool),
 			}, () => {
 				tool.render_from_mask(main_ctx);
 
@@ -1495,7 +1466,6 @@ tools.forEach((tool) => {
 		tool.pointerup = () => {
 			undoable({
 				name: tool.name,
-				icon: get_icon_for_tool(tool),
 			}, () => {
 				tool.render_from_mask(main_ctx);
 
@@ -1589,7 +1559,6 @@ tools.forEach((tool) => {
 		};
 	}
 });
-
 
 export {
 	TOOL_AIRBRUSH, TOOL_BRUSH, TOOL_CURVE, TOOL_ELLIPSE, TOOL_ERASER,

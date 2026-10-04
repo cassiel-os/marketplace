@@ -4,7 +4,7 @@
 /* global $canvas_area, aliasing, localize, main_canvas, main_ctx, palette, selected_colors, selection, stroke_color, transparency */
 // import { localize } from "./app-localization.js";
 import { cancel, deselect, detect_monochrome, show_error_message, undoable, update_title } from "./functions.js";
-import { $G, TAU, get_help_folder_icon, get_rgba_from_color, make_canvas, memoize_synchronous_function } from "./helpers.js";
+import { $G, TAU, get_rgba_from_color, make_canvas, memoize_synchronous_function } from "./helpers.js";
 
 const fill_threshold = 1; // 1 is just enough for a workaround for Brave browser's farbling: https://github.com/1j01/jspaint/issues/184
 
@@ -188,7 +188,6 @@ $G.on("invalidate-brush-canvases", () => {
 	get_brush_canvas.clear_memo_cache();
 });
 
-
 /**
  * Stamps a brush canvas onto the specified context at the given coordinates.
  *
@@ -260,7 +259,6 @@ $G.on("invalidate-brush-canvases", () => {
 	get_circumference_points_for_brush.clear_memo_cache();
 });
 
-
 /** @type {PixelCanvas} */
 let line_brush_canvas;
 /**
@@ -328,7 +326,6 @@ function bresenham_line(x1, y1, x2, y2, callback) {
 	const sy = (y1 < y2) ? 1 : -1;
 	let err = dx - dy;
 
-
 	while (true) {
 		callback(x1, y1);
 
@@ -357,7 +354,6 @@ function bresenham_dense_line(x1, y1, x2, y2, callback) {
 	const sx = (x1 < x2) ? 1 : -1;
 	const sy = (y1 < y2) ? 1 : -1;
 	let err = dx - dy;
-
 
 	while (true) {
 		callback(x1, y1);
@@ -760,7 +756,7 @@ function draw_noncontiguous_fill_separately(source_ctx, dest_ctx, x, y) {
  *
  * The transformation function can change the size of the new canvas, and it will update the selection or document accordingly.
  *
- * @param {{name: string, icon: HTMLImageElement | HTMLCanvasElement}} meta - object containing the name and icon for undo history.
+ * @param {{name: string}} meta - object containing the name for undo history.
  * @param {(original_canvas: PixelCanvas, original_ctx: PixelContext, new_canvas: PixelCanvas, new_ctx: PixelContext) => void} fn - The image transformation function to apply.
  */
 function apply_image_transformation(meta, fn) {
@@ -776,7 +772,6 @@ function apply_image_transformation(meta, fn) {
 	if (selection) {
 		undoable({
 			name: `${meta.name} (${localize("Selection")})`,
-			icon: meta.icon,
 			soft: true,
 		}, () => {
 			selection.replace_source_canvas(new_canvas);
@@ -786,7 +781,6 @@ function apply_image_transformation(meta, fn) {
 		cancel();
 		undoable({
 			name: meta.name,
-			icon: meta.icon,
 		}, () => {
 			saved = false;
 			update_title();
@@ -802,7 +796,6 @@ function apply_image_transformation(meta, fn) {
 function flip_horizontal() {
 	apply_image_transformation({
 		name: localize("Flip horizontal"),
-		icon: get_help_folder_icon("p_fliph.png"),
 	}, (original_canvas, _original_ctx, new_canvas, new_ctx) => {
 		new_ctx.translate(new_canvas.width, 0);
 		new_ctx.scale(-1, 1);
@@ -813,7 +806,6 @@ function flip_horizontal() {
 function flip_vertical() {
 	apply_image_transformation({
 		name: localize("Flip vertical"),
-		icon: get_help_folder_icon("p_flipv.png"),
 	}, (original_canvas, _original_ctx, new_canvas, new_ctx) => {
 		new_ctx.translate(0, new_canvas.height);
 		new_ctx.scale(1, -1);
@@ -829,7 +821,6 @@ function flip_vertical() {
 function rotate(angle) {
 	apply_image_transformation({
 		name: `${localize("Rotate by angle")} ${angle / TAU * 360} ${localize("Degrees")}`,
-		icon: get_help_folder_icon(`p_rotate_${angle >= 0 ? "cw" : "ccw"}.png`),
 	}, (original_canvas, _original_ctx, new_canvas, new_ctx) => {
 		new_ctx.save();
 		switch (angle) {
@@ -915,13 +906,6 @@ function stretch_and_skew(x_scale, y_scale, h_skew, v_skew) {
 			(h_skew !== 0 || v_skew !== 0) ? (
 				(x_scale !== 1 || y_scale !== 1) ? localize("Stretch and Skew") : localize("Skew")
 			) : localize("Stretch"),
-		icon: get_help_folder_icon(
-			(h_skew !== 0) ? "p_skew_h.png" :
-				(v_skew !== 0) ? "p_skew_v.png" :
-					(y_scale !== 1) ? (
-						(x_scale !== 1) ? "p_stretch_both.png" : "p_stretch_v.png"
-					) : "p_stretch_h.png"
-		),
 	}, (original_canvas, _original_ctx, new_canvas, new_ctx) => {
 		const w = original_canvas.width * x_scale;
 		const h = original_canvas.height * y_scale;
@@ -1281,7 +1265,6 @@ function draw_dashes(ctx, x, y, go_x, go_y, scale, translate_x, translate_y) {
 	ctx.translate(x, y);
 	ctx.globalCompositeOperation = "difference";
 
-
 	if (go_x > 0) {
 		const matrix = svg_for_creating_matrices.createSVGMatrix();
 		if (horizontal_pattern.setTransform) { // not supported by Edge as of 2019-12-04
@@ -1337,7 +1320,6 @@ let op_canvas_webgl;
 let op_canvas_2d;
 /** @type {CanvasRenderingContext2D} */
 let op_ctx_2d;
-
 
 function initTesselator() {
 	// function called for each vertex of tesselator output
@@ -1399,7 +1381,6 @@ function triangulate(contours) {
 
 	return triangleVerts;
 }
-
 
 function initWebGL(canvas) {
 	try {

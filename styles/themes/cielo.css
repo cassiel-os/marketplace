@@ -1,0 +1,224 @@
+/* Cielo: Paint in Cassiel's look. jspaint's Modern theme, with its colors and type
+   taken from Cassiel's tokens (/sdk/cassiel.css), so Paint matches the desktop's
+   windows and selection, and follows its light or dark scheme. */
+@import "./modern.css";
+
+:root {
+	--theme-loaded: "cielo.css";
+
+	--Hilight: var(--cassiel-accent);
+	--HilightText: var(--cassiel-on-accent);
+	--WindowText: var(--cassiel-text);
+	--ButtonText: var(--cassiel-text);
+
+	--accent-color: var(--cassiel-accent);
+	--accent-color-hover: var(--cassiel-accent-hover);
+	--window-frame-active-color: var(--cassiel-titlebar-bg);
+	--window-frame-inactive-color: var(--cassiel-titlebar-bg-inactive);
+	--window-titlebar-text-color: var(--cassiel-titlebar-text);
+	--help-window-resizer-color: var(--cassiel-border-strong);
+	/* Around the picture: a mid gray, so white pages stand out (as in Paint). */
+	--canvas-area-background-color: color-mix(in oklch, var(--cassiel-text) 42%, var(--cassiel-surface));
+	--canvas-area-border-color: var(--cassiel-border-strong);
+	--window-background-color: var(--cassiel-window-bg);
+	--window-text-color: var(--cassiel-text);
+	--selected-tool-color: var(--cassiel-accent-soft);
+
+	color-scheme: light dark;
+}
+
+body {
+	font-family: var(--cassiel-font);
+	font-size: var(--cassiel-text-sm);
+}
+
+/* The tool icons: Paint's classic drawings as vectors, sharp at any scale; on the
+   Classic desktop (Chicago95 icons), the original pixel art, grown in whole blocks
+   (pixelated), never smoothed. */
+.tool-icon {
+	background-image: url("../../images/classic/tools.svg");
+	background-repeat: no-repeat;
+	background-position: calc(-16px * (var(--icon-index) * 2 + 1)) -16px;
+}
+:root[data-icon-theme="chicago95"] .tool-icon {
+	background-image: url("../../images/classic/tools.png");
+	background-position: calc(-16px * var(--icon-index)) 0;
+	image-rendering: pixelated;
+}
+
+/* Cassiel's element styles (borders under table cells, wide margins around rules) are
+   for its own pages; Paint lays out its dialogs with tables and rules. */
+table {
+	width: revert;
+}
+td,
+th {
+	padding: revert;
+	border-bottom: revert;
+	text-align: revert;
+}
+hr {
+	margin: revert;
+	border: revert;
+}
+
+/* The status bar, as in Files: a line above it, plain text; Paint's fields (help text,
+   pointer position, selection size) split by hairlines, as Windows XP's panels. */
+.status-area {
+	border-top: var(--cassiel-hairline) solid var(--cassiel-border-strong);
+	color: var(--cassiel-text);
+	font-size: var(--cassiel-text-sm);
+}
+.status-field {
+	height: 22px;
+	line-height: 22px;
+}
+.status-text {
+	padding-left: 12px;
+}
+.status-coordinates {
+	padding-left: 8px;
+	border-left: var(--cassiel-hairline) solid var(--cassiel-border-strong);
+	font-variant-numeric: tabular-nums;
+}
+
+/* Color swatches as the desktop's Color dialog: small rounded chips with a hairline
+   edge, a little apart. */
+.color-button,
+.color-button canvas,
+.color-selection canvas,
+.color-button::after,
+.color-selection::after {
+	border-radius: 2px;
+}
+.color-button::after,
+.color-selection::after {
+	box-shadow: 0 0 0 var(--cassiel-hairline) var(--cassiel-border-strong) inset;
+}
+.colors-component.wide .color-button {
+	margin-left: 3px;
+}
+.colors-component.wide .palette > .color-button:nth-child(n) {
+	margin-top: 0;
+}
+
+.colors-component.wide .palette {
+	height: 34px;
+	row-gap: 3px;
+	align-content: flex-start;
+}
+
+/* The current colors (foreground over background) in their own box, set apart from
+   the palette, as in Paint: the panes' blue gray inside a hairline edge. */
+.colors-component.wide .current-colors {
+	/* Square, as tall as the palette's two rows; the two colors 4px in from every edge. */
+	width: 34px;
+	height: 34px;
+	margin-right: 4px;
+	background: var(--cassiel-pane-header);
+	border: var(--cassiel-hairline) solid var(--cassiel-border-strong);
+	border-radius: var(--cassiel-item-radius);
+	box-sizing: border-box;
+}
+.colors-component.wide .current-colors .color-selection {
+	width: 16px;
+	height: 16px;
+	margin: 0; /* jspaint's 1px nudge would make the left edge wider than the others */
+}
+.colors-component.wide .foreground-color {
+	left: 4px;
+	top: 4px;
+}
+.colors-component.wide .background-color {
+	right: 4px;
+	bottom: 4px;
+}
+
+/* The tool box, as Windows XP's with Cassiel's look:
+   - each tool a small button (rounded, the panes' blue gray under the pointer);
+   - the chosen one pressed in: the panes' blue gray in a hairline, like its boxes;
+   - the tool's options in their own box, like the current colors;
+   - a hairline between the tool box and the picture, as above the palette. */
+.tool {
+	border-radius: var(--cassiel-item-radius);
+}
+.tool:hover {
+	/* Under the pointer: a light hint, never stronger than the chosen tool. */
+	background: var(--cassiel-pane-bg);
+}
+.tool.selected,
+.tool.selected:hover {
+	/* Pressed in: the deeper blue gray inside a hairline, like the boxes around it. */
+	background: var(--cassiel-pane-header);
+	box-shadow: inset 0 0 0 var(--cassiel-hairline) var(--cassiel-border-strong);
+}
+.tool-options {
+	margin-top: 6px;
+	background: var(--cassiel-pane-bg);
+	border: var(--cassiel-hairline) solid var(--cassiel-border-strong);
+	border-radius: var(--cassiel-item-radius);
+	overflow: hidden;
+}
+.component-area.left {
+	border-right: var(--cassiel-hairline) solid var(--cassiel-border-strong);
+}
+.component-area.bottom {
+	border-top: var(--cassiel-hairline) solid var(--cassiel-border-strong);
+}
+
+/* One left edge for the tool box and the current colors (6px in). */
+.tools-component {
+	align-items: flex-start;
+	height: auto; /* the tools and their options, whatever they take */
+	padding: 6px 6px 0;
+}
+/* 2px between the tools, so a chosen tool's box and the one under the pointer never
+   touch. */
+.tools {
+	gap: 2px;
+}
+/* The options box at Paint's own size (41px: its contents are laid out for it),
+   centered under the two columns of tools, as in Windows XP. */
+.tool-options {
+	align-self: center;
+}
+.colors-component.wide {
+	justify-content: flex-start;
+	padding-left: 6px;
+}
+
+/* The text toolbar: a bar above the picture while text is being edited (font, size,
+   bold, italic, underline, vertical), on the panes' blue gray over a hairline. */
+.component-area.top .font-box {
+	flex: 1;
+	gap: 6px;
+	margin: 0;
+	padding: 4px 6px;
+	background: var(--cassiel-pane-bg);
+	border-bottom: var(--cassiel-hairline) solid var(--cassiel-border-strong);
+}
+.font-box select,
+.font-box input {
+	height: var(--cassiel-control-height-sm);
+}
+.font-box select {
+	width: 180px;
+}
+.font-box .text-toolbar-button-group {
+	display: flex;
+	gap: 2px;
+}
+.font-box .toggle {
+	display: inline-grid;
+	place-items: center;
+	border: var(--cassiel-hairline) solid transparent;
+	border-radius: var(--cassiel-item-radius);
+	background: transparent;
+}
+.font-box .toggle:hover:enabled {
+	background: var(--cassiel-surface-2);
+}
+.font-box .toggle.selected {
+	background: var(--cassiel-pane-header);
+	border-color: var(--cassiel-border-strong);
+}

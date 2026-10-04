@@ -54,33 +54,6 @@ add_image_format("image/x-bmp-8bpp", "256 Color Bitmap (*.bmp;*.dib)");
 add_image_format("image/bmp", "24-bit Bitmap (*.bmp;*.dib)");
 // add_image_format("image/x-bmp-32bpp", "32-bit Transparent Bitmap (*.bmp;*.dib)");
 
-/**
- * Filter to only support 24bpp BMP files for File System Access API and Electron save dialog,
- * as these APIs don't allow you to access the selected file type.
- * You can only guess it from the file extension the user types.
- * @template {FileFormat} T
- * @param {T[]} formats
- * @returns {T[]}
- */
-const formats_unique_per_file_extension = (formats) => {
-	// first handle BMP format specifically to make sure the 24-bpp is the selected BMP format
-	formats = formats.filter((format) =>
-		format.extensions.includes("bmp") ? (/**@type {ImageFileFormat}*/(format).mimeType === "image/bmp") : true
-	);
-	// then generally uniquify on extensions
-	// (this could be overzealous in case of partial overlap in extensions of different formats,
-	// but in general it needs special care anyways, to decide which format should win)
-	// This can't be simply chained with the above because it needs to use the intermediate, partially filtered formats array.
-	return formats.filter((format, format_index) =>
-		!format.extensions.some((extension) =>
-			formats.some((other_format, other_format_index) =>
-				other_format_index < format_index &&
-				other_format.extensions.includes(extension)
-			)
-		)
-	);
-};
-
 // For the Open dialog, show more general format categories, like "Bitmap Files", maybe "Icon Files", etc.
 // @TODO: probably need to do this differently for showOpenFilePicker...
 /*
@@ -131,6 +104,4 @@ palette_formats.sort((a, b) =>
 	0
 );
 
-export { formats_unique_per_file_extension, image_formats, palette_formats };
-// Temporary globals until all dependent code is converted to ES Modules
-window.formats_unique_per_file_extension = formats_unique_per_file_extension; // used by electron-injected.js
+export { image_formats, palette_formats };

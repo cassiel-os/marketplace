@@ -1,0 +1,27 @@
+{
+  "id": "paint",
+  "name": "Paint",
+  "version": "0.2.0",
+  "description": "Draw, paint and edit pictures.",
+  "category": "accessories",
+  "icon": "images/icons/jspaint.svg",
+  "entry": "index.html",
+  "window": {
+    "width": 820,
+    "height": 600
+  },
+  "opens": [
+    ".png",
+    ".jpg",
+    ".jpeg",
+    ".bmp",
+    ".gif",
+    ".webp",
+    ".tif",
+    ".tiff",
+    ".ico"
+  ],
+  "permissions": [
+    "desktop"
+  ]
+}

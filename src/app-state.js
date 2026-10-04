@@ -1,5 +1,5 @@
 // @ts-check
-/* exported $thumbnail_window, airbrush_size, aliasing, brush_shape, brush_size, button, ctrl, current_history_node, enable_fs_access_api, enable_palette_loading_from_indexed_images, eraser_size, file_format, file_name, fill_color, helper_layer, history_node_to_cancel_to, magnification, main_ctx, monochrome, monochrome_palette, my_canvas_height, my_canvas_width, palette, pencil_size, pick_color_slot, pointer, pointer_active, pointer_buttons, pointer_over_canvas, pointer_previous, pointer_start, pointer_type, pointers, polychrome_palette, redos, return_to_magnification, return_to_tools, reverse, root_history_node, saved, selected_colors, selected_tool, selected_tools, selection, shift, show_grid, show_thumbnail, stroke_color, stroke_size, system_file_handle, show_font_box, text_tool_font, textbox, thumbnail_canvas, tool_transparent_mode, transparency, undos, update_helper_layer_on_pointermove_active */
+/* exported airbrush_size, aliasing, brush_shape, brush_size, button, ctrl, current_history_node, enable_fs_access_api, enable_palette_loading_from_indexed_images, eraser_size, file_format, file_name, fill_color, helper_layer, history_node_to_cancel_to, magnification, main_ctx, monochrome, monochrome_palette, my_canvas_height, my_canvas_width, palette, pencil_size, pick_color_slot, pointer, pointer_active, pointer_buttons, pointer_over_canvas, pointer_previous, pointer_start, pointer_type, pointers, polychrome_palette, redos, return_to_magnification, return_to_tools, reverse, root_history_node, saved, selected_colors, selected_tool, selected_tools, selection, shift, show_grid, stroke_color, stroke_size, system_file_handle, show_font_box, text_tool_font, textbox, tool_transparent_mode, transparency, undos, update_helper_layer_on_pointermove_active */
 
 // Can't import things until this file is a module...
 // (Well, could use dynamic imports, but that's async and thus probably as complicated as getting it to work with all ESM.)
@@ -107,14 +107,8 @@ let textbox; // singleton
 let show_font_box = true;
 /** @type {OnCanvasHelperLayer} */
 let helper_layer; // instance used for the grid and tool previews (not a singleton)
-/** @type {OSGUI$Window} */
-let $thumbnail_window;
-/** @type {PixelCanvas} */
-let thumbnail_canvas;
 /** @type {boolean} */
 let show_grid = false;
-/** @type {boolean} */
-let show_thumbnail = false;
 /** @type {TextToolFontOptions} */
 let text_tool_font = {
 	family: '"Arial"', // should be an exact value detected by Font Detective

@@ -1,25 +1,20 @@
 // @ts-check
 // eslint-disable-next-line no-unused-vars
-/* global airbrush_size:writable, brush_shape:writable, brush_size:writable, button:writable, ctrl:writable, eraser_size:writable, fill_color:writable, pick_color_slot:writable, history_node_to_cancel_to:writable, MenuBar:writable, my_canvas_height:writable, my_canvas_width:writable, palette:writable, pencil_size:writable, pointer:writable, pointer_active:writable, pointer_buttons:writable, pointer_over_canvas:writable, pointer_previous:writable, pointer_start:writable, pointer_type:writable, pointers:writable, reverse:writable, shift:writable, stroke_color:writable, stroke_size:writable, update_helper_layer_on_pointermove_active:writable */
+/* global airbrush_size:writable, brush_shape:writable, brush_size:writable, button:writable, ctrl:writable, eraser_size:writable, fill_color:writable, pick_color_slot:writable, history_node_to_cancel_to:writable, my_canvas_height:writable, my_canvas_width:writable, palette:writable, pencil_size:writable, pointer:writable, pointer_active:writable, pointer_buttons:writable, pointer_over_canvas:writable, pointer_previous:writable, pointer_start:writable, pointer_type:writable, pointers:writable, reverse:writable, shift:writable, stroke_color:writable, stroke_size:writable, update_helper_layer_on_pointermove_active:writable */
 /* global AccessKeys, current_history_node, default_airbrush_size, default_brush_shape, default_brush_size, default_canvas_height, default_canvas_width, default_eraser_size, default_magnification, default_pencil_size, default_stroke_size, enable_fs_access_api, file_name, get_direction, localize, magnification, main_canvas, main_ctx, return_to_tools, selected_colors, selected_tool, selected_tools, selection, systemHooks, textbox, transparency */
 
 import { $ColorBox } from "./$ColorBox.js";
 import { $ToolBox } from "./$ToolBox.js";
 import { Handles } from "./Handles.js";
 // import { get_direction, localize } from "./app-localization.js";
-import { default_palette, get_winter_palette } from "./color-data.js";
-import { image_formats } from "./file-format-data.js";
-import { $this_version_news, cancel, change_some_url_params, change_url_param, clear, confirm_overwrite_capability, delete_selection, deselect, edit_copy, edit_cut, edit_paste, file_new, file_open, file_save, file_save_as, get_tool_by_id, get_uris, image_attributes, image_flip_and_rotate, image_invert_colors, image_stretch_and_skew, load_image_from_uri, make_or_update_undoable, open_from_file, paste, paste_image_from_file, redo, render_history_as_gif, reset_canvas_and_history, reset_file, reset_selected_colors, resize_canvas_and_save_dimensions, resize_canvas_without_saving_dimensions, save_as_prompt, select_all, select_tool, select_tools, set_magnification, show_document_history, show_error_message, show_news, show_resource_load_error_message, toggle_grid, undo, update_canvas_rect, update_disable_aa, update_helper_layer, update_magnified_canvas_size, view_bitmap, write_image_file } from "./functions.js";
-import { show_help } from "./help.js";
-import { $G, E, TAU, get_file_extension, get_help_folder_icon, is_discord_embed, make_canvas, to_canvas_coords } from "./helpers.js";
+
+import { cancel, clear, delete_selection, deselect, edit_copy, edit_cut, edit_paste, file_new, file_open, file_save, file_save_as, get_uris, image_attributes, image_flip_and_rotate, image_invert_colors, image_stretch_and_skew, load_image_from_uri, make_or_update_undoable, open_from_file, paste, paste_image_from_file, redo, reset_canvas_and_history, reset_file, reset_selected_colors, resize_canvas_and_save_dimensions, select_all, select_tools, set_magnification, show_error_message, show_resource_load_error_message, toggle_grid, undo, update_canvas_rect, update_disable_aa, update_helper_layer, update_magnified_canvas_size, view_bitmap } from "./functions.js";
+import { $G, E, TAU, make_canvas, to_canvas_coords } from "./helpers.js";
 import { init_webgl_stuff, rotate } from "./image-manipulation.js";
-import { menus } from "./menus.js";
-import { showMessageBox } from "./msgbox.js";
-import { stopSimulatingGestures } from "./simulate-random-gestures.js";
-import { disable_speech_recognition, enable_speech_recognition, trace_and_sketch_stop } from "./speech-recognition.js";
+import { MENU_DIVIDER, menus } from "./menus.js";
+
 import { localStore } from "./storage.js";
-import { get_theme, set_theme } from "./theme.js";
-import { TOOL_AIRBRUSH, TOOL_BRUSH, TOOL_CURVE, TOOL_ELLIPSE, TOOL_ERASER, TOOL_LINE, TOOL_PENCIL, TOOL_POLYGON, TOOL_RECTANGLE, TOOL_ROUNDED_RECTANGLE, TOOL_SELECT, tools } from "./tools.js";
+import { TOOL_AIRBRUSH, TOOL_BRUSH, TOOL_CURVE, TOOL_ELLIPSE, TOOL_ERASER, TOOL_LINE, TOOL_PENCIL, TOOL_POLYGON, TOOL_RECTANGLE, TOOL_ROUNDED_RECTANGLE, tools } from "./tools.js";
 
 // #region Exports
 
@@ -35,436 +30,6 @@ import { TOOL_AIRBRUSH, TOOL_BRUSH, TOOL_CURVE, TOOL_ELLIPSE, TOOL_ERASER, TOOL_
 // @TODO: Minimize global variables and exports from app.js
 window.update_fill_and_stroke_colors_and_lineWidth = update_fill_and_stroke_colors_and_lineWidth;
 window.tool_go = tool_go;
-
-// #endregion
-
-
-// #region System Hooks and default implementations
-
-/**
- * @param {string} extension
- * @returns {`.${string}`}
- */
-const prependDot = (extension) => `.${extension}`;
-/**
- * @param {FileFormat} format
- * @returns {string}
- */
-const getMimeType = (format) => "mimeType" in format ? format.mimeType : `application/x-${format.formatID}`;
-
-// Note: JSDoc type annotations don't seem to actually work on window.*
-/**
- * @type {SystemHooks}
- * The methods in systemHooks can be overridden by a containing page like 98.js.org which hosts jspaint in a same-origin iframe.
- * This allows integrations like setting the wallpaper as the background of the host page, or saving files to a server.
- * This API may be removed at any time (and perhaps replaced by something based around postMessage)
- * The API is documented in the README.md file.
- */
-window.systemHooks = window.systemHooks || {};
-/** @type {SystemHooks} */
-window.systemHookDefaults = {
-	// named to be distinct from various platform APIs (showSaveFilePicker, saveAs, electron's showSaveDialog; and saveFile is too ambiguous)
-	// could call it saveFileAs maybe but then it'd be weird that you don't pass in the file directly
-	showSaveFileDialog: async ({ formats, defaultFileName, defaultPath, defaultFileFormatID, getBlob, savedCallbackUnreliable, dialogTitle }) => {
-
-		// Note: showSaveFilePicker currently doesn't support suggesting a filename,
-		// or retrieving which file type was selected in the dialog (you have to get it (guess it) from the file name)
-		// In particular, some formats are ambiguous with the file name, e.g. different bit depths of BMP files.
-		// So, it's a tradeoff with the benefit of overwriting on Save.
-		// https://developer.mozilla.org/en-US/docs/Web/API/Window/showSaveFilePicker
-		// Also, if you're using accessibility options Speech Recognition or Dwell Clicker,
-		// `showSaveFilePicker` fails based on a notion of it not being a "user gesture".
-		// `saveAs` will likely also fail on the same basis,
-		// but at least in chrome, there's a "Downloads Blocked" icon with a popup where you can say Always Allow.
-		// I can't detect when it's allowed or blocked, but `saveAs` has a better chance of working,
-		// so for Speech Recognition and Dwell Clicker, I set a global flag temporarily to disable File System Access API (window.untrusted_gesture).
-		if (window.showSaveFilePicker && !window.untrusted_gesture && enable_fs_access_api) {
-			// We can't get the selected file type, not even from newHandle.getFile()
-			// so limit formats shown to a set that can all be used by their unique file extensions
-			// formats = formats_unique_per_file_extension(formats);
-			// OR, show two dialogs, one for the format and then one for the save location.
-			const { newFileFormatID } = await save_as_prompt({ dialogTitle, defaultFileName, defaultFileFormatID, formats, promptForName: false });
-			const new_format = formats.find((format) => format.formatID === newFileFormatID);
-			const blob = await getBlob(new_format && new_format.formatID);
-			formats = [new_format];
-			let newHandle;
-			let newFileName;
-			try {
-				newHandle = await showSaveFilePicker({
-					types: formats.map((format) => {
-						return {
-							description: format.name,
-							accept: {
-								[getMimeType(format)]: format.extensions.map(prependDot),
-							},
-						};
-					}),
-				});
-				newFileName = newHandle.name;
-				const newFileExtension = get_file_extension(newFileName);
-				const doItAgain = async (message) => {
-					const button_value = await showMessageBox({
-						message: `${message}\n\nTry adding .${new_format.extensions[0]} to the name. Sorry about this.`,
-						iconID: "error",
-						buttons: [
-							{
-								label: localize("Save As"), // or "Retry"
-								value: "show-save-as-dialog-again",
-								default: true,
-							},
-							{
-								label: localize("Save"), // or "Ignore"
-								value: "save-without-extension",
-							},
-							{
-								label: localize("Cancel"), // or "Abort"
-								value: "cancel",
-							},
-						],
-					});
-					if (button_value === "show-save-as-dialog-again") {
-						return window.systemHookDefaults.showSaveFileDialog({
-							formats,
-							defaultFileName,
-							defaultPath,
-							defaultFileFormatID,
-							getBlob,
-							savedCallbackUnreliable,
-							dialogTitle,
-						});
-					} else if (button_value === "save-without-extension") {
-						// @TODO: DRY
-						const writableStream = await newHandle.createWritable();
-						await writableStream.write(blob);
-						await writableStream.close();
-						savedCallbackUnreliable?.({
-							newFileName: newFileName,
-							newFileFormatID: new_format && new_format.formatID,
-							newFileHandle: newHandle,
-							newBlob: blob,
-						});
-					} else {
-						// user canceled save
-					}
-				};
-				if (!newFileExtension) {
-					// return await doItAgain(`Missing file extension.`);
-					return await doItAgain(`'${newFileName}' doesn't have an extension.`);
-				}
-				if (!new_format.extensions.includes(newFileExtension)) {
-					// Closest translation: "Paint cannot save to the same filename with a different file type."
-					// return await doItAgain(`Wrong file extension for selected file type.`);
-					return await doItAgain(`File extension '.${newFileExtension}' does not match the selected file type ${new_format.name}.`);
-				}
-				// const new_format =
-				// 	get_format_from_extension(formats, newHandle.name) ||
-				// 	formats.find((format)=> format.formatID === defaultFileFormatID);
-				// const blob = await getBlob(new_format && new_format.formatID);
-				const writableStream = await newHandle.createWritable();
-				await writableStream.write(blob);
-				await writableStream.close();
-			} catch (error) {
-				if (error.name === "AbortError") {
-					// user canceled save
-					return;
-				}
-				// console.warn("Error during showSaveFileDialog (for showSaveFilePicker; now falling back to saveAs)", error);
-				// newFileName = (newFileName || file_name || localize("untitled"))
-				// 	.replace(/\.(bmp|dib|a?png|gif|jpe?g|jpe|jfif|tiff?|webp|raw)$/i, "") +
-				// 	"." + new_format.extensions[0];
-				// saveAs(blob, newFileName);
-				if (error.message.match(/gesture|activation/)) {
-					// show_error_message("Your browser blocked the file from being saved, because you didn't use the mouse or keyboard directly to save. Try looking for a Downloads Blocked icon and say Always Allow, or save again with the keyboard or mouse.", error);
-					show_error_message("Sorry, due to browser security measures, you must use the keyboard or mouse directly to save.");
-					return;
-				}
-				show_error_message(localize("Failed to save document."), error);
-				return;
-			}
-			savedCallbackUnreliable?.({
-				newFileName: newFileName,
-				newFileFormatID: new_format && new_format.formatID,
-				newFileHandle: newHandle,
-				newBlob: blob,
-			});
-		} else {
-
-			const { newFileName, newFileFormatID } = await save_as_prompt({ dialogTitle, defaultFileName, defaultFileFormatID, formats });
-			const blob = await getBlob(newFileFormatID);
-			saveAs(blob, newFileName);
-			savedCallbackUnreliable?.({
-				newFileName,
-				newFileFormatID,
-				newFileHandle: null,
-				newBlob: blob,
-			});
-		}
-	},
-	showOpenFileDialog: async ({ formats }) => {
-		if (window.untrusted_gesture) {
-			// We can't show a file picker RELIABLY.
-			// FIXME: double error message
-			show_error_message("Sorry, a file picker cannot be shown when using Speech Recognition or Dwell Clicker. You must click File > Open directly with the mouse, or press Ctrl+O on the keyboard.");
-			throw new Error("can't show file picker reliably");
-		}
-		if (window.showOpenFilePicker && enable_fs_access_api) {
-			const [fileHandle] = await window.showOpenFilePicker({
-				types: formats.map((format) => {
-					return {
-						description: format.name,
-						accept: {
-							[getMimeType(format)]: format.extensions.map(prependDot),
-						},
-					};
-				}),
-			});
-			const file = await fileHandle.getFile();
-			return { file, fileHandle };
-		} else {
-			// @TODO: specify mime types?
-			return new Promise((resolve) => {
-				const $input = /** @type {JQuery<HTMLInputElement>} */($("<input type='file'>")
-					.on("change", () => {
-						resolve({ file: $input[0].files[0] });
-						$input.remove();
-					})
-					.appendTo($app)
-					.hide()
-					.trigger("click")
-				);
-			});
-		}
-	},
-	writeBlobToHandle: async (save_file_handle, blob) => {
-		if (save_file_handle && save_file_handle.createWritable && enable_fs_access_api) {
-			const acknowledged = await confirm_overwrite_capability();
-			if (!acknowledged) {
-				return false;
-			}
-			try {
-				const writableStream = await save_file_handle.createWritable();
-				await writableStream.write(blob);
-				await writableStream.close();
-				return true;
-			} catch (error) {
-				if (error.name === "AbortError") {
-					// user canceled save (this might not be a real error code that can occur here)
-					return false;
-				}
-				if (error.name === "NotAllowedError") {
-					// use didn't give permission to save
-					// is this too much of a warning?
-					show_error_message(localize("Save was interrupted, so your file has not been saved."), error);
-					return false;
-				}
-				if (error.name === "SecurityError") {
-					// not in a user gesture ("User activation is required to request permissions.")
-					saveAs(blob, file_name);
-					return undefined;
-				}
-			}
-		} else {
-			saveAs(blob, file_name);
-			// hopefully if the page reloads/closes the save dialog/download will persist and succeed?
-			return undefined;
-		}
-	},
-	readBlobFromHandle: async (file_handle) => {
-		if (file_handle && file_handle.getFile) {
-			const file = await file_handle.getFile();
-			return file;
-		} else {
-			throw new Error(`Unknown file handle (${file_handle})`);
-			// show_error_message(`${localize("Failed to open document.")}\n${localize("An unsupported operation was attempted.")}`, error);
-		}
-	},
-	setWallpaperTiled: (canvas) => {
-		const wallpaperCanvas = make_canvas(screen.width, screen.height);
-		const pattern = wallpaperCanvas.ctx.createPattern(canvas, "repeat");
-		wallpaperCanvas.ctx.fillStyle = pattern;
-		wallpaperCanvas.ctx.fillRect(0, 0, wallpaperCanvas.width, wallpaperCanvas.height);
-
-		systemHooks.setWallpaperCentered(wallpaperCanvas);
-	},
-	setWallpaperCentered: (canvas) => {
-		systemHooks.showSaveFileDialog({
-			dialogTitle: localize("Save As"),
-			defaultFileName: `${file_name.replace(/\.(bmp|dib|a?png|gif|jpe?g|jpe|jfif|tiff?|webp|raw)$/i, "")} wallpaper.png`,
-			defaultFileFormatID: "image/png",
-			formats: image_formats,
-			getBlob: (new_file_type) => {
-				return new Promise((resolve) => {
-					write_image_file(canvas, new_file_type, (blob) => {
-						resolve(blob);
-					});
-				});
-			},
-		});
-	},
-};
-
-for (const [key, defaultValue] of Object.entries(window.systemHookDefaults)) {
-	window.systemHooks[key] = window.systemHooks[key] || defaultValue;
-}
-
-// #endregion
-
-// #region URL Params
-const update_from_url_params = () => {
-	// Dwell Clicker
-	// (Head Tracker implies Dwell Clicker for now, but could be made independent if Tracky Mouse supports other modes in the future.)
-	if (location.hash.match(/dwell-clicker|head-tracker/i)) {
-		if (!$("body").hasClass("dwell-clicker-mode")) {
-			$("body").addClass("dwell-clicker-mode");
-			$G.triggerHandler("dwell-clicker-toggled");
-		}
-	} else {
-		if ($("body").hasClass("dwell-clicker-mode")) {
-			$("body").removeClass("dwell-clicker-mode");
-			$G.triggerHandler("dwell-clicker-toggled");
-		}
-	}
-
-	// Enlarge UI
-	if (location.hash.match(/enlarge-ui/i)) {
-		if (!$("body").hasClass("enlarge-ui")) {
-			$("body").addClass("enlarge-ui");
-			$G.triggerHandler("enlarge-ui-toggled");
-			$G.triggerHandler("theme-load"); // signal layout change
-		}
-	} else {
-		if ($("body").hasClass("enlarge-ui")) {
-			$("body").removeClass("enlarge-ui");
-			$G.triggerHandler("enlarge-ui-toggled");
-			$G.triggerHandler("theme-load"); // signal layout change
-		}
-	}
-
-	// Vertical Color Box Mode
-	if (location.hash.match(/vertical-color-box-mode/i)) {
-		if (!$("body").hasClass("vertical-color-box-mode")) {
-			$("body").addClass("vertical-color-box-mode");
-			$G.triggerHandler("vertical-color-box-mode-toggled");
-			$G.triggerHandler("theme-load"); // signal layout change
-		}
-	} else {
-		if ($("body").hasClass("vertical-color-box-mode")) {
-			$("body").removeClass("vertical-color-box-mode");
-			$G.triggerHandler("vertical-color-box-mode-toggled");
-			$G.triggerHandler("theme-load"); // signal layout change
-		}
-	}
-
-	// Quick Undo Button
-	if (location.hash.match(/easy-undo/i)) {
-		if (!$("body").hasClass("easy-undo-mode")) {
-			$("body").addClass("easy-undo-mode");
-			$G.triggerHandler("easy-undo-mode-toggled");
-			$G.triggerHandler("theme-load"); // signal layout change (just copying pattern thoughtlessly)
-		}
-	} else {
-		if ($("body").hasClass("easy-undo-mode")) {
-			$("body").removeClass("easy-undo-mode");
-			$G.triggerHandler("easy-undo-mode-toggled");
-			$G.triggerHandler("theme-load"); // signal layout change (just copying pattern thoughtlessly)
-		}
-	}
-
-	// Head Tracker Mode
-	if (location.hash.match(/head-tracker/i)) {
-		if (!$("body").hasClass("head-tracker-mode")) {
-			$("body").addClass("head-tracker-mode");
-			$G.triggerHandler("head-tracker-toggled");
-		}
-	} else {
-		if ($("body").hasClass("head-tracker-mode")) {
-			$("body").removeClass("head-tracker-mode");
-			$G.triggerHandler("head-tracker-toggled");
-		}
-	}
-
-	// Speech Recognition Mode
-	if (location.hash.match(/speech-recognition-mode/i)) {
-		enable_speech_recognition();
-	} else {
-		disable_speech_recognition();
-	}
-
-	// Developer helpers to compare with reference screenshots of MS Paint
-	// (Seems like the color box is getting (un)shifted when this is enabled, making it line up less than it should?
-	// like the code "// Nudge the Colors component over a tiny bit" is applying and then being reset.)
-	$("body").toggleClass("compare-reference", !!location.hash.match(/compare-reference/i));
-	$("body").toggleClass("compare-reference-tool-windows", !!location.hash.match(/compare-reference-tool-windows/i));
-	setTimeout(() => {
-		if (location.hash.match(/compare-reference/i)) { // including compare-reference-tool-windows
-			select_tool(get_tool_by_id(TOOL_SELECT));
-			const test_canvas_width = 576;
-			const test_canvas_height = 432;
-			if (main_canvas.width !== test_canvas_width || main_canvas.height !== test_canvas_height) {
-				// Unfortunately, right now this can cause a reverse "Save changes?" dialog,
-				// where Discard will restore your drawing, Cancel will discard it, and Save will save a blank canvas,
-				// because the load from storage happens after this resize.
-				// But this is just a helper for development, so it's not a big deal.
-				// are_you_sure here doesn't help, either.
-				// are_you_sure(() => {
-				resize_canvas_without_saving_dimensions(test_canvas_width, test_canvas_height);
-				// });
-			}
-			if (!location.hash.match(/compare-reference-tool-windows/i)) {
-				$toolbox.dock($left);
-				$colorbox.dock($bottom);
-				window.debugKeepMenusOpen = false;
-			}
-		}
-		if (location.hash.match(/compare-reference-tool-windows/i)) {
-			$toolbox.undock_to(84, 35);
-			$colorbox.undock_to(239, 195);
-			window.debugKeepMenusOpen = true;
-			// $(".help-menu-button").click(); // have to trigger pointerdown/up, it doesn't respond to click
-			// $(".help-menu-button").trigger("pointerdown").trigger("pointerup"); // and it doesn't use jQuery
-			$(".help-menu-button")[0].dispatchEvent(new Event("pointerdown"));
-			$(".help-menu-button")[0].dispatchEvent(new Event("pointerup"));
-			$("[aria-label='About Paint']")[0].dispatchEvent(new Event("pointerenter"));
-		}
-	}, 500);
-
-	// dev helper to open Project News window to preview news write-up
-	// I'm naming this "force-open-project-news" and not simply "project-news"
-	// because I'm not handling closing the window, and I don't want it to sound
-	// super friendly.
-	// I did go on a tangent of making it a proper UI navigation URL hash,
-	// and binding the window state to the URL state (bidirectionally),
-	// but I'm not sure how it should work with the back button.
-	// It's probably nice on mobile for the back button to close windows,
-	// but I'd want it to be consistent between all the windows of the app.
-	if (location.hash.match(/force-open-project-news/i)) {
-		if (!$(".news-window:visible").length) {
-			show_news();
-		}
-	}
-};
-update_from_url_params();
-$G.on("hashchange popstate change-url-params", update_from_url_params);
-
-// handle backwards compatibility URLs
-// Eye Gaze Mode was a monolithic feature that has been since been split into smaller features.
-// We can maintain backwards compatibility with the old URL param by mapping it to the new features.
-// (BTW: Eye Gaze Mode never included an actual eye tracker (instead relying on external software),
-// but if I added that as a feature I could call the feature Eye Tracker, so it wouldn't be too confusing.)
-if (location.search.match(/eye-gaze-mode/) || location.hash.match(/eye-gaze-mode/)) {
-	change_some_url_params({
-		"eye-gaze-mode": false,
-		"enlarge-ui": true,
-		"dwell-clicker": true,
-		"vertical-color-box-mode": true,
-		"easy-undo": true,
-	}, { replace_history_state: true });
-	update_from_url_params();
-}
-if (location.search.match(/vertical-colors?-box/)) {
-	change_url_param("vertical-color-box", true, { replace_history_state: true });
-	update_from_url_params();
-}
 
 // #endregion
 
@@ -506,7 +71,6 @@ window.$left = $left;
 const $right = $(E("div")).addClass("component-area right").appendTo($H);
 window.$right = $right;
 
-
 // there's also probably a CSS solution alternative to this
 if (get_direction() === "rtl") {
 	$left.appendTo($H);
@@ -526,250 +90,43 @@ window.$status_position = $status_position;
 const $status_size = $(E("div")).addClass("status-coordinates status-field inset-shallow").appendTo($status_area);
 window.$status_size = $status_size;
 
-// #region News Indicator
-const news_seen_key = "jspaint latest news seen";
-const latest_news_datetime = $this_version_news.find("time").attr("datetime");
-const $news_indicator = $(`
-	<a class="news-indicator" href="#project-news">
-		<!--<img src="images/winter/present.png" width="24" height="22" alt=""/>-->
-		<!--<img src="images/about/news.gif" width="40" height="16" alt=""/>-->
-		<img src="images/new.gif" width="40" height="16" alt=""/>
-		<span>
-			<b>Font Finesse</b>
-		</span>
-		<!--<span class="marquee" dir="ltr" style="--text-width: 44ch; --animation-duration: 3s;">
-			<span>
-				<b>Cool new things</b> — One thing! Another thing! Something else!
-			</span>
-		</span>
-		<span>
-			<b>Just One Thing</b>
-		</span>-->
-	</a>
-`);
-$news_indicator.on("click auxclick", (event) => {
-	event.preventDefault();
-	show_news();
-	$news_indicator.remove();
-	try {
-		localStorage[news_seen_key] = latest_news_datetime;
-	} catch (_error) { /* ignore */ }
-});
-let news_seen;
-let local_storage_unavailable;
-try {
-	news_seen = localStorage[news_seen_key];
-} catch (_error) {
-	local_storage_unavailable = true;
-}
-const day = 24 * 60 * 60 * 1000;
-const news_period_if_can_dismiss = 15 * day;
-const news_period_if_cannot_dismiss = 5 * day;
-const news_period = local_storage_unavailable ? news_period_if_cannot_dismiss : news_period_if_can_dismiss;
-if (Date.now() < Date.parse(latest_news_datetime) + news_period && news_seen !== latest_news_datetime) {
-	$status_area.append($news_indicator);
-}
-if ($news_indicator.text().includes("Bubblegum")) {
-	let bubbles_raf_id = -1;
-	const bubbles = [];
-	const make_bubble = () => {
-		const $bubble = $(E("img")).attr({
-			src: "images/bubblegum/bubble.png",
-			width: 24,
-			height: 24,
-			alt: "",
-		}).css({
-			position: "absolute",
-			pointerEvents: "none",
-			top: 0,
-			left: 0,
-			zIndex: 10,
-		}).appendTo("body");
-		const rect = $news_indicator[0].getBoundingClientRect();
-		const x = rect.left + Math.random() * rect.width;
-		const y = rect.top + rect.height;
-		const scale = Math.random() * 0.5 + 0.5;
-		const bubble = { $bubble, x, y, scale, vx: Math.random() * 2 - 1, vy: -Math.random() * 2 };
-		bubbles.push(bubble);
-		if (bubbles_raf_id === -1) {
-			animate_bubbles();
-		}
-		setTimeout(() => {
-			$bubble.remove();
-			bubbles.splice(bubbles.indexOf(bubble), 1);
-			if (bubbles.length === 0) {
-				cancelAnimationFrame(bubbles_raf_id);
-				bubbles_raf_id = -1;
-			}
-		}, 10000);
-	};
-	let last_time = performance.now();
-	const animate_bubbles = () => {
-		bubbles_raf_id = requestAnimationFrame(animate_bubbles);
-		const now = performance.now();
-		const dt = now - last_time;
-		for (const bubble of bubbles) {
-			// not actually frame rate independent physics, I don't think
-			bubble.x += bubble.vx * dt / 16;
-			bubble.y += bubble.vy * dt / 16;
-			const wind_x = Math.sin(bubble.y / 100 + now / 3000) * 0.01;
-			const wind_y = Math.cos(bubble.x / 100 + now / 3000) * 0.01;
-			bubble.vx += wind_x;
-			bubble.vy += wind_y;
-			bubble.$bubble.css({
-				transform: `translate(${bubble.x}px, ${bubble.y}px) scale(${bubble.scale})`,
-			});
-		}
-		last_time = now;
-	};
-	$news_indicator.on("pointerenter", () => {
-		for (let i = 0; i < 10; i++) {
-			setTimeout(make_bubble, i * 100);
-		}
-	});
-	$news_indicator.on("pointerdown", () => {
-		for (let i = 0; i < 50; i++) {
-			setTimeout(make_bubble, i * 1);
-		}
-	});
-}
-// #endregion
-
 $status_text.default = () => {
-	$status_text.text(localize("For Help, click Help Topics on the Help Menu."));
+	// Cassiel: no Help Topics, so no pointer to it.
+	$status_text.text("");
 };
 $status_text.default();
 
 // #endregion
 
 // #region Menu Bar
-let menu_bar_outside_frame = false;
-if (frameElement) {
-	try {
-		if (parent.MenuBar) {
-			// @ts-ignore
-			MenuBar = parent.MenuBar;
-			menu_bar_outside_frame = true;
-		}
-	} catch (_error) { /* ignore */ }
-}
-const menu_bar = MenuBar(menus);
-window.menu_bar = menu_bar;
-if (menu_bar_outside_frame) {
-	$(menu_bar.element).insertBefore(frameElement);
-} else {
-	$(menu_bar.element).prependTo($V);
-}
-
-$(menu_bar.element).on("info", (event) => {
-	// @ts-ignore
-	$status_text.text(event.detail?.description ?? "");
-});
-$(menu_bar.element).on("default-info", () => {
-	$status_text.default();
-});
-
-// Hidden in a menu, these GIFs are not as obtrusive even though they can't be dismissed
-const theme_updated_period = 20 * day;
-const theme_new_period = 40 * day;
-const theme_soon_period = 40 * day;
-if (Date.now() < Date.parse("2024-02-22") + theme_new_period) {
-	$("[role=menuitem][aria-label*='Modern Dark'] .menu-item-shortcut").append("<img src='images/new2.gif' alt='New!'/>");
-}
-if (Date.now() < Date.parse("2024-02-24") + theme_soon_period) {
-	// $("[role=menuitem][aria-label*='Bubblegum'] .menu-item-shortcut").append("<img src='images/soon-twist-anim.gif' alt='Coming Soon!' class='too-big-soon-gif'/>");
-	// $("[role=menuitem][aria-label*='Retro Futurist'] .menu-item-shortcut").append("<img src='images/soon.gif' alt='Coming Soon!'/>");
-	// $("[role=menuitem][aria-label*='Picnic'] .menu-item-shortcut").append("<img src='images/soon.gif' alt='Coming Soon!'/>");
-}
-if (Date.now() < Date.parse("2024-02-22") + theme_updated_period) {
-	$("[role=menuitem][aria-label*='Modern Light'] .menu-item-shortcut").append("<img src='images/updated.gif' alt='Updated!'/>");
-	$("[role=menuitem][aria-label*='Classic Dark'] .menu-item-shortcut").append("<img src='images/updated.gif' alt='Updated!'/>");
-	$("[role=menuitem][aria-label*='Occult'] .menu-item-shortcut").append("<img src='images/updated.gif' alt='Updated!'/>");
-}
-
-// Extras menu emoji icons
-// (OS-GUI.js doesn't support icons yet but I wanted to spruce it up a bit.)
-// Originally I defined the emoji as part of the label, which worked well for a while.
-// Now I'm rendering the emoji as pseudo elements.
-// - It allows for matching on the menu item text exactly, without including emoji in my tests,
-//   which will hopefully be replaced with custom icons in the future.
-// - It makes it easier to replace the emoji with custom icons in the future.
-// - It hides the emoji from `aria-label`, for screen reader users.
-// - It makes the menu data cleaner.
-// - It allows aligning the emoji nicely, even when some don't show as emoji, depending on the platform.
-
+// Cassiel draws the menu bar (under the window's title) with its own menus; Paint
+// describes them (menus.js) and keeps the actions. Paint's own key handling covers the
+// shortcuts, so the menus only show them. The status bar shows the description of the
+// item under the pointer, as in Paint.
 /**
- * @param {OSGUIMenuFragment[]} menu_items
- * @param {HTMLElement} menu_element
- * @yields {[OSGUIMenuItem, HTMLElement]}
- * @returns {Generator<[OSGUIMenuItem, HTMLElement], void, void>}
+ * @param {OSGUIMenuFragment[]} items
+ * @returns {object[]}
  */
-function* traverse_menu(menu_items, menu_element) {
-	// Traverse menu data and elements in tandem, yielding pairs of menu item specifications and elements.
-	// This approach handles identically named menu items in separate menus,
-	// as is the case with "File > Manage Storage" and "Edit > History", both present in the Extras menu,
-	// but also in the other menus for discoverability.
-	// However, it doesn't handle identically named menu items in the same menu,
-	// as it still matches up items within the menu using aria-label.
-
-	// Menu structure:
-	// - Menu popups are not descendants of the menu bar or other menu popups; they are always direct children of the body.
-	// - Menu items that open submenus have "aria-controls" pointing to the ID of the submenu.
-	// - (Menu popups also have "data-semantic-parent" pointing to the ID of the menu item that opens them.)
-	// - `submenu` is an array, but the top level (menu bar) is represented as an object, which is a bit awkward.
-	//   However, this function doesn't deal with the top level.
-
-	const menu_item_elements = /** @type {HTMLElement[]} */([...menu_element.querySelectorAll(".menu-item")]);
-	for (const menu_item of menu_items) {
-		if (typeof menu_item !== "object" || !("label" in menu_item)) {
-			continue;
-		}
-		const aria_label = AccessKeys.toText(menu_item.label);
-		const menu_item_element = menu_item_elements.filter((el) =>
-			el.getAttribute("aria-label") === aria_label
-		)[0];
-		if (!menu_item_element) {
-			console.warn("Couldn't find menu item", menu_item, "with aria-label", aria_label);
-			continue;
-		}
-		yield [menu_item, menu_item_element];
-		if (menu_item.submenu) {
-			yield* traverse_menu(menu_item.submenu, menu_document.getElementById(menu_item_element.getAttribute("aria-controls")));
-		}
-		// if (menu_item.radioItems) {
-		// 	yield* traverse_menu(menu_item.radioItems, menu_element);
-		// }
+const cassiel_menu_items = (items) => items.map((item) => item === MENU_DIVIDER ? "separator" : {
+	label: item.label,
+	shortcut: item.shortcutLabel,
+	description: item.description,
+	enabled: item.enabled,
+	checked: item.checkbox?.check,
+	action: item.checkbox ? item.checkbox.toggle : item.action,
+	items: item.submenu && cassiel_menu_items(item.submenu),
+});
+window.cassiel.menu.set(
+	Object.entries(menus).map(([label, items]) => ({ label, items: cassiel_menu_items(items) })),
+	{ shortcuts: false },
+);
+window.cassiel.on("menuinfo", (description) => {
+	if (description == null) {
+		$status_text.default();
+	} else {
+		$status_text.text(description);
 	}
-}
-
-const menu_document = menu_bar.element.ownerDocument;
-const extras_menu_button = menu_document.querySelector(".extras-menu-button");
-const extras_menu_popup = menu_document.getElementById(extras_menu_button.getAttribute("aria-controls"));
-
-let emoji_css = `
-	.menu-item .menu-item-label::before {
-		display: inline-block;
-		width: 1.8em;
-		margin-right: 0.2em;
-		text-align: center;
-	}
-`;
-for (const [menu_item, menu_item_element] of traverse_menu(menus["E&xtras"], extras_menu_popup)) {
-	if (menu_item.emoji_icon) {
-		emoji_css += `
-			#${menu_item_element.id} .menu-item-label::before {
-				content: "${menu_item.emoji_icon}";
-			}
-		`;
-	}
-}
-$("<style>").text(emoji_css).appendTo(menu_document.head);
-
-// Electron menu integration
-if (window.is_electron_app) {
-	window.setMenus(menus);
-}
-
+});
 // #endregion
 
 let $toolbox = $ToolBox(tools);
@@ -779,17 +136,8 @@ window.$toolbox = $toolbox;
 // If there's to be extra tools, they should probably get a window, with different UI
 // so it can display names of the tools, and maybe authors and previews (and not necessarily icons)
 
-let $colorbox = $ColorBox($("body").hasClass("vertical-color-box-mode"));
+const $colorbox = $ColorBox();
 window.$colorbox = $colorbox;
-
-$G.on("vertical-color-box-mode-toggled", () => {
-	// Destroy and recreate the color box because it uses a constructor parameter
-	// for this state and this handles re-docking to the correct edge
-	$colorbox.destroy();
-	$colorbox = $ColorBox($("body").hasClass("vertical-color-box-mode"));
-	window.$colorbox = $colorbox;
-	prevent_selection($colorbox);
-});
 
 $G.on("resize", () => { // for browser zoom, and in-app zoom of the canvas
 	update_canvas_rect();
@@ -833,10 +181,7 @@ $("body").on("dragover dragenter", (/** @type {JQuery.DragOverEvent | JQuery.Dra
 		// @TODO: sort files/items in priority of image, theme, palette
 		// and then try loading them in series, with async await to avoid race conditions?
 		// or maybe support opening multiple documents in tabs
-		// Note: don't use FS Access API in Electron app because:
-		// 1. it's faulty (permissions problems, 0 byte files maybe due to the perms problems)
-		// 2. we want to save the file.path, which the dt.files code path takes care of
-		if (window.FileSystemHandle && !window.is_electron_app) {
+		if (window.FileSystemHandle) {
 			for (const item of dt.items) {
 				// kind will be "file" for file/directory entries.
 				if (item.kind === "file") {
@@ -915,17 +260,6 @@ $G.on("keydown", (e) => {
 			deselect();
 		}
 	}
-	if (
-		// Ctrl+Shift+Y for history window,
-		// chosen because it's related to the undo/redo shortcuts
-		// and it looks like a branching symbol.
-		(e.ctrlKey || e.metaKey) && e.shiftKey && !e.altKey &&
-		e.key.toUpperCase() === "Y"
-	) {
-		show_document_history();
-		e.preventDefault();
-		return;
-	}
 	// @TODO: return if menus/menubar focused or focus in dialog window
 	// or maybe there's a better way to do this that works more generally
 	// maybe it should only handle the event if document.activeElement is the body or html element?
@@ -974,15 +308,10 @@ $G.on("keydown", (e) => {
 		} else {
 			cancel();
 		}
-		stopSimulatingGestures();
-		trace_and_sketch_stop();
 	} else if (e.key === "Enter") {
 		if (selection) {
 			deselect();
 		}
-	} else if (e.key === "F1") {
-		show_help();
-		e.preventDefault();
 	} else if (e.key === "F4") {
 		redo();
 	} else if (e.key === "Delete" || e.key === "Backspace") {
@@ -1098,15 +427,10 @@ $G.on("keydown", (e) => {
 				}
 				break;
 			case "Y":
-				// Ctrl+Shift+Y handled above
 				redo();
 				break;
 			case "G":
-				if (e.shiftKey) {
-					render_history_as_gif();
-				} else {
-					toggle_grid();
-				}
+				toggle_grid();
 				break;
 			case "F":
 				// @ts-ignore (repeat doesn't exist on jQuery.Event, I guess, but this is fine)
@@ -1193,25 +517,6 @@ addEventListener("wheel", (e) => {
 		new_magnification = Math.max(0.5, Math.min(new_magnification, 80));
 		set_magnification(new_magnification, to_canvas_coords(e));
 		alt_zooming = true;
-		return;
-	}
-	if (e.ctrlKey || e.metaKey) {
-		return;
-	}
-	// for reference screenshot mode (development helper):
-	if (location.hash.match(/compare-reference/i)) { // including compare-reference-tool-windows
-		// const delta_opacity = Math.sign(e.originalEvent.deltaY) * -0.1; // since attr() is not supported other than for content, this increment must match CSS
-		const delta_opacity = Math.sign(e.deltaY) * -0.2; // since attr() is not supported other than for content, this increment must match CSS
-		let old_opacity = parseFloat($("body").attr("data-reference-opacity"));
-		if (!isFinite(old_opacity)) {
-			old_opacity = 0.5;
-		}
-		const new_opacity = Math.max(0, Math.min(1, old_opacity + delta_opacity));
-		$("body").attr("data-reference-opacity", new_opacity);
-		// prevent scrolling, keeping the screenshot lined up
-		// e.preventDefault(); // doesn't work
-		// $canvas_area.scrollTop(0); // doesn't work with smooth scrolling
-		// $canvas_area.scrollLeft(0);
 	}
 }, { passive: false });
 // #endregion
@@ -1246,11 +551,10 @@ $G.on("cut copy paste", (e) => {
 				if (e.type === "cut") {
 					delete_selection({
 						name: localize("Cut"),
-						icon: get_help_folder_icon("p_cut.png"),
 					});
 				}
 			};
-			if (!navigator.clipboard || !navigator.clipboard.write || is_discord_embed) {
+			if (!navigator.clipboard || !navigator.clipboard.write) {
 				return do_sync_clipboard_copy_or_cut();
 			}
 			try {
@@ -1309,7 +613,6 @@ localStore.get({
 	make_or_update_undoable({
 		match: (history_node) => history_node.name === localize("New"),
 		name: "Resize Canvas For New Document",
-		icon: get_help_folder_icon("p_stretch_both.png"),
 	}, () => {
 		main_canvas.width = Math.max(1, my_canvas_width);
 		main_canvas.height = Math.max(1, my_canvas_height);
@@ -1322,6 +625,8 @@ localStore.get({
 	});
 });
 
+// The file Paint was opened with (Files, Open with) comes with the SDK's ready.
+window.initial_system_file_handle = (await window.cassiel.ready).props?.path;
 if (window.initial_system_file_handle) {
 	systemHooks.readBlobFromHandle(window.initial_system_file_handle).then((file) => {
 		if (file) {
@@ -1332,23 +637,6 @@ if (window.initial_system_file_handle) {
 		show_error_message(`Failed to open file ${window.initial_system_file_handle}`, error);
 	});
 }
-// #endregion
-
-// #region Palette Updating From Theme
-
-const update_palette_from_theme = () => {
-	if (get_theme() === "winter.css") {
-		palette = get_winter_palette();
-		$colorbox.rebuild_palette();
-	} else {
-		palette = default_palette;
-		$colorbox.rebuild_palette();
-	}
-};
-
-$G.on("theme-load", update_palette_from_theme);
-// #region Initialization (continued)
-update_palette_from_theme();
 // #endregion
 
 // #endregion
@@ -1753,51 +1041,5 @@ prevent_selection($colorbox);
 $G.on("blur", () => {
 	$G.triggerHandler("pointerup");
 });
-
-// #region Fullscreen Handling for iOS
-// For Safari on iPad, Fullscreen mode overlays the system bar, completely obscuring our menu bar.
-// See CSS .fullscreen handling (and exit_fullscreen_if_ios) for more info.
-function iOS() {
-	return (
-		[
-			"iPad Simulator",
-			"iPhone Simulator",
-			"iPod Simulator",
-			"iPad",
-			"iPhone",
-			"iPod",
-		].includes(navigator.platform) ||
-		// iPad on iOS 13 detection
-		(navigator.userAgent.includes("Mac") && "ontouchend" in document)
-	);
-}
-$("html").toggleClass("ios", iOS());
-$G.on("fullscreenchange webkitfullscreenchange", () => {
-	// const fullscreen = $G.is(":fullscreen") || $G.is(":-webkit-full-screen"); // gives "Script error."
-	const fullscreen = !!(document.fullscreenElement || document.webkitFullscreenElement);
-	// $status_text.text(`fullscreen: ${fullscreen}`);
-	$("html").toggleClass("fullscreen", fullscreen);
-});
-// #endregion
-
-// #region Testing Helpers
-// Note: this is defined here so the app is loaded when this is defined.
-window.api_for_cypress_tests = {
-	reset_for_next_test() {
-		selected_colors.foreground = "#000";
-		selected_colors.background = "#fff";
-		brush_shape = default_brush_shape;
-		brush_size = default_brush_size;
-		eraser_size = default_eraser_size;
-		airbrush_size = default_airbrush_size;
-		pencil_size = default_pencil_size;
-		stroke_size = default_stroke_size;
-		clear();
-	},
-	selected_colors,
-	set_theme,
-	$,
-};
-// #endregion
 
 init_webgl_stuff();

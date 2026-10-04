@@ -1,7 +1,6 @@
 // @ts-check
-/* global $bottom, $left, $right, button, get_direction, localize, palette, selected_colors */
+/* global $bottom, button, palette, selected_colors */
 import { $Component } from "./$Component.js";
-// import { get_direction, localize } from "./app-localization.js";
 import { show_edit_colors_window } from "./edit-colors.js";
 import { $G, E, make_canvas } from "./helpers.js";
 
@@ -15,8 +14,6 @@ function $Swatch(color) {
 	const swatch_canvas = make_canvas();
 	$(swatch_canvas).css({ pointerEvents: "none" }).appendTo($swatch);
 
-	// @TODO: clean up event listener
-	$G.on("theme-load", () => { update_$swatch($swatch); });
 	$swatch.data("swatch", color);
 	update_$swatch($swatch, color);
 
@@ -53,10 +50,9 @@ function update_$swatch($swatch, new_color) {
 }
 
 /**
- * @param {boolean} vertical
  * @returns {JQuery<HTMLDivElement> & I$Component & I$ColorBox}
  */
-function $ColorBox(vertical) {
+function $ColorBox() {
 	const $cb = $(E("div")).addClass("color-box");
 
 	const $current_colors = $Swatch(selected_colors.ternary).addClass("current-colors");
@@ -126,35 +122,20 @@ function $ColorBox(vertical) {
 
 		// Note: this doesn't work until the colors box is in the DOM
 		const $some_button = $palette.find(".color-button");
-		if (vertical) {
-			const height_per_button =
-				$some_button.outerHeight() +
-				parseFloat(getComputedStyle($some_button[0]).getPropertyValue("margin-top")) +
-				parseFloat(getComputedStyle($some_button[0]).getPropertyValue("margin-bottom"));
-			$palette.height(Math.ceil(palette.length / 2) * height_per_button);
-		} else {
-			const width_per_button =
-				$some_button.outerWidth() +
-				parseFloat(getComputedStyle($some_button[0]).getPropertyValue("margin-left")) +
-				parseFloat(getComputedStyle($some_button[0]).getPropertyValue("margin-right"));
-			$palette.width(Math.ceil(palette.length / 2) * width_per_button);
-		}
+		const width_per_button =
+			$some_button.outerWidth() +
+			parseFloat(getComputedStyle($some_button[0]).getPropertyValue("margin-left")) +
+			parseFloat(getComputedStyle($some_button[0]).getPropertyValue("margin-right"));
+		$palette.width(Math.ceil(palette.length / 2) * width_per_button);
 
 		// the "last foreground color button" starts out as the first in the palette
 		$c.data("$last_fg_color_button", $palette.find(".color-button:first-child"));
 	};
 
-	let $c;
-	if (vertical) {
-		$c = $Component(localize("Colors"), "colors-component", "tall", $cb);
-		$c.appendTo(get_direction() === "rtl" ? $left : $right); // opposite ToolBox by default
-	} else {
-		$c = $Component(localize("Colors"), "colors-component", "wide", $cb);
-		$c.appendTo($bottom);
-	}
+	let $c = $Component("colors-component", "wide", $cb);
+	$c.appendTo($bottom);
 
 	build_palette();
-	$(window).on("theme-change", build_palette);
 
 	// I'm gonna do things messy, got a long road to go!
 	// eslint-disable-next-line no-self-assign

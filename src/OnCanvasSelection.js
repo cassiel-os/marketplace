@@ -2,10 +2,9 @@
 /* global $canvas_area, $status_position, $status_size, main_canvas, main_ctx, selected_colors, tool_transparent_mode, transparency */
 import { Handles } from "./Handles.js";
 import { OnCanvasObject } from "./OnCanvasObject.js";
-import { get_tool_by_id, make_or_update_undoable, undoable, update_helper_layer } from "./functions.js";
-import { $G, get_icon_for_tool, get_rgba_from_color, make_canvas, make_css_cursor, to_canvas_coords } from "./helpers.js";
+import { make_or_update_undoable, undoable, update_helper_layer } from "./functions.js";
+import { $G, get_rgba_from_color, make_canvas, make_css_cursor, to_canvas_coords } from "./helpers.js";
 import { replace_colors_with_swatch } from "./image-manipulation.js";
-import { TOOL_SELECT } from "./tools.js";
 
 class OnCanvasSelection extends OnCanvasObject {
 	/**
@@ -81,7 +80,6 @@ class OnCanvasSelection extends OnCanvasObject {
 				set_rect: ({ x, y, width, height }) => {
 					undoable({
 						name: "Resize Selection",
-						icon: get_icon_for_tool(get_tool_by_id(TOOL_SELECT)),
 						soft: true,
 					}, () => {
 						this.x = x;
@@ -104,7 +102,6 @@ class OnCanvasSelection extends OnCanvasObject {
 						(!e.shiftKey && /^Move Selection$/.test(history_node.name)),
 					name: e.shiftKey ? "Smear Selection" : "Move Selection",
 					update_name: true,
-					icon: get_icon_for_tool(get_tool_by_id(TOOL_SELECT)),
 					soft: true,
 				}, () => {
 					const m = to_canvas_coords(e);
@@ -125,18 +122,13 @@ class OnCanvasSelection extends OnCanvasObject {
 				mox = ~~(cx / rect.width * this.canvas.width);
 				moy = ~~(cy / rect.height * this.canvas.height);
 				$G.on("pointermove", pointermove);
-				this.dragging = true;
-				update_helper_layer(); // for thumbnail, which draws textbox outline if it's not being dragged
 				$G.one("pointerup", () => {
 					$G.off("pointermove", pointermove);
-					this.dragging = false;
-					update_helper_layer(); // for thumbnail, which draws selection outline if it's not being dragged
 				});
 				if (e.shiftKey) {
 					// Stamp or start to smear selection
 					undoable({
 						name: "Stamp Selection",
-						icon: get_icon_for_tool(get_tool_by_id(TOOL_SELECT)),
 						soft: true,
 					}, () => {
 						this.draw();
@@ -145,7 +137,6 @@ class OnCanvasSelection extends OnCanvasObject {
 					// Stamp selection
 					undoable({
 						name: "Stamp Selection",
-						icon: get_icon_for_tool(get_tool_by_id(TOOL_SELECT)),
 						soft: true,
 					}, () => {
 						this.draw();

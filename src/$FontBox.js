@@ -1,6 +1,5 @@
 // @ts-check
-/* global localize, text_tool_font */
-import { $ToolWindow } from "./$ToolWindow.js";
+/* global $top, localize, text_tool_font */
 // import { localize } from "./app-localization.js";
 import { $G, E, supports_vertical_writing_mode } from "./helpers.js";
 
@@ -47,7 +46,7 @@ const eachFont = async (callback, afterAllCallback) => {
 };
 
 /**
- * @returns {OSGUI$Window}
+ * @returns {JQuery<HTMLDivElement>}
  */
 function $FontBox() {
 	const $fb = $(E("div")).addClass("font-box");
@@ -135,43 +134,23 @@ function $FontBox() {
 	$family.on("change", update_font);
 	$size.on("change", update_font);
 
-	const $w = $ToolWindow();
-	$w.title(localize("Fonts"));
-	$w.$content.append($fb);
-	$w.center();
+	// A bar above the picture (not a window), shown while text is being edited.
+	$fb.hide().appendTo($top);
 
-	// Hotfix for bug where the font dropdown would close immediately when clicked in Chrome.
-	// Code in $Window.js (from os-gui.js but PATCHED) is trying to focus the dropdown when it's already focused,
-	// or focusing the window content area. Either can cause the dropdown to close.
-	// The code patches in $Window.js specific to this repo may be related to why this is happening.
-	// See: "PATCHED; I want focus tracking in a tool window"
-	// Maybe I don't want it for the font window! (What tool window did I want it for? A history panel, or...?)
-	// I could probably adjust my patch to not apply to the font box, but this is a quick fix.
-	$family[0].focus = () => {
-		// console.trace("$FontBox: Font family select focus() called");
-	};
-	$w.$content[0].focus = () => {
-		// console.trace("$FontBox: Font box window content area focus() called");
-	};
-
-	return $w;
-
+	return $fb;
 
 	function $Toggle(xi, thing, label, description) {
 		const $button = $(E("button")).addClass("toggle").attr({
 			"aria-pressed": false,
 			"aria-label": label,
 			"aria-description": description,
+			"data-tooltip": label,
 		});
 		const $icon = $(E("span")).addClass("icon").appendTo($button);
 		$button.css({
 			width: 23,
 			height: 22,
 			padding: 0,
-			display: "inline-flex",
-			alignContent: "center",
-			alignItems: "center",
-			justifyContent: "center",
 		});
 		$icon.css({
 			flex: "0 0 auto",

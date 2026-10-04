@@ -1,5 +1,5 @@
 // @ts-check
-/* global show_font_box:writable */
+/* global selected_tool, show_font_box */
 /* global $canvas_area, $status_position, $status_size, magnification, main_canvas, selected_colors, text_tool_font, tool_transparent_mode */
 import { $FontBox } from "./$FontBox.js";
 import { Handles } from "./Handles.js";
@@ -248,63 +248,24 @@ class OnCanvasTextBox extends OnCanvasObject {
 			const cy = e.clientY - rect.top;
 			mox = ~~(cx / rect.width * this.canvas.width);
 			moy = ~~(cy / rect.height * this.canvas.height);
-			this.dragging = true;
-			update_helper_layer(); // for thumbnail, which draws textbox outline if it's not being dragged
 			$G.on("pointermove", pointermove);
 			$G.one("pointerup", () => {
 				$G.off("pointermove", pointermove);
-				this.dragging = false;
-				update_helper_layer(); // for thumbnail, which draws textbox outline if it's not being dragged
 			});
 		});
 		$status_position.text("");
 		$status_size.text("");
 		$canvas_area.trigger("resize"); // could use "update" event instead if this is just to hide the main canvas handles
 
-		if (OnCanvasTextBox.$fontbox && OnCanvasTextBox.$fontbox.closed) {
-			// This might never happen anymore given the "close" event handler that hides instead of closing the font box.
-			OnCanvasTextBox.$fontbox = null;
-		}
-		const $fb = OnCanvasTextBox.$fontbox = OnCanvasTextBox.$fontbox || $FontBox();
-		$fb.toggle(show_font_box);
-		const displace_font_box = () => {
-			// move the font box out of the way if it's overlapping the OnCanvasTextBox
-			const fb_rect = $fb[0].getBoundingClientRect();
-			const tb_rect = this.$el[0].getBoundingClientRect();
-			if (
-				// the fontbox overlaps textbox
-				fb_rect.left <= tb_rect.right &&
-				tb_rect.left <= fb_rect.right &&
-				fb_rect.top <= tb_rect.bottom &&
-				tb_rect.top <= fb_rect.bottom
-			) {
-				// move the font box out of the way
-				$fb.css({
-					top: this.$el.position().top - $fb.height(),
-				});
-			}
-			$fb.applyBounds();
-		};
-
-		$fb.on("close", (e) => {
-			// Allow reopening the font box (without reinitializing it), via View > Text Toolbar.
-			e.preventDefault();
-			$fb.hide();
-			show_font_box = false;
-		});
+		OnCanvasTextBox.update_fontbox();
 
 		// must be after textbox is in the DOM
 		update();
 
-		displace_font_box();
-
 		// In case a software keyboard opens, like Optikey for eye gaze / head tracking users,
 		// or perhaps a handwriting input for pen tablet users, or *partially* for mobile browsers.
-		// Mobile browsers generally scroll the view for a textbox well enough, but
-		// don't include the custom behavior of moving the font box out of the way.
 		$(window).on("resize", this._on_window_resize = () => {
 			this.$editor[0].scrollIntoView({ block: "nearest", inline: "nearest" });
-			displace_font_box();
 		});
 	}
 	position() {
@@ -313,14 +274,6 @@ class OnCanvasTextBox extends OnCanvasObject {
 	}
 	destroy() {
 		super.destroy();
-		// Don't want to call close() anymore since the "close" event is handled to toggle `show_font_box` now,
-		// and we don't want to toggle the preference when destroying the textbox.
-		// The window is essentially a lazy-loaded singleton, hidden instead of closed.
-		// if (OnCanvasTextBox.$fontbox && !OnCanvasTextBox.$fontbox.closed) {
-		// 	OnCanvasTextBox.$fontbox.close();
-		// }
-		// OnCanvasTextBox.$fontbox = null;
-		OnCanvasTextBox.$fontbox?.hide();
 		$G.off("option-changed", this._on_option_changed);
 		this.$editor.off("input", this._on_input);
 		this.$editor.off("scroll", this._on_scroll);
@@ -331,10 +284,23 @@ class OnCanvasTextBox extends OnCanvasObject {
 
 /**
  * @static
- * @type {OSGUI$Window | null}
+ * @type {JQuery<HTMLDivElement> | null}
  * @memberof OnCanvasTextBox
  */
 OnCanvasTextBox.$fontbox = null;
+
+/**
+ * Shows the font bar while the Text tool is in use, not only while a text box is open:
+ * hiding it as a click on another tool begins would move the tools under the pointer,
+ * and that click would be lost.
+ */
+OnCanvasTextBox.update_fontbox = () => {
+	const show = show_font_box && selected_tool?.id === "TOOL_TEXT";
+	if (show && !OnCanvasTextBox.$fontbox) {
+		OnCanvasTextBox.$fontbox = $FontBox();
+	}
+	OnCanvasTextBox.$fontbox?.toggle(show);
+};
 
 export { OnCanvasTextBox };
 

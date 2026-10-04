@@ -67,10 +67,7 @@ declare const TOOL_PENCIL: "TOOL_PENCIL";
 // declare let selection: OnCanvasSelection;
 // declare let textbox: OnCanvasTextBox;
 // declare let helper_layer: OnCanvasHelperLayer;
-// declare let $thumbnail_window: OSGUI$Window;
-// declare let thumbnail_canvas: HTMLCanvasElement;
 // declare let show_grid: boolean;
-// declare let show_thumbnail: boolean;
 // declare let text_tool_font: TextToolFontOptions;
 interface TextToolFontOptions {
 	/** should be an exact value detected by Font Detective */
@@ -120,11 +117,6 @@ declare interface I$ColorBox {
 
 // $Component.js
 interface I$Component {
-	hide(): this;
-	show(): this;
-	toggle(): this;
-	dock($dock_to?: JQuery<HTMLElement>): void;
-	undock_to(x: number, y: number): void;
 	destroy(): void;
 }
 // helpers.js
@@ -171,7 +163,7 @@ declare function make_monochrome_palette(rgba1?: number[], rgba2?: number[]): (s
  * @param {HistoryNode | null=} options.parent - the state before this state (its basis), or null if this is the first state
  * @param {HistoryNode[]=} options.futures - the states branching off from this state (its children)
  * @param {number=} options.timestamp - when this state was created
- * @param {boolean=} options.soft - indicates that undo should skip this state; it can still be accessed with the History window
+ * @param {boolean=} options.soft - indicates that undo should skip this state
  * @param {ImageData | null=} options.image_data - the image data for the canvas (TODO: region updates)
  * @param {ImageData | null=} options.selection_image_data - the image data for the selection, if any
  * @param {number=} options.selection_x - the x position of the selection, if any
@@ -186,11 +178,10 @@ declare function make_monochrome_palette(rgba1?: number[], rgba2?: number[]): (s
  * @param {string | CanvasPattern=} options.foreground_color - selected foreground color (left click)
  * @param {string | CanvasPattern=} options.background_color - selected background color (right click)
  * @param {string | CanvasPattern=} options.ternary_color - selected ternary color (ctrl+click)
- * @param {string=} options.name - the name of the operation, shown in the history window, e.g. localize("Resize Canvas")
- * @param {HTMLImageElement |HTMLCanvasElement | null=} options.icon - a visual representation of the operation type, shown in the history window, e.g. get_help_folder_icon("p_blank.png")
+ * @param {string=} options.name - the name of the operation, e.g. localize("Resize Canvas")
  * @returns {HistoryNode}
  */
-declare function make_history_node({ parent, futures, timestamp, soft, image_data, selection_image_data, selection_x, selection_y, textbox_text, textbox_x, textbox_y, textbox_width, textbox_height, text_tool_font, tool_transparent_mode, foreground_color, background_color, ternary_color, name, icon, }: {
+declare function make_history_node({ parent, futures, timestamp, soft, image_data, selection_image_data, selection_x, selection_y, textbox_text, textbox_x, textbox_y, textbox_width, textbox_height, text_tool_font, tool_transparent_mode, foreground_color, background_color, ternary_color, name, }: {
 	parent?: (HistoryNode | null) | undefined;
 	futures?: HistoryNode[] | undefined;
 	timestamp?: number | undefined;
@@ -210,7 +201,6 @@ declare function make_history_node({ parent, futures, timestamp, soft, image_dat
 	background_color?: (string | CanvasPattern) | undefined;
 	ternary_color?: (string | CanvasPattern) | undefined;
 	name?: string | undefined;
-	icon?: (HTMLImageElement | HTMLCanvasElement | null) | undefined;
 }): HistoryNode;
 declare function exit_fullscreen_if_ios(): void;
 declare function show_about_paint(): void;
@@ -285,7 +275,6 @@ interface Window {
 		(source: HTMLImageElement | HTMLCanvasElement | ImageData): PixelCanvas,
 		(): PixelCanvas,
 	};
-	get_help_folder_icon: (file_name: string) => HTMLImageElement;
 	get_format_from_extension: <T extends FileFormat>(formats: T[], file_path_or_name_or_ext: string) => T;
 	// functions.js
 	get_tool_by_id(id: string): Tool;
@@ -295,7 +284,7 @@ interface Window {
 	 * @param {HistoryNode | null=} options.parent - the state before this state (its basis), or null if this is the first state
 	 * @param {HistoryNode[]=} options.futures - the states branching off from this state (its children)
 	 * @param {number=} options.timestamp - when this state was created
-	 * @param {boolean=} options.soft - indicates that undo should skip this state; it can still be accessed with the History window
+	 * @param {boolean=} options.soft - indicates that undo should skip this state
 	 * @param {ImageData | null=} options.image_data - the image data for the canvas (TODO: region updates)
 	 * @param {ImageData | null=} options.selection_image_data - the image data for the selection, if any
 	 * @param {number=} options.selection_x - the x position of the selection, if any
@@ -310,11 +299,10 @@ interface Window {
 	 * @param {string | CanvasPattern=} options.foreground_color - selected foreground color (left click)
 	 * @param {string | CanvasPattern=} options.background_color - selected background color (right click)
 	 * @param {string | CanvasPattern=} options.ternary_color - selected ternary color (ctrl+click)
-	 * @param {string=} options.name - the name of the operation, shown in the history window, e.g. localize("Resize Canvas")
-	 * @param {HTMLImageElement |HTMLCanvasElement | null=} options.icon - a visual representation of the operation type, shown in the history window, e.g. get_help_folder_icon("p_blank.png")
+	 * @param {string=} options.name - the name of the operation, e.g. localize("Resize Canvas")
 	 * @returns {HistoryNode}
 	 */
-	make_history_node({ parent, futures, timestamp, soft, image_data, selection_image_data, selection_x, selection_y, textbox_text, textbox_x, textbox_y, textbox_width, textbox_height, text_tool_font, tool_transparent_mode, foreground_color, background_color, ternary_color, name, icon, }: {
+	make_history_node({ parent, futures, timestamp, soft, image_data, selection_image_data, selection_x, selection_y, textbox_text, textbox_x, textbox_y, textbox_width, textbox_height, text_tool_font, tool_transparent_mode, foreground_color, background_color, ternary_color, name, }: {
 		parent?: (HistoryNode | null) | undefined;
 		futures?: HistoryNode[] | undefined;
 		timestamp?: number | undefined;
@@ -334,7 +322,6 @@ interface Window {
 		background_color?: (string | CanvasPattern) | undefined;
 		ternary_color?: (string | CanvasPattern) | undefined;
 		name?: string | undefined;
-		icon?: (HTMLImageElement | HTMLCanvasElement | null) | undefined;
 	}): HistoryNode;
 	exit_fullscreen_if_ios: () => void;
 	show_about_paint: () => void;
@@ -563,7 +550,7 @@ declare class OnCanvasSelection extends OnCanvasObject {
 declare class OnCanvasTextBox extends OnCanvasObject {
 	constructor(x: number, y: number, width: number, height: number, starting_text?: string);
 	position(): void;
-	static $fontbox: OSGUI$Window | null;
+	static $fontbox: JQuery<HTMLDivElement> | null;
 	canvas: PixelCanvas;
 	$editor: JQuery<HTMLTextAreaElement>;
 	dragging: boolean;
@@ -643,16 +630,6 @@ interface Rect { x: number; y: number; width: number; height: number; }
 // 	$Button(label: string, action: () => void): JQuery<HTMLButtonElement>;
 // }
 
-// still part of jspaint, uncomfortably overlapping with os-gui.js's I$FormWindow
-interface I$DialogWindow {
-	$form: JQuery<HTMLFormElement>;
-	$main: JQuery<HTMLDivElement>;
-	$buttons: JQuery<HTMLDivElement>;
-
-	$Button(label: string | Node, action: () => void, options?: { type?: string }): JQuery<HTMLButtonElement>;
-}
-// definitely some cleanup to be done here regarding the window "classes"
-interface I$ToolWindow { }
 
 //
 
@@ -687,7 +664,6 @@ interface Tool {
 	id: ToolID,
 	name: string,
 	speech_recognition: string[],
-	help_icon: string,
 	description: string,
 	cursor: Parameters<typeof make_css_cursor>,
 	/** Indicates that the brush operation should be previewed on the canvas at the cursor location. */
@@ -783,7 +759,7 @@ interface HistoryNode {
 	futures: HistoryNode[];
 	/** when this state was created */
 	timestamp: number;
-	/** indicates that undo should skip this state; it can still be accessed with the History window */
+	/** indicates that undo should skip this state */
 	soft: boolean;
 	/** the image data for the canvas (TODO: region updates) */
 	image_data: ImageData | null;
@@ -813,15 +789,12 @@ interface HistoryNode {
 	background_color: string | CanvasPattern;
 	/** selected ternary color (ctrl+click) */
 	ternary_color: string | CanvasPattern;
-	/** the name of the operation, shown in the history window, e.g. localize("Resize Canvas") */
+	/** the name of the operation, e.g. localize("Resize Canvas") */
 	name: string;
-	/** a visual representation of the operation type, shown in the history window, e.g. get_help_folder_icon("p_blank.png") */
-	icon: HTMLImageElement | HTMLCanvasElement | null;
 }
 
 interface ActionMetadata {
 	name: string;
-	icon?: HTMLImageElement | HTMLCanvasElement;
 	use_loose_canvas_changes?: boolean;
 	soft?: boolean;
 	assume_saved?: boolean;
