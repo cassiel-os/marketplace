@@ -625,9 +625,12 @@ localStore.get({
 	});
 });
 
-// The file Paint was opened with (Files, Open with) comes with the SDK's ready.
-window.initial_system_file_handle = (await window.cassiel.ready).props?.path;
-if (window.initial_system_file_handle) {
+// The file Paint was opened with (Files, Open with) comes with the SDK's ready. Not
+// awaited here: the rest of Paint (and every module importing this one) would wait
+// for the desktop's answer, and the window would show an unfinished Paint meanwhile.
+window.cassiel?.ready.then(({ props }) => {
+	window.initial_system_file_handle = props?.path;
+	if (!window.initial_system_file_handle) return;
 	systemHooks.readBlobFromHandle(window.initial_system_file_handle).then((file) => {
 		if (file) {
 			open_from_file(file, window.initial_system_file_handle);
@@ -636,7 +639,7 @@ if (window.initial_system_file_handle) {
 		// this handler is not always called, sometimes error message is shown from readBlobFromHandle
 		show_error_message(`Failed to open file ${window.initial_system_file_handle}`, error);
 	});
-}
+});
 // #endregion
 
 // #endregion

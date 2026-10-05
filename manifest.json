@@ -1,11 +1,12 @@
 {
-  "id": "paint",
+  "id": "run.cassiel.paint",
   "name": "Paint",
   "version": "0.2.0",
   "description": "Draw, paint and edit pictures.",
   "author": "Cassiel",
   "category": "accessories",
   "icon": "images/icons/jspaint.svg",
+  "sdk": "1.0",
   "entry": "index.html",
   "window": {
     "width": 820,

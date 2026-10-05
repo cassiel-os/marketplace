@@ -88,9 +88,13 @@
 	// short sentence the assistant reads back.
 	/* global main_canvas, file_name */
 	const register = async () => {
-		// Paint's functions are module exports (main_canvas and file_name are globals).
-		const { file_new, file_save, image_invert_colors, clear, resize_canvas_and_save_dimensions } = await import(new URL("functions.js", here).href);
-		const { flip_horizontal, flip_vertical, rotate } = await import(new URL("image-manipulation.js", here).href);
+		// Paint's functions are module exports (main_canvas and file_name are globals). The
+		// package bundles the modules and hands them over as window.paintModules (importing
+		// the files again would make a second Paint, with its own state). The import is for
+		// running from the sources, unbundled; the package has no src/functions.js.
+		const module = (name) => window.paintModules?.[name] ?? import(new URL(name, here).href);
+		const { file_new, file_save, image_invert_colors, clear, resize_canvas_and_save_dimensions } = await module("functions.js");
+		const { flip_horizontal, flip_vertical, rotate } = await module("image-manipulation.js");
 		const size = () => `${main_canvas.width} × ${main_canvas.height}`;
 		sdk.actions.register("new_image", {
 			description: "Starts a new blank picture (asks to save the current one if it changed); optionally its size in pixels.",

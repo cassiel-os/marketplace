@@ -50,17 +50,54 @@ s = re.sub(r'\n\s*\n', '\n', s)
 open(p, 'w').write(s)
 PY
 
+# The modules as two bundles instead of ~25 files (one request each, in a chain of
+# imports): what runs before app-state.js, which must stay a classic script (its
+# let/const are globals the modules read), and app.js after it. Code splitting keeps
+# each module once, shared between the two. The integration script reaches functions.js
+# and image-manipulation.js through window.paintModules.
+python3 - "$OUT" <<'PY'
+import os, re, sys
+out = sys.argv[1]
+page = os.path.join(out, "index.html")
+html = open(page).read()
+tags = re.findall(r'[ \t]*<script (?:type="module"|defer) src="src/([^"]+)"></script>\n', html)
+modules = [m for m in tags if m not in ("app-state.js", "app.js")]
+start = "".join(f'import "./{m}";\n' for m in modules)
+start += 'import * as functions from "./functions.js";\nimport * as imageManipulation from "./image-manipulation.js";\n'
+start += 'window.paintModules = { "functions.js": functions, "image-manipulation.js": imageManipulation };\n'
+open(os.path.join(out, "src", "paint-start.js"), "w").write(start)
+first = True
+def swap(m):
+    global first
+    name = m.group(1)
+    if name == "app-state.js":
+        return m.group(0)
+    if name == "app.js":
+        return '\t<script type="module" src="bundle/app.js"></script>\n'
+    if first:
+        first = False
+        return '\t<script type="module" src="bundle/paint-start.js"></script>\n'
+    return ""
+html = re.sub(r'[ \t]*<script (?:type="module"|defer) src="src/([^"]+)"></script>\n', swap, html)
+open(page, "w").write(html)
+PY
+"$ESBUILD" "$OUT/src/paint-start.js" "$OUT/src/app.js" --bundle --splitting --format=esm --minify --log-level=error \
+  --outdir="$OUT/bundle" --entry-names='[name]' --chunk-names='chunk-[hash]'
+# Only the classic scripts stay in src/.
+find "$OUT/src" -name '*.js' ! -name 'cassiel-integration.js' ! -name 'error-handling-basic.js' ! -name 'app-localization.js' ! -name 'app-state.js' -delete
+
 # Vector art without editor metadata (Inkscape's), losslessly.
 find "$OUT" -type f -name '*.svg' -size +8k | while read -r f; do npx --yes svgo@3 --quiet --multipass "$f" -o "$f"; done
 
 # Minify scripts and styles in place (per file: modules keep their imports).
-[ "${MINIFY:-1}" = 1 ] && find "$OUT" -type f -name '*.js' ! -name '*.min.js' | while read -r f; do "$ESBUILD" "$f" --minify --log-level=error --outfile="$f" --allow-overwrite; done
+[ "${MINIFY:-1}" = 1 ] && find "$OUT" -type f -name '*.js' ! -name '*.min.js' ! -path "$OUT/bundle/*" | while read -r f; do "$ESBUILD" "$f" --minify --log-level=error --outfile="$f" --allow-overwrite; done
 [ "${MINIFY:-1}" = 1 ] && find "$OUT" -type f -name '*.css' | while read -r f; do "$ESBUILD" "$f" --minify --log-level=error --outfile="$f" --allow-overwrite; done
 
 (cd "$OUT" && rm -f "$ROOT/build/paint.capp" && zip -qr -9 -X "$ROOT/build/paint.capp" . -x '.*')
 du -sh "$OUT" "$ROOT/build/paint.capp"
 if [ "${1:-}" = "--install" ]; then
-  docker exec cassiel-dev sh -c 'rm -rf /data/apps/paint && mkdir -p /data/apps'
-  docker cp "$OUT" cassiel-dev:/data/apps/paint
-  echo "Installed paint; reload the desktop."
+  ID="$(sed -n 's/.*"id": *"\([^"]*\)".*/\1/p' manifest.json | head -1)"
+  docker exec cassiel-dev sh -c "rm -rf /data/apps/$ID && mkdir -p /data/apps"
+  docker cp "$OUT" "cassiel-dev:/data/apps/$ID"
+  echo "Installed $ID; reload the desktop."
 fi
