@@ -70,6 +70,15 @@
   });
   webamp.onMinimize(() => window.cassiel.window.minimize());
 
+  // The library window's title, in the frame's own letters; its frame turns gold while
+  // the app has the focus, as Winamp's windows do.
+  for (const ch of 'SPOTIFY LIBRARY')
+    $('libraryTitle').append(Object.assign(document.createElement('div'), { className: `gen-text-letter gen-text-${ch === ' ' ? 'space' : ch.toLowerCase()}` }));
+  const focused = () => $('libraryWindow').classList.toggle('selected', document.hasFocus());
+  addEventListener('focus', focused);
+  addEventListener('blur', focused);
+  focused();
+
   let tab = 'search';
   let rows = []; // what the list shows: { kind, title, sub, art, time, play }
   let selected = -1;
@@ -95,11 +104,11 @@
     rows.forEach((row, i) => {
       const li = document.createElement('li');
       li.setAttribute('aria-selected', String(i === selected));
-      const art = row.art ? Object.assign(document.createElement('img'), { src: row.art, alt: '', loading: 'lazy' }) : Object.assign(document.createElement('span'), { className: 'noart' });
+      // As a playlist line: number, title, then what it is, dimmer; time on the right.
       const text = document.createElement('span');
       text.className = 'text';
-      text.append(Object.assign(document.createElement('strong'), { textContent: row.title }), Object.assign(document.createElement('small'), { textContent: row.sub }));
-      li.append(art, text, Object.assign(document.createElement('span'), { className: 'time', textContent: row.time ?? '' }));
+      text.append(`${i + 1}. ${row.title}  `, Object.assign(document.createElement('small'), { textContent: row.sub }));
+      li.append(text, Object.assign(document.createElement('span'), { className: 'time', textContent: row.time ?? '' }));
       li.addEventListener('click', () => ((selected = i), render()));
       li.addEventListener('dblclick', () => run(row));
       list.append(li);

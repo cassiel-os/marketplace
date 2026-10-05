@@ -5,26 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Winamp for Spotify</title>
     <link rel="stylesheet" href="/sdk/cassiel.css" />
+    <link rel="stylesheet" href="gen-skin.css" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="deck" id="deck"></div>
-    <aside class="library">
-      <header class="account" data-window-drag>
-        <span id="who">Not signed in</span>
-        <button id="sign">Sign in with Spotify</button>
-      </header>
-      <form class="search" id="search">
-        <input id="query" type="search" placeholder="Search songs, artists, albums, playlists" autocomplete="off" />
-      </form>
-      <nav class="tabs" role="tablist">
-        <button role="tab" data-tab="search" aria-selected="true">Search</button>
-        <button role="tab" data-tab="playlists">Playlists</button>
-        <button role="tab" data-tab="liked">Liked Songs</button>
-      </nav>
-      <ul class="list" id="list" tabindex="0"></ul>
-      <footer class="status" id="status">Unofficial. Not made by or affiliated with Spotify or Winamp.</footer>
-    </aside>
+    <div class="deck"><div class="stage" id="deck"></div></div>
+    <!-- Spotify's library in a window of Winamp's own: the generic frame (the one
+         Milkdrop's window wears, gen-skin.css), the playlist's colors inside. -->
+    <div class="gen library">
+      <div class="gen-window selected" id="libraryWindow">
+        <div class="gen-top" data-window-drag>
+          <div class="gen-top-left"></div>
+          <div class="gen-top-left-fill"></div>
+          <div class="gen-top-left-end"></div>
+          <div class="gen-top-title" id="libraryTitle" aria-label="Spotify Library"></div>
+          <div class="gen-top-right-end"></div>
+          <div class="gen-top-right-fill"></div>
+          <div class="gen-top-right"><div class="gen-close" data-window-action="close" role="button" aria-label="Close" data-tooltip="Close"></div></div>
+        </div>
+        <div class="gen-middle">
+          <div class="gen-middle-left"><div class="gen-middle-left-bottom"></div></div>
+          <div class="gen-middle-center">
+            <div class="pane">
+              <header class="account">
+                <span id="who">Not signed in</span>
+                <button class="link" id="sign">Sign in with Spotify</button>
+              </header>
+              <form class="search" id="search">
+                <label for="query">Search:</label>
+                <input id="query" type="search" autocomplete="off" />
+              </form>
+              <nav class="tabs" role="tablist">
+                <button role="tab" data-tab="search" aria-selected="true">Search</button>
+                <button role="tab" data-tab="playlists">Playlists</button>
+                <button role="tab" data-tab="liked">Liked Songs</button>
+              </nav>
+              <ul class="list" id="list" tabindex="0"></ul>
+              <footer class="status" id="status">Unofficial. Not made by or affiliated with Spotify or Winamp.</footer>
+            </div>
+          </div>
+          <div class="gen-middle-right"><div class="gen-middle-right-bottom"></div></div>
+        </div>
+        <div class="gen-bottom"><div class="gen-bottom-left"></div><div class="gen-bottom-right"></div></div>
+      </div>
+    </div>
     <script src="/sdk/cassiel.js"></script>
     <script src="webamp.js"></script>
     <script src="auth.js"></script>
