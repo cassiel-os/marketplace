@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Spotify</title>
+    <link rel="stylesheet" href="/sdk/cassiel.css" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <form class="bar" id="bar">
+      <input id="link" type="text" placeholder="Paste a Spotify link" autocomplete="off" spellcheck="false" />
+      <button type="submit">Open</button>
+    </form>
+    <main class="player">
+      <div class="empty" id="empty">
+        <img src="icon.svg" width="56" height="56" alt="" />
+        <p>Paste a link to a song, album, playlist or podcast from Spotify, or ask Cass to play something.</p>
+        <p class="muted">Songs play in full with a Spotify Premium account signed in; otherwise Spotify plays a short preview.</p>
+      </div>
+      <div class="embed" id="embed"></div>
+    </main>
+    <footer class="status">Unofficial. Not made by or affiliated with Spotify.</footer>
+    <script src="/sdk/cassiel.js"></script>
+    <script src="app.js"></script>
+    <script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
+  </body>
+</html>
