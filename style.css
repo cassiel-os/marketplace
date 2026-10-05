@@ -1,18 +1,37 @@
-/* Neo Arcade: the library on the left (thumbnails and names, the chosen one in blue),
-   the game's screen on the right, a line under it with what it is and how it runs.
-   Dark navy, as an arcade cabinet's side. */
+/* Neo Arcade in NeoRAGEx's look (as neoragex.net draws its window): deep navy, the
+   ROM browser with thumbnails and a blue selection, Russo One for titles and labels,
+   Exo 2 for the rest, gold for what is ready, green for what plays. */
+@font-face {
+  font-family: 'Russo One';
+  src: url('type/russo-one.woff2') format('woff2');
+  font-display: block;
+}
+@font-face {
+  font-family: 'Exo 2';
+  src: url('type/exo2.woff2') format('woff2');
+  font-weight: 100 900;
+  font-display: block;
+}
 :root {
-  --bg: #0e1120;
-  --side: #121629;
-  --panel: #0a0c17;
-  --line: #262b45;
-  --text: #e6e8f2;
-  --muted: #8a90b0;
-  --pick: #2c3f94;
-  --pick-line: #4a5fc4;
-  --ok: #7be0a0;
-  --warn: #f2c14e;
-  --bad: #f0707a;
+  --display: 'Russo One', 'Segoe UI', system-ui, sans-serif;
+  --text-font: 'Exo 2', 'Segoe UI', system-ui, sans-serif;
+  --window: #0b0e1c;
+  --bar: #11152a;
+  --toolbar: #0c1020;
+  --line: #1d2240;
+  --list: #090c16;
+  --main: #07090f;
+  --text: #aab3d6;
+  --dim: #8a90b5;
+  --faint: #5a627f;
+  --menu-dim: #7a82a8;
+  --blue: #2e4db0;
+  --blue-dark: #243d8c;
+  --blue-edge: #5b78d8;
+  --gold: #ffb43d;
+  --ok: #6fe0a8;
+  --warn: #ffb43d;
+  --bad: #ff6b6b;
   color-scheme: dark;
 }
 html,
@@ -22,138 +41,254 @@ body {
 }
 body {
   display: flex;
-  background: var(--bg);
+  flex-direction: column;
+  background: var(--window);
   color: var(--text);
-  font: 13px/1.3 var(--cassiel-font, system-ui, sans-serif);
+  font: 500 13px/1.35 var(--text-font);
   user-select: none;
   overflow: hidden;
 }
 button {
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  color: inherit;
   font: inherit;
+  cursor: default;
 }
 
-/* --- The library. --- */
-.library {
+/* --- Title bar: three lights, the name. --- */
+.bar {
   flex: none;
-  width: 250px;
-  display: flex;
-  flex-direction: column;
-  background: var(--side);
-  border-right: 1px solid var(--line);
-}
-.lib-head {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 12px 14px 8px;
-  color: var(--muted);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
+  gap: 8px;
+  padding: 11px 14px;
+  background: var(--bar);
+  border-bottom: 1px solid var(--line);
+}
+.lights {
+  display: flex;
+  gap: 7px;
+}
+.light {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+.light.close {
+  background: #ff5f57;
+}
+.light.min {
+  background: #febc2e;
+}
+.light.max {
+  background: #28c840;
+}
+.light:hover {
+  filter: brightness(1.15);
+}
+.title {
+  margin-left: 8px;
+  color: var(--dim);
+  font: 12px/1 var(--display);
+  letter-spacing: 1px;
+}
+
+/* --- Menu bar, the ROM and BIOS count on the right. --- */
+.toolbar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: var(--toolbar);
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+}
+.toolbar .item {
+  padding: 4px 8px;
+  border-radius: 5px;
+  color: var(--text);
+  letter-spacing: 0.2px;
+}
+.toolbar .item:hover,
+.toolbar .item[aria-expanded='true'] {
+  background: #1a2040;
+  color: #fff;
+}
+.toolbar .sp {
+  flex: 1;
+}
+.toolbar .tb {
+  padding-right: 6px;
+  color: var(--menu-dim);
+  font: 11px/1 var(--display);
+  letter-spacing: 0.6px;
+}
+.toolbar .acc {
+  color: var(--gold);
+}
+.toolbar .no {
+  color: var(--bad);
+}
+.dropdown {
+  position: fixed;
+  z-index: 10;
+  min-width: 230px;
+  margin: 0;
+  padding: 5px;
+  list-style: none;
+  background: #10142a;
+  border: 1px solid #262c52;
+  border-radius: 8px;
+  box-shadow: 0 12px 34px rgb(0 0 0 / 0.5);
+  font-size: 13px;
+}
+.dropdown li {
+  display: flex;
+  gap: 16px;
+  padding: 6px 10px;
+  border-radius: 5px;
+  color: var(--text);
+}
+.dropdown li:hover:not(.off):not(.sep) {
+  background: linear-gradient(90deg, var(--blue), var(--blue-dark));
+  color: #fff;
+}
+.dropdown li .k {
+  margin-left: auto;
+  color: var(--faint);
+  font: 11px/1.6 var(--display);
+}
+.dropdown li:hover .k {
+  color: #c9d3ff;
+}
+.dropdown li.on::before {
+  content: '✓';
+  margin: 0 -10px 0 -2px;
+  width: 0;
+  overflow: visible;
+}
+.dropdown li.off {
+  opacity: 0.4;
+}
+.dropdown li.sep {
+  height: 1px;
+  margin: 4px 6px;
+  padding: 0;
+  background: var(--line);
+}
+
+/* --- The ROM browser. --- */
+.body {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  background: var(--main);
+}
+.list {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  background: var(--list);
+  border-right: 1px solid var(--line);
+}
+.lh {
+  padding: 6px 8px 10px;
+  color: var(--faint);
+  font: 11px/1 var(--display);
+  letter-spacing: 1.2px;
   text-transform: uppercase;
-}
-.lib-head b {
-  color: var(--muted);
-}
-.bios i {
-  display: inline-block;
-  min-width: 18px;
-  margin-left: 4px;
-  padding: 1px 5px;
-  border-radius: 9px;
-  background: #2a2f4a;
-  color: var(--muted);
-  font-style: normal;
-  text-align: center;
-}
-.bios.ok i {
-  background: var(--warn);
-  color: #1b1600;
-}
-.bios.missing i {
-  background: var(--bad);
-  color: #200;
 }
 .games {
   flex: 1;
   min-height: 0;
   margin: 0;
-  padding: 2px 8px 8px;
+  padding: 0;
   overflow-y: auto;
   list-style: none;
   outline: none;
+  scrollbar-color: #232a48 transparent;
 }
 .games li {
   display: flex;
   align-items: center;
-  gap: 12px;
-  height: 46px;
-  padding: 0 8px;
-  border: 1px solid transparent;
-  border-radius: 7px;
-  cursor: default;
-}
-.games li + li {
-  margin-top: 2px;
+  gap: 11px;
+  padding: 6px 8px;
+  margin-bottom: 3px;
+  border-radius: 6px;
 }
 .games li:hover {
-  background: rgb(255 255 255 / 0.04);
+  background: rgb(255 255 255 / 0.03);
 }
 .games li[aria-selected='true'] {
-  background: var(--pick);
-  border-color: var(--pick-line);
+  background: linear-gradient(90deg, var(--blue), var(--blue-dark));
 }
 .games .thumb {
   flex: none;
-  width: 52px;
+  width: 50px;
   height: 36px;
-  border: 1px solid #343a5c;
-  border-radius: 3px;
-  background: #1a1f38 center / cover no-repeat;
-  color: #59608a;
-  font-size: 11px;
-  font-weight: 700;
-  line-height: 36px;
+  border: 1px solid #232a48;
+  border-radius: 4px;
+  background: #11152a center / cover no-repeat;
+  color: var(--faint);
+  font: 9px/36px var(--display);
+  letter-spacing: 0.5px;
   text-align: center;
   overflow: hidden;
+}
+.games li[aria-selected='true'] .thumb {
+  border-color: var(--blue-edge);
 }
 .games .name {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 15px;
+  color: var(--text);
+  font-size: 14px;
+}
+.games li[aria-selected='true'] .name {
+  color: #fff;
 }
 .games .note {
   display: block;
-  height: auto;
-  padding: 18px 8px;
-  border: 0;
-  color: var(--muted);
+  padding: 14px 8px;
+  color: var(--faint);
   font-size: 12px;
-  line-height: 1.5;
+  line-height: 1.6;
   white-space: normal;
 }
 .folder {
-  margin: 0 10px 10px;
-  padding: 6px;
+  margin-top: 6px;
+  padding: 7px;
   border: 1px solid var(--line);
   border-radius: 6px;
-  background: #171c33;
-  color: var(--muted);
-  box-shadow: none;
+  color: var(--dim);
+  font: 11px/1 var(--display);
+  letter-spacing: 0.5px;
 }
 .folder:hover {
-  color: var(--text);
+  border-color: var(--blue-edge);
+  color: #fff;
 }
 
-/* --- The screen and the line under it. --- */
-.stage {
-  flex: 1;
+/* --- The screen and the status line. --- */
+.main {
   min-width: 0;
+  min-height: 0;
   display: flex;
   flex-direction: column;
-  padding: 16px 18px 10px;
+  gap: 10px;
+  padding: 14px;
 }
 .screen {
   position: relative;
@@ -163,21 +298,15 @@ button {
   align-items: center;
   justify-content: center;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 6px;
   background: #000;
   overflow: hidden;
-}
-.snap,
-#canvas {
-  max-width: 100%;
-  max-height: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: contain;
-  image-rendering: pixelated;
 }
 .snap {
   width: 100%;
   height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
 }
 #canvas {
   position: absolute;
@@ -185,57 +314,56 @@ button {
   margin: auto;
   width: 100%;
   height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
+  image-rendering: pixelated;
   outline: none;
 }
 .empty {
-  max-width: 340px;
+  max-width: 360px;
   padding: 20px;
-  color: var(--muted);
+  color: var(--dim);
   font-size: 13px;
-  line-height: 1.6;
+  line-height: 1.7;
   text-align: center;
 }
 .empty b {
   display: block;
-  margin-bottom: 6px;
-  color: var(--text);
-  font-size: 18px;
+  margin-bottom: 8px;
+  color: #fff;
+  font: 20px/1.2 var(--display);
+  letter-spacing: 0.5px;
 }
 .empty kbd {
-  padding: 0 4px;
+  padding: 0 5px;
   border: 1px solid var(--line);
-  border-radius: 3px;
-  font: inherit;
-  font-size: 12px;
+  border-radius: 4px;
+  color: var(--text);
+  font: 11px var(--display);
 }
-.info {
+.status {
   display: flex;
+  align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 10px 2px 0;
-  color: var(--muted);
-  font-size: 14px;
-  font-weight: 700;
+  padding: 0 2px;
+  color: var(--dim);
+  font: 12px/1 var(--display);
   letter-spacing: 0.5px;
   white-space: nowrap;
 }
-.info .now {
+.status .now {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.info .now::before {
+.status .now:not(:empty)::before {
   content: '▶ ';
-  font-size: 11px;
 }
-.info .now:empty::before {
-  content: '';
-}
-.state::before {
+.state:not(:empty)::before {
   content: '●';
   margin-right: 6px;
-}
-.state:empty::before {
-  content: '';
 }
 .state.ok {
   color: var(--ok);

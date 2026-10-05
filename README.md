@@ -14,6 +14,8 @@ ROMs and BIOS are not included: they belong to their owners.
 
 ## Third parties
 
+- `type/`: Russo One and Exo 2, SIL Open Font License (`type/OFL-*.txt`), in the app so
+  it needs no network.
 - `nostalgist.js`: Nostalgist 0.22.0, MIT (`LICENSE-nostalgist.txt`).
 - `core/fbneo_libretro.{js,wasm}`: FinalBurn Neo's libretro core, RetroArch 1.22.2
   Emscripten build from [retroarch-emscripten-build](https://github.com/arianrhodsandlot/retroarch-emscripten-build)

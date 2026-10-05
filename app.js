@@ -84,10 +84,8 @@
   function render() {
     const list = $('games');
     $('count').textContent = String(games.length);
-    const bios = $('bios');
-    bios.classList.toggle('ok', !!folder && hasBios);
-    bios.classList.toggle('missing', !!folder && !hasBios);
-    bios.querySelector('i').textContent = !folder ? '—' : hasBios ? 'OK' : 'NO';
+    const info = $('romInfo');
+    if (info) info.innerHTML = folder ? `${games.length} ROMS · BIOS <span class="${hasBios ? 'acc' : 'no'}">${hasBios ? 'OK' : 'NO'}</span>` : 'SIN CARPETA';
     list.replaceChildren();
     if (!folder) return list.append(note('Elige la carpeta donde tienes tus ROMs (zip). Neo Geo necesita también neogeo.zip ahí.'));
     if (!games.length) return list.append(note('No hay ROMs (zip) en esta carpeta.'));
@@ -310,42 +308,95 @@
       'Mover: flechas\nBotones A B C D: Z X A S\nStart: Enter\nMoneda: Shift derecho\n\nUn control (gamepad) conectado funciona solo.',
     );
 
-  function menus() {
-    window.cassiel.menu.set([
-      {
-        label: '&Archivo',
-        items: [
-          { label: 'Elegir &carpeta de ROMs…', action: chooseFolder },
-          { label: '&Volver a leer la carpeta', shortcut: 'F5', action: scan, enabled: () => !!folder },
-          'separator',
-          { label: '&Salir', action: () => window.cassiel.close() },
-        ],
-      },
-      {
-        label: '&Emulación',
-        items: [
-          { label: '&Jugar', shortcut: 'Ctrl+Enter', action: () => play(), enabled: () => pick >= 0 },
-          { label: '&Pausa', shortcut: 'F3', checked: () => paused, action: pause, enabled: () => !!emu },
-          { label: '&Reiniciar', action: () => emu?.restart(), enabled: () => !!emu },
-          { label: '&Detener', shortcut: 'Ctrl+Q', action: stop, enabled: () => !!emu },
-          'separator',
-          { label: '&Guardar partida', shortcut: 'F2', action: saveState, enabled: () => !!emu },
-          { label: '&Cargar partida', shortcut: 'F4', action: loadState, enabled: () => !!emu },
-          { label: 'Ca&ptura de pantalla', shortcut: 'F12', action: () => capture(), enabled: () => !!emu },
-        ],
-      },
-      { label: '&Opciones', items: [{ label: '&Controles…', action: controls }] },
-      { label: '&Vídeo', items: [{ label: '&Pantalla completa', shortcut: 'F11', action: fullscreen }] },
-      {
-        label: 'A&yuda',
-        items: [
-          { label: '&ROMs compatibles…', action: sets },
-          'separator',
-          { label: '&Acerca de Neo Arcade', action: about },
-        ],
-      },
-    ]);
+  // The menu bar, drawn here (the app has its own title bar, so the desktop draws
+  // none): menus open on a click, items as the desktop's, shortcuts while it has keys.
+  const MENUS = () => [
+    {
+      label: 'Archivo',
+      items: [
+        { label: 'Elegir carpeta de ROMs…', action: chooseFolder },
+        { label: 'Volver a leer la carpeta', shortcut: 'F5', action: scan, enabled: () => !!folder },
+        'separator',
+        { label: 'Salir', action: () => window.cassiel.close() },
+      ],
+    },
+    {
+      label: 'Emulación',
+      items: [
+        { label: 'Jugar', shortcut: 'Ctrl+Enter', action: () => play(), enabled: () => pick >= 0 },
+        { label: 'Pausa', shortcut: 'F3', checked: () => paused, action: pause, enabled: () => !!emu },
+        { label: 'Reiniciar', action: () => emu?.restart(), enabled: () => !!emu },
+        { label: 'Detener', shortcut: 'Ctrl+Q', action: stop, enabled: () => !!emu },
+        'separator',
+        { label: 'Guardar partida', shortcut: 'F2', action: saveState, enabled: () => !!emu },
+        { label: 'Cargar partida', shortcut: 'F4', action: loadState, enabled: () => !!emu },
+        { label: 'Captura de pantalla', shortcut: 'F12', action: () => capture(), enabled: () => !!emu },
+      ],
+    },
+    { label: 'Opciones', items: [{ label: 'Controles…', action: controls }] },
+    { label: 'Vídeo', items: [{ label: 'Pantalla completa', shortcut: 'F11', action: fullscreen }] },
+    {
+      label: 'Ayuda',
+      items: [{ label: 'ROMs compatibles…', action: sets }, 'separator', { label: 'Acerca de Neo Arcade', action: about }],
+    },
+  ];
+  const value = (v) => (typeof v === 'function' ? v() : v);
+  const dropdown = $('dropdown');
+  let openMenu = null;
+  function closeMenu() {
+    dropdown.hidden = true;
+    openMenu?.setAttribute('aria-expanded', 'false');
+    openMenu = null;
   }
+  function showMenu(button, menu) {
+    closeMenu();
+    openMenu = button;
+    button.setAttribute('aria-expanded', 'true');
+    dropdown.replaceChildren(
+      ...menu.items.map((item) => {
+        const li = document.createElement('li');
+        if (item === 'separator') return (li.className = 'sep'), li;
+        const on = value(item.enabled) ?? true;
+        li.role = 'menuitem';
+        li.className = `${on ? '' : 'off'}${value(item.checked) ? ' on' : ''}`;
+        li.append(Object.assign(document.createElement('span'), { textContent: item.label }));
+        if (item.shortcut) li.append(Object.assign(document.createElement('span'), { className: 'k', textContent: item.shortcut }));
+        li.addEventListener('click', () => on && (closeMenu(), item.action()));
+        return li;
+      }),
+    );
+    const r = button.getBoundingClientRect();
+    dropdown.style.left = `${r.left}px`;
+    dropdown.style.top = `${r.bottom + 2}px`;
+    dropdown.hidden = false;
+  }
+  function menus() {
+    const bar = $('menubar');
+    if (bar.childElementCount) return;
+    for (const menu of MENUS()) {
+      const b = Object.assign(document.createElement('button'), { className: 'item', textContent: menu.label });
+      b.setAttribute('aria-haspopup', 'menu');
+      b.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openMenu === b ? closeMenu() : showMenu(b, MENUS().find((m) => m.label === menu.label));
+      });
+      b.addEventListener('pointerenter', () => openMenu && openMenu !== b && showMenu(b, MENUS().find((m) => m.label === menu.label)));
+      bar.append(b);
+    }
+    bar.append(Object.assign(document.createElement('span'), { className: 'sp' }), Object.assign(document.createElement('span'), { className: 'tb', id: 'romInfo', textContent: 'SIN CARPETA' }));
+  }
+  addEventListener('click', closeMenu);
+  addEventListener('blur', closeMenu);
+  addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && openMenu) return closeMenu();
+    const key = `${e.ctrlKey || e.metaKey ? 'Ctrl+' : ''}${e.key === 'Enter' ? 'Enter' : e.key.length === 1 ? e.key.toUpperCase() : e.key}`;
+    for (const menu of MENUS())
+      for (const item of menu.items)
+        if (item !== 'separator' && item.shortcut === key && (value(item.enabled) ?? true)) {
+          e.preventDefault();
+          return item.action();
+        }
+  });
 
   // ------------------------------------------------------------ Cass
 
