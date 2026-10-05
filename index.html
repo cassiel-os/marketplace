@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Neo Arcade</title>
+    <link rel="stylesheet" href="/sdk/cassiel.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <aside class="library">
+      <header class="lib-head">
+        <span>Biblioteca · <b id="count">0</b></span>
+        <span class="bios" id="bios" data-tooltip="neogeo.zip, el BIOS de Neo Geo, en tu carpeta de ROMs">BIOS <i>—</i></span>
+      </header>
+      <ul class="games" id="games" tabindex="0" role="listbox" aria-label="Juegos"></ul>
+      <button class="folder" id="folder" data-tooltip="La carpeta con tus ROMs (zip) y neogeo.zip">Elegir carpeta de ROMs…</button>
+    </aside>
+    <main class="stage">
+      <div class="screen" id="screen">
+        <img class="snap" id="snap" alt="" hidden />
+        <div class="empty" id="empty"></div>
+        <canvas id="canvas" hidden></canvas>
+      </div>
+      <footer class="info">
+        <span class="now" id="now"></span>
+        <span class="state" id="state"></span>
+      </footer>
+    </main>
+    <script src="/sdk/cassiel.js"></script>
+    <script src="nostalgist.js"></script>
+    <script src="games.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "id": "run.cassiel.neo-arcade",
+  "name": "Neo Arcade",
+  "version": "0.1.0",
+  "description": "Neo Geo and arcade games from your own ROMs, played by FinalBurn Neo (through Nostalgist), offline.",
+  "author": "Cassiel",
+  "category": "games",
+  "icon": "icon.svg",
+  "sdk": "1.0",
+  "entry": "index.html",
+  "window": {
+    "width": 900,
+    "height": 620,
+    "minWidth": 640,
+    "minHeight": 440,
+    "single": true
+  },
+  "permissions": ["files"]
+}
