@@ -1,0 +1,18 @@
+{
+  "id": "checkers",
+  "name": "Checkers",
+  "version": "1.0.0",
+  "description": "Play checkers against Cass.",
+  "author": "Cassiel",
+  "category": "games",
+  "icon": "icon.svg",
+  "entry": "index.html",
+  "window": {
+    "width": 560,
+    "height": 490,
+    "minWidth": 400,
+    "minHeight": 360,
+    "single": true
+  },
+  "permissions": ["assistant"]
+}

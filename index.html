@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Checkers</title>
+    <link rel="stylesheet" href="/sdk/cassiel.css" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="stage">
+      <div class="table">
+        <aside class="side">
+          <section class="card" id="card-white">
+            <div class="card-side">WHITE</div>
+            <svg class="buddy buddy-white" viewBox="0 0 32 32" aria-hidden="true">
+              <ellipse cx="16" cy="29" rx="11" ry="2.2" class="buddy-shadow" />
+              <path d="M5 27c0-7 4.6-11 11-11s11 4 11 11z" class="buddy-body" />
+              <circle cx="16" cy="9.5" r="6.5" class="buddy-head" />
+            </svg>
+            <div class="card-name">Cass</div>
+            <div class="card-status" id="status-white"></div>
+          </section>
+          <div class="vs" aria-hidden="true"><span>VS</span></div>
+          <section class="card" id="card-red">
+            <div class="card-side">RED</div>
+            <svg class="buddy buddy-red" viewBox="0 0 32 32" aria-hidden="true">
+              <ellipse cx="16" cy="29" rx="11" ry="2.2" class="buddy-shadow" />
+              <path d="M5 27c0-7 4.6-11 11-11s11 4 11 11z" class="buddy-body" />
+              <circle cx="16" cy="9.5" r="6.5" class="buddy-head" />
+            </svg>
+            <div class="card-name">You</div>
+            <div class="card-status" id="status-red"></div>
+          </section>
+          <div class="actions">
+            <button class="action" id="draw">DRAW</button>
+            <button class="action" id="resign">RESIGN</button>
+          </div>
+        </aside>
+        <div class="area" id="area">
+          <div class="board" id="board">
+            <div class="banner" id="banner" hidden>
+              <div class="banner-box">
+                <strong id="banner-text"></strong>
+                <button class="action" id="again">PLAY AGAIN</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script src="/sdk/cassiel.js"></script>
+    <script src="engine.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
