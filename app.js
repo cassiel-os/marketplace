@@ -12,9 +12,9 @@
   const webamp = new window.Webamp({
     __customMediaClass: SpotifyMedia,
     windowLayout: {
-      main: { position: { left: 8, top: 8 } },
-      equalizer: { position: { left: 8, top: 124 } },
-      playlist: { position: { left: 8, top: 240 }, size: { extraHeight: 4, extraWidth: 0 } },
+      main: { position: { left: 0, top: 0 } },
+      equalizer: { position: { left: 0, top: 116 } },
+      playlist: { position: { left: 0, top: 232 }, size: { extraHeight: 4, extraWidth: 0 } },
     },
     enableHotkeys: false,
     zIndex: 1,

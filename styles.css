@@ -18,15 +18,15 @@ input {
 }
 .deck {
   flex: none;
-  width: 291px;
+  width: 275px;
   background: #000;
   overflow: hidden;
 }
 /* Webamp centers its windows in their container: this one is their size, at the top. */
 .stage {
   position: relative;
-  width: 291px;
-  height: 480px;
+  width: 275px;
+  height: 464px;
 }
 
 /* --- The window: the generic frame, filling the rest. --- */
