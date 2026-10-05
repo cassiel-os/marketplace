@@ -1,0 +1,1109 @@
+/* Winamp 2's three windows drawn in CSS: the sizes, places and colors of its base skin
+   (1 unit = 1 pixel of the original), as shapes instead of pixels, so they stay sharp
+   at any size: straight edges, real diagonals, type for the lettering. */
+
+.deck {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  width: 275px;
+  height: 100%;
+  background: #000;
+}
+.wa-window {
+  position: relative;
+  flex: none;
+  width: 275px;
+  height: 116px;
+  overflow: hidden;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #fff;
+  user-select: none;
+}
+.wa-window[hidden] {
+  display: none;
+}
+.wa-window button {
+  position: absolute;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  color: inherit;
+  font: inherit;
+  line-height: 1;
+  outline: none;
+  cursor: default;
+}
+.wa-window input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  outline: none;
+}
+.wa-window input[type='range']::-webkit-slider-runnable-track {
+  height: 100%;
+  background: transparent;
+}
+.wa-window input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* ============================================================== title bars */
+/* Brushed dark, gold bars either side of the name (gray when the app is not active),
+   the window keys on the right. */
+.wa-window .titlebar {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 14px;
+  background:
+    var(--bars) var(--bar-a) 4px / var(--bar-a-w) 7px no-repeat,
+    var(--bars) var(--bar-b) 4px / var(--bar-b-w) 7px no-repeat,
+    linear-gradient(90deg, #5b5b62, #6c6c7e 36%, #75758c 62%, #6e6e81) 1px 1px / 273px 1px no-repeat,
+    linear-gradient(#5b5b62, #5b5b62) 1px 1px / 1px 13px no-repeat,
+    linear-gradient(90deg, #13131e 0%, #1c1c2b 15%, #2c2c45 36%, #39395a 62%, #30304b 89%, #222235 100%),
+    #0d0d14;
+  --bars: linear-gradient(180deg, #1e1f25 0 1px, #87774c 1px 2px, #909090 2px 3px, #31302d 3px 4px, #645b44 4px 5px, #87774c 5px 6px, #242529 6px 7px);
+}
+body.active .wa-window .titlebar {
+  --bars: linear-gradient(180deg, #1e1f25 0 1px, #ecce7a 1px 2px, #ffffff 2px 3px, #45413c 3px 4px, #a3946a 4px 5px, #ecce7a 5px 6px, #25262c 6px 7px);
+}
+.wa-window .t-name {
+  position: absolute;
+  top: 3px;
+  color: #f0f0f6;
+  font: 700 7.5px/9px Arial, Helvetica, sans-serif;
+  text-align: center;
+  text-shadow: 0 1px 0 #3a3a50;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.main .titlebar {
+  --bar-a: 20px;
+  --bar-a-w: 87px;
+  --bar-b: 168px;
+  --bar-b-w: 75px;
+}
+.main .t-name {
+  left: 107px;
+  width: 61px;
+  letter-spacing: 1.6px;
+}
+.eq .titlebar {
+  --bar-a: 7px;
+  --bar-a-w: 84px;
+  --bar-b: 191px;
+  --bar-b-w: 62px;
+}
+.eq .t-name {
+  left: 91px;
+  width: 100px;
+  letter-spacing: 1.1px;
+}
+/* The window keys: a dark well with a shape. */
+.wa-window .tb {
+  top: 3px;
+  width: 9px;
+  height: 9px;
+  border-radius: 1px;
+  background: linear-gradient(160deg, #3c3c50, #20202e);
+  box-shadow: inset 0 0 0 1px #14141e;
+}
+.wa-window .tb:active {
+  background: #0e0e16;
+}
+.wa-window .tb::after {
+  content: '';
+  position: absolute;
+}
+.wa-window .tb.minimize {
+  left: 244px;
+}
+.wa-window .tb.shade {
+  left: 254px;
+}
+.wa-window .tb.close {
+  left: 264px;
+}
+.wa-window .tb.minimize::after {
+  inset: 5px 2px 2px;
+  background: linear-gradient(90deg, #9aa0ac, #dfe3ea);
+}
+.wa-window .tb.shade::after {
+  inset: 2px 2px 5px;
+  background: linear-gradient(90deg, #9aa0ac, #dfe3ea);
+}
+.wa-window .tb.close::after {
+  inset: 1.5px;
+  background: linear-gradient(135deg, #f1e3a8, #b9a056);
+  clip-path: polygon(0 14%, 14% 0, 50% 36%, 86% 0, 100% 14%, 64% 50%, 100% 86%, 86% 100%, 50% 64%, 14% 100%, 0 86%, 36% 50%);
+}
+/* The options key: Winamp's little wave, gold. */
+.wa-window .tb.option {
+  left: 6px;
+  background: none;
+  box-shadow: none;
+}
+.wa-window .tb.option::after {
+  inset: 1px 0;
+  background: linear-gradient(135deg, #f6e08c, #a77e24);
+  clip-path: polygon(0 75%, 25% 10%, 50% 75%, 75% 10%, 100% 75%, 100% 95%, 75% 35%, 50% 100%, 25% 35%, 0 100%);
+}
+
+/* ============================================================== the main window */
+/* Its face: frame lines, the brushed panel, the display, the boxes for the song, kbps
+   and kHz, the position groove. Each layer a rectangle. */
+.main {
+  background:
+    /* display: right and bottom highlight, top and left shadow */
+    linear-gradient(#6f6f83, #717186) 103px 23px / 1px 42px no-repeat,
+    linear-gradient(90deg, #666675, #717186) 12px 64px / 91px 1px no-repeat,
+    linear-gradient(#101019, #101019) 11px 22px / 92px 1px no-repeat,
+    linear-gradient(#101019, #101019) 11px 22px / 1px 42px no-repeat,
+    /* display: the blue axes of the analyzer (dotted) */
+    repeating-linear-gradient(180deg, #005284 0 1px, transparent 1px 2px) 22px 42px / 1px 17px no-repeat,
+    repeating-linear-gradient(90deg, #5e95ea 0 1px, transparent 1px 2px) 22px 60px / 81px 1px no-repeat,
+    /* display: black, with its faint dot grid */
+    radial-gradient(circle at 1.5px 1.5px, #181829 0.55px, transparent 0.75px) 12px 23px / 2px 2px,
+    linear-gradient(#000, #000) 12px 23px / 91px 41px no-repeat,
+    /* song box */
+    linear-gradient(#696978, #696978) 266px 23px / 1px 14px no-repeat,
+    linear-gradient(#74738a, #74738a) 109px 36px / 158px 1px no-repeat,
+    linear-gradient(#222235, #222235) 109px 23px / 157px 1px no-repeat,
+    linear-gradient(#222235, #222235) 109px 23px / 1px 13px no-repeat,
+    linear-gradient(#000, #000) 110px 24px / 156px 12px no-repeat,
+    /* kbps box */
+    linear-gradient(#737388, #737388) 127px 40px / 1px 12px no-repeat,
+    linear-gradient(#717186, #717186) 109px 51px / 19px 1px no-repeat,
+    linear-gradient(#20202f, #20202f) 109px 40px / 18px 1px no-repeat,
+    linear-gradient(#20202f, #20202f) 109px 40px / 1px 11px no-repeat,
+    linear-gradient(#000, #000) 110px 41px / 17px 10px no-repeat,
+    /* kHz box */
+    linear-gradient(#75758c, #75758c) 167px 40px / 1px 12px no-repeat,
+    linear-gradient(#717186, #717186) 153px 51px / 15px 1px no-repeat,
+    linear-gradient(#20202f, #20202f) 153px 40px / 14px 1px no-repeat,
+    linear-gradient(#20202f, #20202f) 153px 40px / 1px 11px no-repeat,
+    linear-gradient(#000, #000) 154px 41px / 13px 10px no-repeat,
+    /* position groove: dark top, highlights right and bottom */
+    linear-gradient(#656572, #656572) 264px 72px / 1px 10px no-repeat,
+    linear-gradient(90deg, #626270, #717186) 16px 81px / 249px 1px no-repeat,
+    linear-gradient(#101019, #101019) 16px 72px / 248px 2px no-repeat,
+    linear-gradient(#101019, #101019) 16px 72px / 1px 9px no-repeat,
+    linear-gradient(90deg, #1a1a27, #2b2b44 35%, #2b2b44 80%, #1e1e2f) 17px 74px / 247px 7px no-repeat,
+    /* the inner frame: one light line all around */
+    linear-gradient(90deg, #5c5c63, #737388 45%, #6f6f83 75%, #656572) 6px 14px / 266px 1px no-repeat,
+    linear-gradient(90deg, #62626d, #737388 40%, #6f6f83 75%, #656572) 4px 112px / 268px 1px no-repeat,
+    linear-gradient(#5c5c63, #62626d) 6px 14px / 1px 99px no-repeat,
+    linear-gradient(#656572, #656572) 271px 14px / 1px 99px no-repeat,
+    /* the outer edge: a light line inside a dark one */
+    linear-gradient(90deg, #5c5c63, #6d6d7f 36%, #74748b 72%, #696978) 1px 1px / 273px 1px no-repeat,
+    linear-gradient(#5c5c63, #62626d) 1px 1px / 1px 114px no-repeat,
+    linear-gradient(#696978, #5e5e6c) 273px 1px / 1px 114px no-repeat,
+    /* the brushed panel: dark at the left edge, lightest past the middle */
+    linear-gradient(90deg, #13131d 0%, #161521 8%, #1c1c2b 14%, #27273e 26%, #33334f 40%, #373757 52%, #353554 74%, #2c2c45 90%, #1c1c2b 97%, #161622 100%),
+    #0d0d14;
+}
+
+/* Gray beveled keys: transport, eject, shuffle, repeat, EQ and PL, and the equalizer's
+   and playlist's. Outer edge #adb5c6, inner highlight #efffff, face #bdced6, shadows
+   #7b8494 and #4a5a6b; pressed, the face darkens and the bevel turns over. */
+.wa-window .key {
+  background: #bdced6;
+  box-shadow:
+    inset 1px 1px 0 #adb5c6,
+    inset 2px 2px 0 #efffff,
+    inset -1px -1px 0 #4a5a6b,
+    inset -2px -2px 0 #7b8494,
+    inset -3px -3px 0 #adb5c6;
+  color: #2f374d;
+  font: 700 6.5px/1 Arial, Helvetica, sans-serif;
+  letter-spacing: 0.3px;
+}
+.wa-window .key:active {
+  background: #a6b5bf;
+  box-shadow:
+    inset 1px 1px 0 #4a5a6b,
+    inset 2px 2px 0 #7b8494,
+    inset -1px -1px 0 #efffff,
+    inset -2px -2px 0 #adb5c6;
+}
+.main .transport {
+  top: 88px;
+  width: 23px;
+  height: 18px;
+}
+.main .previous {
+  left: 16px;
+}
+.main .play {
+  left: 39px;
+}
+.main .pause {
+  left: 62px;
+}
+.main .stop-btn {
+  left: 85px;
+}
+.main .next {
+  left: 108px;
+  width: 22px;
+}
+.main .eject {
+  left: 136px;
+  top: 89px;
+  width: 22px;
+  height: 16px;
+}
+/* Their symbols: true shapes in the original's dark slate. */
+.main .transport::after,
+.main .eject::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  width: 9px;
+  height: 9px;
+  background: #2f374d;
+}
+.main .previous::after {
+  left: 6px;
+  width: 10px;
+  clip-path: polygon(0 0, 20% 0, 20% 44%, 100% 0, 100% 100%, 20% 56%, 20% 100%, 0 100%);
+}
+.main .play::after {
+  left: 7px;
+  width: 8px;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+.main .pause::after {
+  left: 6px;
+  background: linear-gradient(90deg, #2f374d 0 35%, transparent 35% 65%, #2f374d 65%);
+}
+.main .stop-btn::after {
+  left: 7px;
+}
+.main .next::after {
+  left: 5px;
+  width: 10px;
+  clip-path: polygon(0 0, 80% 44%, 80% 0, 100% 0, 100% 100%, 80% 100%, 80% 56%, 0 100%);
+}
+.main .eject::after {
+  left: 5px;
+  top: 3px;
+  width: 11px;
+  background:
+    linear-gradient(#4a5a6b, #4a5a6b) 0 7px / 100% 2px no-repeat,
+    linear-gradient(160deg, #97a8b9, #4a5a6b) 0 0 / 100% 6px no-repeat;
+  clip-path: polygon(50% 0, 100% 66%, 0 66%, 0 78%, 100% 78%, 100% 100%, 0 100%, 0 78%, 0 66%);
+}
+/* Shuffle, repeat, EQ, PL, ON and AUTO: a light in a sunken socket, then the label. */
+.main .shuffle {
+  left: 164px;
+  top: 89px;
+  width: 47px;
+  height: 15px;
+  padding: 4px 0 0 12px;
+  text-align: left;
+}
+.main .repeat {
+  left: 210px;
+  top: 89px;
+  width: 28px;
+  height: 15px;
+}
+.main .eq-btn,
+.main .pl-btn {
+  top: 58px;
+  width: 23px;
+  height: 12px;
+  padding: 3px 0 0 8px;
+  text-align: left;
+}
+.main .eq-btn {
+  left: 219px;
+}
+.main .pl-btn {
+  left: 242px;
+  padding-left: 9px;
+}
+.wa-window .toggle::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  width: 4px;
+  height: 4px;
+  background: #0c3d0c;
+  box-shadow: -1px -1px 0 #4a5a6b, 1px 1px 0 #d5def2;
+}
+.main .eq-btn::before,
+.main .pl-btn::before {
+  left: 3px;
+  top: 3px;
+  width: 3px;
+  height: 3px;
+}
+.wa-window .toggle.selected::before {
+  background: #00d600;
+  box-shadow: -1px -1px 0 #4a5a6b, 1px 1px 0 #d5def2, 0 0 3px #00d600;
+}
+/* Repeat: the loop arrow, as lines. */
+.main .repeat::after {
+  content: '';
+  position: absolute;
+  left: 12px;
+  top: 4px;
+  width: 9px;
+  height: 6px;
+  border: 1.4px solid #2f374d;
+  border-left-color: transparent;
+  border-radius: 0 2px 2px 0;
+  box-sizing: border-box;
+}
+
+/* --- The display: play state, time, the song, kbps, kHz, mono and stereo. --- */
+.main .state {
+  position: absolute;
+  left: 26px;
+  top: 28px;
+  width: 9px;
+  height: 9px;
+}
+.main .state::after {
+  content: '';
+  position: absolute;
+}
+.main.play .state::after {
+  left: 1px;
+  width: 7px;
+  height: 9px;
+  background: #00f000;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+.main.pause .state::after {
+  left: 1px;
+  top: 1px;
+  width: 7px;
+  height: 7px;
+  background: linear-gradient(90deg, #f0f000 0 35%, transparent 35% 65%, #f0f000 65%);
+}
+.main.stop .state::after {
+  left: 2px;
+  top: 2px;
+  width: 6px;
+  height: 6px;
+  background: #e02020;
+}
+.main .time {
+  left: 39px;
+  top: 26px;
+  width: 59px;
+  height: 13px;
+  color: #00f800;
+  font: 700 15px/13px var(--cassiel-font-mono, ui-monospace, monospace);
+  text-shadow: 0 0 2px rgb(0 248 0 / 0.45);
+}
+.main.stop .time {
+  visibility: hidden;
+}
+.main.pause .time {
+  animation: wa-blink 2s step-start 1s infinite;
+}
+@keyframes wa-blink {
+  50% {
+    visibility: hidden;
+  }
+}
+.main .time .d {
+  position: absolute;
+  top: 0;
+  width: 9px;
+  height: 13px;
+  text-align: center;
+}
+.main #m1 {
+  left: 9px;
+}
+.main #m2 {
+  left: 21px;
+}
+.main #s1 {
+  left: 39px;
+}
+.main #s2 {
+  left: 51px;
+}
+.main .time .colon {
+  position: absolute;
+  left: 33px;
+  top: 3px;
+  width: 2px;
+  height: 7px;
+  background: linear-gradient(#00f800 0 2px, transparent 2px 5px, #00f800 5px);
+}
+.main .time .minus {
+  position: absolute;
+  left: -1px;
+  top: 6px;
+  width: 5px;
+  height: 1.5px;
+  background: #00f800;
+  visibility: hidden;
+}
+.main.remaining .time .minus {
+  visibility: inherit;
+}
+/* The song, kbps and kHz: green type. */
+.main .marquee,
+.main .kbps,
+.main .khz {
+  position: absolute;
+  overflow: hidden;
+  color: #00f800;
+  font: 700 6.4px/6px Arial, Helvetica, sans-serif;
+  text-transform: uppercase;
+  white-space: pre;
+}
+.main .marquee {
+  left: 111px;
+  top: 27px;
+  width: 154px;
+  height: 7px;
+}
+.main .marquee span {
+  display: inline-block;
+}
+.main .kbps {
+  left: 111px;
+  top: 43px;
+  width: 15px;
+  height: 7px;
+  text-align: center;
+}
+.main .khz {
+  left: 156px;
+  top: 43px;
+  width: 10px;
+  height: 7px;
+  text-align: center;
+}
+.main .kbps-label,
+.main .khz-label {
+  position: absolute;
+  top: 42px;
+  color: #fff;
+  font: 700 7px/8px Arial, Helvetica, sans-serif;
+  letter-spacing: 0.2px;
+}
+.main .kbps-label {
+  left: 130px;
+}
+.main .khz-label {
+  left: 170px;
+}
+.main .mono,
+.main .stereo {
+  position: absolute;
+  top: 41px;
+  height: 12px;
+  color: #3b3b4c;
+  font: 700 7px/12px Arial, Helvetica, sans-serif;
+  letter-spacing: 0.2px;
+}
+.main .mono {
+  left: 212px;
+  width: 27px;
+}
+.main .stereo {
+  left: 239px;
+  width: 29px;
+}
+.main .mono.selected,
+.main .stereo.selected {
+  color: #00f800;
+  text-shadow: 0 0 3px rgb(0 248 0 / 0.5);
+}
+
+/* --- Sliders. --- */
+/* Volume and balance: a groove lit green to red as it rises (winamp.js moves the
+   strip, 15 per step). */
+.main .volume,
+.main .balance {
+  position: absolute;
+  top: 57px;
+  height: 13px;
+  background-image:
+    repeating-linear-gradient(180deg, transparent 0 3px, #101019 3px 4px, transparent 4px 8px, #3a3a52 8px 9px, transparent 9px 15px),
+    linear-gradient(180deg, transparent 4px, #1c6c14 4px 5px, #18920b 5px 8px, transparent 8px, transparent 19px, #2f811b 19px 20px, #34b215 20px 23px, transparent 23px, transparent 34px, #478627 34px 35px, #5aba28 35px 38px, transparent 38px, transparent 49px, #519b2c 49px 50px, #69da30 50px 53px, transparent 53px, transparent 64px, #5c9b2c 64px 65px, #7ada30 65px 68px, transparent 68px, transparent 79px, #61a02c 79px 80px, #81e230 80px 83px, transparent 83px, transparent 94px, #6da02c 94px 95px, #92e230 95px 98px, transparent 98px, transparent 109px, #77a031 109px 110px, #a4e238 110px 113px, transparent 113px, transparent 124px, #77a031 124px 125px, #a4e238 125px 128px, transparent 128px, transparent 139px, #88a031 139px 140px, #bde238 140px 143px, transparent 143px, transparent 154px, #8e9b2c 154px 155px, #c6da30 155px 158px, transparent 158px, transparent 169px, #8e9b2c 169px 170px, #c6da30 170px 173px, transparent 173px, transparent 184px, #8e9b2c 184px 185px, #c6da30 185px 188px, transparent 188px, transparent 199px, #8e9b2c 199px 200px, #c6da30 200px 203px, transparent 203px, transparent 214px, #9f9b2c 214px 215px, #e0da30 215px 218px, transparent 218px, transparent 229px, #9f902c 229px 230px, #e0c930 230px 233px, transparent 233px, transparent 244px, #9f902c 244px 245px, #e0c930 245px 248px, transparent 248px, transparent 259px, #9f902c 259px 260px, #e0c930 260px 263px, transparent 263px, transparent 274px, #9f8127 274px 275px, #e0b228 275px 278px, transparent 278px, transparent 289px, #9f6c27 289px 290px, #e09228 290px 293px, transparent 293px, transparent 304px, #9f6c27 304px 305px, #e09228 305px 308px, transparent 308px, transparent 319px, #9b5d21 319px 320px, #d97c1f 320px 323px, transparent 323px, transparent 334px, #8e5b17 334px 335px, #c6780f 335px 338px, transparent 338px, transparent 349px, #9f5721 349px 350px, #e0721e 350px 353px, transparent 353px, transparent 364px, #9f4921 364px 365px, #e05c1e 365px 368px, transparent 368px, transparent 379px, #9f3e21 379px 380px, #e04c1e 380px 383px, transparent 383px, transparent 394px, #9f2a1b 394px 395px, #e02c15 395px 398px, transparent 398px, transparent 409px, #9f161b 409px 410px, #e00e15 410px 413px, transparent 413px),
+    repeating-linear-gradient(180deg, transparent 0 4px, #0b1a0b 4px 8px, transparent 8px 15px);
+  background-repeat: no-repeat;
+}
+.main .volume {
+  left: 107px;
+  width: 68px;
+  background-size: 65px 420px;
+}
+.main .balance {
+  left: 177px;
+  width: 38px;
+  background-size: 38px 420px;
+}
+.main .volume input {
+  width: 65px;
+  height: 13px;
+}
+.main .balance input {
+  width: 38px;
+  height: 13px;
+}
+/* Their thumbs: gray, beveled, three grip lines. */
+.main .volume input::-webkit-slider-thumb,
+.main .balance input::-webkit-slider-thumb {
+  width: 14px;
+  height: 11px;
+  margin-top: 1px;
+  border-radius: 1px;
+  background:
+    linear-gradient(90deg, #0b0f16 0 1px, transparent 1px 2px, #0b0f16 2px 3px, transparent 3px 4px, #0b0f16 4px 5px) 4px 3px / 5px 4px no-repeat,
+    #adbcc4;
+  box-shadow:
+    inset 1px 1px 0 #dae7ea,
+    inset -1px -1px 0 #4a5a6b,
+    inset -2px -2px 0 #7b8494,
+    0 0 0 1px #0b0f16;
+}
+.main .volume input:active::-webkit-slider-thumb,
+.main .balance input:active::-webkit-slider-thumb {
+  background:
+    linear-gradient(90deg, #0b0f16 0 1px, transparent 1px 2px, #0b0f16 2px 3px, transparent 3px 4px, #0b0f16 4px 5px) 4px 3px / 5px 4px no-repeat,
+    #c7d6dd;
+}
+/* Position: the groove is on the face; the thumb is a gold bar with a slot. */
+.main .position {
+  position: absolute;
+  left: 16px;
+  top: 72px;
+  width: 248px;
+  height: 10px;
+}
+.main .position input {
+  width: 248px;
+  height: 10px;
+}
+.main .position input::-webkit-slider-thumb {
+  width: 29px;
+  height: 10px;
+  border-radius: 1px;
+  background:
+    linear-gradient(180deg, #755b22 0 1px, #f4eac7 1px 2px, #af9861 2px 4px) 4px 3px / 21px 4px no-repeat,
+    linear-gradient(180deg, #f4eac7, #dbcb9e 30%, #af9861 70%, #836930);
+  box-shadow:
+    inset 1px 1px 0 #dbcb9e,
+    inset -1px -1px 0 #8d753a,
+    1px 1px 0 #090202;
+}
+.main .position input:active::-webkit-slider-thumb {
+  background:
+    linear-gradient(180deg, #755b22 0 1px, #fff6dc 1px 2px, #c3ad74 2px 4px) 4px 3px / 21px 4px no-repeat,
+    linear-gradient(180deg, #fff6dc, #ecdcab 30%, #c3ad74 70%, #977b3a);
+}
+.main.stop .position input::-webkit-slider-thumb {
+  visibility: hidden;
+}
+
+/* --- The clutter bar (O A I D V) and the logo. --- */
+.main .clutter {
+  position: absolute;
+  left: 10px;
+  top: 22px;
+  width: 8px;
+  height: 43px;
+  padding-top: 3px;
+  box-sizing: border-box;
+  background: #15151f;
+  box-shadow: inset 0 0 0 1px #0a0a10;
+  color: #8e8ea8;
+  font: 700 6px/8px Arial, Helvetica, sans-serif;
+  text-align: center;
+}
+.main .clutter i {
+  display: block;
+  font-style: normal;
+}
+.main .logo {
+  position: absolute;
+  left: 253px;
+  top: 91px;
+  width: 13px;
+  height: 15px;
+}
+.main .logo::before {
+  content: '';
+  position: absolute;
+  left: -3px;
+  top: -2px;
+  width: 17px;
+  height: 17px;
+  border-radius: 4px;
+  transform: rotate(45deg) scale(0.82);
+  background: linear-gradient(180deg, #e9ebef, #9fa3ad);
+  box-shadow: inset 0 0 0 1px #5d6170;
+}
+.main .logo::after {
+  content: '';
+  position: absolute;
+  left: 1px;
+  top: 0;
+  width: 11px;
+  height: 15px;
+  background: linear-gradient(160deg, #f3d27a, #b5822a 55%, #6b4a12);
+  clip-path: polygon(62% 0, 8% 58%, 44% 58%, 30% 100%, 92% 38%, 54% 38%, 74% 0);
+}
+
+/* ============================================================== the equalizer */
+/* Its face: the frame lines, the brushed panel (a glow behind the preamp), the guide
+   dashes at +12, 0 and -12 dB. */
+.eq {
+  background:
+    /* guide dashes: by the preamp, then between the bands */
+    var(--dash-a) 16px 39px / 25px 1px no-repeat,
+    var(--dash-a) 16px 68px / 25px 1px no-repeat,
+    var(--dash-a) 16px 98px / 25px 1px no-repeat,
+    var(--dash) 73px 39px / 185px 1px no-repeat,
+    var(--dash) 73px 68px / 185px 1px no-repeat,
+    var(--dash) 73px 98px / 185px 1px no-repeat,
+    /* inner frame: light lines left, top, and the outer ones right and bottom */
+    linear-gradient(#5c5c64, #5c5c64) 6px 14px / 1px 98px no-repeat,
+    linear-gradient(90deg, #5c5c64, #73738a 45%, #6c6c7e 80%, #686878) 6px 14px / 263px 1px no-repeat,
+    linear-gradient(90deg, #605f6a, #737388 40%, #6f6f83 75%, #605f6a) 4px 112px / 268px 1px no-repeat,
+    linear-gradient(#686878, #646471) 271px 1px / 1px 112px no-repeat,
+    linear-gradient(#5c5c64, #605f6a) 1px 1px / 1px 114px no-repeat,
+    /* the dark channel inside them */
+    linear-gradient(#14141f, #14141f) 4px 111px / 267px 1px no-repeat,
+    linear-gradient(#0f0f16, #101018) 4px 13px / 2px 99px no-repeat,
+    linear-gradient(#191927, #191927) 269px 14px / 2px 98px no-repeat,
+    /* the glow behind the preamp */
+    radial-gradient(12px 42px at 50% 50%, rgb(78 78 120 / 0.55), transparent) 9px 30px / 26px 84px no-repeat,
+    /* the brushed panel: dark at the left, lightest past the middle */
+    linear-gradient(90deg, #181825 0, #1e1e2f 12px, #242439 40px, #27273e 60px, #30304b 80px, #363554 100px, #383859 130px, #39395a 170px, #383859 210px, #353554 250px, #2a2a43 262px, #1c1c2c 272px, #14131e 275px),
+    #0d0d14;
+  --dash: repeating-linear-gradient(90deg, #d4d4d9 0 7px, transparent 7px 18px);
+  --dash-a: linear-gradient(90deg, #d4d4d9 0 5px, transparent 5px 19px, #d4d4d9 19px 25px);
+}
+.eq .db {
+  position: absolute;
+  left: 45px;
+  width: 22px;
+  color: #d4a80c;
+  font: 700 7px/8px Arial, Helvetica, sans-serif;
+  text-align: center;
+  white-space: nowrap;
+}
+.eq .db.plus {
+  top: 36px;
+}
+.eq .db.zero {
+  top: 64px;
+}
+.eq .db.minus {
+  top: 95px;
+}
+.eq .eq-on {
+  left: 14px;
+  top: 18px;
+  width: 26px;
+  height: 12px;
+}
+.eq .eq-auto {
+  left: 40px;
+  top: 18px;
+  width: 32px;
+  height: 12px;
+}
+.eq .eq-on,
+.eq .eq-auto {
+  padding: 2.5px 0 0 10px;
+  text-align: left;
+  letter-spacing: 0.4px;
+}
+.eq .eq-on::before,
+.eq .eq-auto::before {
+  left: 4px;
+  top: 4px;
+  width: 3px;
+  height: 2px;
+}
+.eq .eq-presets {
+  left: 217px;
+  top: 18px;
+  width: 44px;
+  height: 12px;
+  padding-right: 2px;
+  letter-spacing: 0.8px;
+  text-align: center;
+}
+.eq .eq-graph {
+  position: absolute;
+  left: 86px;
+  top: 17px;
+  width: 113px;
+  height: 19px;
+  overflow: visible;
+  pointer-events: none;
+}
+/* The bands: a slot lit in the level's color (--level), a gray knob at --knob, the
+   frequency under it. */
+.eq .band {
+  position: absolute;
+  top: 38px;
+  width: 14px;
+  height: 63px;
+  touch-action: none;
+}
+.eq .band::before {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 2px;
+  width: 6px;
+  height: 59px;
+  border-radius: 1px 1px 2px 2px;
+  background:
+    linear-gradient(90deg, #12121d 0 1px, transparent 1px 5px, #9393a5 5px),
+    linear-gradient(180deg, rgb(0 0 0 / 0.35), transparent 3px),
+    var(--level, #e0cd30);
+}
+.eq .band::after {
+  content: attr(data-name);
+  position: absolute;
+  left: -10px;
+  right: -10px;
+  top: 63px;
+  color: #d4d4d9;
+  font: 700 7px/8px Arial, Helvetica, sans-serif;
+  text-align: center;
+  pointer-events: none;
+}
+.eq .knob {
+  position: absolute;
+  left: 1px;
+  top: var(--knob, 25px);
+  width: 11px;
+  height: 11px;
+  background:
+    linear-gradient(180deg, #080810 0 1px, transparent 1px 2px, #080810 2px 3px) 3px 3px / 3px 3px no-repeat,
+    #adbdc6;
+  box-shadow:
+    inset 1px 1px 0 #080810,
+    inset 2px 2px 0 #dde6e9,
+    inset -1px -1px 0 #080810,
+    inset -2px -2px 0 #4a5a6b,
+    inset -3px -3px 0 #7b8494;
+}
+.eq .band.active .knob {
+  background:
+    linear-gradient(180deg, #080810 0 1px, transparent 1px 2px, #080810 2px 3px) 3px 3px / 3px 3px no-repeat,
+    #c7d6dd;
+}
+/* The presets: Winamp's gray menu. */
+.wa-menu {
+  position: absolute;
+  z-index: 5;
+  left: 160px;
+  top: 31px;
+  min-width: 100px;
+  margin: 0;
+  padding: 2px;
+  list-style: none;
+  background: #d4d0c8;
+  box-shadow:
+    inset 1px 1px 0 #fff,
+    inset -1px -1px 0 #404040,
+    1px 1px 0 #000;
+  color: #000;
+  font: 11px/1 Arial, Helvetica, sans-serif;
+}
+.wa-menu li {
+  padding: 3px 14px;
+}
+.wa-menu li:hover {
+  background: #0a246a;
+  color: #fff;
+}
+
+/* ============================================================== the playlist */
+/* The frame around the list: the title on top (20 high), a side column each way (12
+   left, 20 right with the scroll bar), the keys and displays under it (38 high). */
+.pl {
+  flex: 1;
+  min-height: 116px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  background:
+    /* outer light lines: left, and right */
+    linear-gradient(#6a6a7a, #5b5c64) 1px 1px / 1px calc(100% - 2px) no-repeat,
+    linear-gradient(#6a6a7a, #636370) calc(100% - 4px) 1px / 1px calc(100% - 4px) no-repeat,
+    /* inner left line, from under the title to the keys */
+    linear-gradient(#6a6a7a, #6a6a7a) 6px 14px / 1px calc(100% - 52px) no-repeat,
+    /* scroll column: its two light lines */
+    linear-gradient(#6a6a7a, #6a6a7a) calc(100% - 19px) 20px / 1px calc(100% - 58px) no-repeat,
+    linear-gradient(#6a6a7a, #6a6a7a) calc(100% - 8px) 20px / 1px calc(100% - 58px) no-repeat,
+    /* the brushed panel */
+    linear-gradient(90deg, #1d1d2d 0, #292940 4px, #2a2a42 12px, #32314d 40px, #3a395a 120px, #3d3c5f 175px, #353453 230px, #2b2a43 258px, #292940 268px, #1d1d2d 275px),
+    #1d1d2d;
+}
+.pl .titlebar {
+  height: 20px;
+  --bar-a: 7px;
+  --bar-a-w: 84px;
+  --bar-b: 185px;
+  --bar-b-w: 66px;
+  background:
+    var(--bars) var(--bar-a) 4px / var(--bar-a-w) 7px no-repeat,
+    var(--bars) var(--bar-b) 4px / var(--bar-b-w) 7px no-repeat,
+    /* inner frame's top line */
+    linear-gradient(90deg, #6b6b7c, #75758c 50%, #6c6c7d) 6px 14px / 263px 1px no-repeat,
+    linear-gradient(90deg, #5b5b62, #6c6c7e 36%, #75758c 62%, #6e6e81) 1px 1px / 273px 1px no-repeat,
+    linear-gradient(#6a6a7a, #6a6a7a) 1px 1px / 1px 19px no-repeat,
+    linear-gradient(#6a6a7a, #6a6a7a) 271px 1px / 1px 19px no-repeat,
+    linear-gradient(#1d1d2d, #1d1d2d) 4px 12px / 2px 8px no-repeat,
+    linear-gradient(90deg, #1d1d2d 0, #2a2a42 4px, #32314d 40px, #3a395a 120px, #3d3c5f 175px, #353453 230px, #2b2a43 262px, #1d1d2d 275px);
+}
+.pl .t-name {
+  left: 91px;
+  width: 94px;
+  letter-spacing: 1.3px;
+}
+.pl .tb.shade {
+  left: 254px;
+}
+.pl .tb.close {
+  left: 264px;
+}
+.pl-middle {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  margin: 20px 20px 0 12px;
+  background: #000;
+  box-shadow: -1px 0 0 #000, 1px 0 0 #000;
+}
+.pl-list {
+  position: absolute;
+  inset: 3px 0;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+  list-style: none;
+  outline: none;
+  font: 9px/13px Arial, Helvetica, sans-serif;
+}
+.pl-list::-webkit-scrollbar {
+  display: none;
+}
+.pl-list li {
+  display: flex;
+  height: 13px;
+  padding: 0 3px 0 2px;
+  color: #00ff00;
+  white-space: nowrap;
+}
+.pl-list li.current {
+  color: #fff;
+}
+.pl-list li.selected {
+  background: #0000c6;
+}
+.pl-list .n {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pl-list .d {
+  flex: none;
+  padding-left: 6px;
+}
+/* The scroll bar: in the right column, a gold thumb with its slot. */
+.pl-scroll {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: -15px;
+  width: 8px;
+}
+.pl-thumb {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 8px;
+  height: 18px;
+  border-radius: 1px;
+  background:
+    linear-gradient(90deg, #f4eac6 0 1px, #755c22 1px 2px, #b0995e 2px 3px) 2px 3px / 3px 12px no-repeat,
+    linear-gradient(90deg, #daca9c, #f4eac6 30%, #b0995e 75%, #8d7138);
+  box-shadow:
+    inset 1px 1px 0 #daca9c,
+    inset -1px -1px 0 #090202;
+}
+.pl-thumb:active {
+  filter: brightness(1.12);
+}
+
+.pl-bottom {
+  position: relative;
+  flex: none;
+  height: 38px;
+  background:
+    /* the list's bottom edge, the light line near the foot, the dark ones */
+    linear-gradient(90deg, #5f606a, #74748a 50%, #636370) 3px 0 / calc(100% - 7px) 1px no-repeat,
+    linear-gradient(90deg, #5b5c64, #75758c 50%, #5f606a) 3px 34px / calc(100% - 7px) 1px no-repeat,
+    linear-gradient(#0e0e16, #0e0e16) 3px 32px / calc(100% - 7px) 2px no-repeat,
+    linear-gradient(#0e0e16, #0e0e16) 0 37px / 100% 1px no-repeat,
+    linear-gradient(#5b5c64, #5b5c64) 3px 0 / 1px 34px no-repeat,
+    linear-gradient(90deg, #151621 0, #1d1e2e 50px, #333350 110px, #393859 128px, #353554 130px, #1f1f30 132px, #1f1f30 225px, #28283f 236px, #292940 250px, #1d1d2d 275px);
+}
+.pl-key {
+  top: 8px;
+  width: 22px;
+  height: 18px;
+  font-size: 6.5px;
+  text-align: center;
+}
+.pl-key::before {
+  content: '';
+  position: absolute;
+  left: -3px;
+  top: 0;
+  width: 3px;
+  height: 18px;
+  background: linear-gradient(90deg, #8192a5 0 1px, #edffff 1px 2px, #46505d 2px);
+}
+.pl-key.add {
+  left: 14px;
+}
+.pl-key.rem {
+  left: 43px;
+}
+.pl-key.sel {
+  left: 72px;
+}
+.pl-key.misc {
+  left: 101px;
+}
+.pl-key.list {
+  left: 231px;
+  line-height: 7px;
+}
+.pl-total,
+.pl-time {
+  position: absolute;
+  background: #000;
+  color: #00ff00;
+  font: 700 6.4px/10px Arial, Helvetica, sans-serif;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.pl-total {
+  left: 129px;
+  top: 7px;
+  width: 93px;
+  height: 11px;
+  padding-left: 3px;
+  box-sizing: border-box;
+  box-shadow: 0 1px 0 #636370;
+}
+.pl-time {
+  left: 187px;
+  top: 21px;
+  width: 35px;
+  height: 10px;
+  padding-right: 3px;
+  box-sizing: border-box;
+  text-align: right;
+  box-shadow: 0 1px 0 #636370;
+}
+/* The small transport: light gold shapes. */
+.pl-mini {
+  position: absolute;
+  left: 128px;
+  top: 22px;
+  display: flex;
+}
+.pl-mini .mini {
+  position: relative;
+  width: 10px;
+  height: 10px;
+}
+.pl-mini .mini::after {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  width: 6px;
+  height: 6px;
+  background: #e8d9a4;
+}
+.pl-mini .mini:active::after {
+  background: #fff;
+}
+.pl-mini .previous::after {
+  clip-path: polygon(0 0, 25% 0, 25% 40%, 100% 0, 100% 100%, 25% 60%, 25% 100%, 0 100%);
+}
+.pl-mini .play::after {
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+.pl-mini .pause::after {
+  background: linear-gradient(90deg, #e8d9a4 0 35%, transparent 35% 65%, #e8d9a4 65%);
+}
+.pl-mini .next::after {
+  clip-path: polygon(0 0, 75% 40%, 75% 0, 100% 0, 100% 100%, 75% 100%, 75% 60%, 0 100%);
+}
+.pl-mini .eject::after {
+  width: 7px;
+  clip-path: polygon(50% 0, 100% 55%, 0 55%, 0 72%, 100% 72%, 100% 100%, 0 100%);
+}
+.pl-arrow {
+  left: 260px;
+  width: 8px;
+  height: 5px;
+}
+.pl-arrow::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #8b8ea0;
+}
+.pl-arrow:active::after {
+  background: #c9ccd8;
+}
+.pl-arrow.up {
+  top: 2px;
+}
+.pl-arrow.up::after {
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+.pl-arrow.down {
+  top: 8px;
+}
+.pl-arrow.down::after {
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+.pl-grip {
+  position: absolute;
+  left: 256px;
+  top: 19px;
+  width: 14px;
+  height: 13px;
+  background: repeating-linear-gradient(135deg, transparent 0 2px, #5c5f72 2px 3px);
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+}

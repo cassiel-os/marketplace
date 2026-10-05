@@ -1,5 +1,5 @@
-/* Webamp (Winamp 2) on the left, its base skin made sharp by skin.css, and the Media
-   Library on the right, drawn in the same style with CSS. The window has no title bar
+/* Winamp 2 on the left (winamp.css), and the Media Library on the right, drawn in the
+   same style with CSS. The window has no title bar
    of the desktop's: the library's is it. */
 :root {
   --bg: #24243a;
@@ -40,16 +40,6 @@ button {
   color: inherit;
 }
 
-/* --- Webamp, on black: its windows at the column's top. --- */
-.deck {
-  flex: none;
-  width: 275px;
-  background: #000;
-}
-.stage {
-  position: relative;
-  width: 275px;
-}
 
 /* --- The library's window frame and title bar, as Winamp's. --- */
 .wa {
@@ -78,8 +68,7 @@ button {
     repeating-linear-gradient(180deg, #b9b9c6 0 1px, #5d5d70 1px 2px, transparent 2px 4px) center / calc(100% - 22px) 7px no-repeat,
     linear-gradient(180deg, #2d2d44, #1b1b29);
 }
-.title.active,
-body:focus-within .title {
+body.active .title {
   background:
     repeating-linear-gradient(180deg, var(--gold-hi) 0 1px, var(--gold-lo) 1px 2px, transparent 2px 4px) center / calc(100% - 22px) 7px no-repeat,
     linear-gradient(180deg, #2d2d44, #1b1b29);

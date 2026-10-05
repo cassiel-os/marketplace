@@ -1,10 +1,9 @@
-// Winamp for Spotify: Webamp (Winamp 2, its base skin made sharp) and a Media Library,
-// playing Spotify. Sign in (Premium plays); the library's tree has Search, Liked Songs
-// and your playlists; double-click a song to play from there in Webamp. Webamp drives
-// Spotify through SpotifyMedia (spotify.js). Its equalizer, balance and visualizer
-// cannot touch Spotify's protected sound. Cass can search, play, pause and skip.
+// Winamp for Spotify: Winamp 2 (winamp.js, player.js) and a Media Library, playing
+// Spotify. Sign in (Premium plays); the library's tree has Search, Liked Songs and your
+// playlists; double-click a song to play from there in Winamp. Cass can search, play,
+// pause and skip.
 (() => {
-  const { api, connect, device, SpotifyMedia, toTrack } = window.Spotify4Webamp;
+  const { api, connect, device } = window.SpotifyBridge;
   const auth = window.SpotifyAuth;
   const $ = (id) => document.getElementById(id);
 
@@ -22,105 +21,19 @@
   };
   window.addEventListener('spotify-error', (e) => status(e.detail));
 
-  // ---------------------------------------------------------------- Webamp
+  // ---------------------------------------------------------------- the player
 
-  // Its three windows stacked in the left column, the playlist down to the bottom (in
-  // Winamp's steps of 29 pixels). Made once the page has its final size.
-  const MAIN = 116;
-  const EQ = 116;
-  const PLAYLIST = 116;
-  const STEP = 29;
-  let webamp = null;
-  function place() {
-    const room = innerHeight;
-    const extraHeight = Math.max(0, Math.floor((room - MAIN - EQ - PLAYLIST) / STEP));
-    $('stage').style.height = `${MAIN + EQ + PLAYLIST + extraHeight * STEP}px`;
-    webamp = new window.Webamp({
-      __customMediaClass: SpotifyMedia,
-      windowLayout: {
-        main: { position: { left: 0, top: 0 } },
-        equalizer: { position: { left: 0, top: MAIN } },
-        playlist: { position: { left: 0, top: MAIN + EQ }, size: { extraHeight, extraWidth: 0 } },
-      },
-      enableHotkeys: false,
-      zIndex: 1,
-    });
-    // Its own close and minimize act on the Cassiel window.
-    webamp.onWillClose((cancel) => {
-      cancel();
-      window.cassiel.close();
-    });
-    webamp.onMinimize(() => window.cassiel.window.minimize());
-    webamp.renderInto($('stage')).then(eqShapes);
-  }
-
-  // The equalizer's lit parts, drawn as shapes (skin.css): each slider's slot in the
-  // color of its level, green at -12 dB to red at +12 as in Winamp's 28 steps, and the
-  // graph's curve through the ten bands with the preamp's line under it.
-  const LEVELS = [
-    '#2a9a16', '#2a9a16', '#5ab02c', '#71cd34', '#71cd34', '#89e230', '#89e230', '#a4e238', '#a4e238', '#c4db32',
-    '#c4db32', '#c4db32', '#c4db32', '#c4db32', '#e0cd30', '#e0cd30', '#e0cd30', '#e0cd30', '#e0b228', '#e09228',
-    '#e09228', '#dc771f', '#c6780f', '#dc771f', '#e0541e', '#e0541e', '#d3221b', '#d3221b',
-  ];
-  const BANDS = [60, 170, 310, 600, 1000, 3000, 6000, 12000, 14000, 16000];
-  const SVG = 'http://www.w3.org/2000/svg';
-  function eqShapes() {
-    const graph = document.createElementNS(SVG, 'svg');
-    graph.classList.add('eq-curve');
-    graph.setAttribute('viewBox', '0 0 113 19');
-    graph.innerHTML = `
-      <defs><linearGradient id="eq-heat" x1="0" y1="1" x2="0" y2="18" gradientUnits="userSpaceOnUse">
-        <stop offset="0" stop-color="#d3221b"/><stop offset="0.3" stop-color="#e09228"/>
-        <stop offset="0.5" stop-color="#e0cd30"/><stop offset="0.75" stop-color="#89e230"/>
-        <stop offset="1" stop-color="#2a9a16"/></linearGradient></defs>
-      <g stroke="#6c6c7e" stroke-width="1">${BANDS.map((_, i) => `<line x1="${2.5 + 12 * i}" y1="0" x2="${2.5 + 12 * i}" y2="19"/>`).join('')}</g>
-      <line class="preamp" x1="0" x2="113" stroke="#bacbdd" stroke-width="1"/>
-      <path class="curve" fill="none" stroke="url(#eq-heat)" stroke-width="1.2" stroke-linejoin="round"/>`;
-    const y = (value) => 1.5 + ((100 - value) / 100) * 16;
-    let last = null;
-    const draw = () => {
-      const sliders = webamp.store.getState().equalizer.sliders;
-      if (sliders === last && graph.isConnected) return;
-      last = sliders;
-      const eq = document.querySelector('#equalizer-window');
-      if (!eq) return;
-      if (!graph.isConnected) eq.append(graph);
-      for (const [key, value] of Object.entries(sliders)) {
-        const band = eq.querySelector(key === 'preamp' ? '#preamp' : `#band-${key}`);
-        band?.style.setProperty('--level', LEVELS[Math.round((value / 100) * 27)]);
-      }
-      const at = (value) => y(value).toFixed(2);
-      graph.querySelector('.preamp').setAttribute('y1', at(sliders.preamp));
-      graph.querySelector('.preamp').setAttribute('y2', at(sliders.preamp));
-      // A smooth curve through the bands (Catmull-Rom, as cubic Béziers).
-      const p = BANDS.map((band, i) => [2.5 + 12 * i, y(sliders[band])]);
-      let d = `M${p[0][0]},${p[0][1].toFixed(2)}`;
-      for (let i = 0; i < p.length - 1; i++) {
-        const [a, b, c, e] = [p[i - 1] ?? p[i], p[i], p[i + 1], p[i + 2] ?? p[i + 1]];
-        const c1 = [b[0] + (c[0] - a[0]) / 6, b[1] + (c[1] - a[1]) / 6];
-        const c2 = [c[0] - (e[0] - b[0]) / 6, c[1] - (e[1] - b[1]) / 6];
-        d += ` C${c1[0].toFixed(2)},${Math.min(18, Math.max(1, c1[1])).toFixed(2)} ${c2[0].toFixed(2)},${Math.min(18, Math.max(1, c2[1])).toFixed(2)} ${c[0]},${c[1].toFixed(2)}`;
-      }
-      graph.querySelector('.curve').setAttribute('d', d);
-    };
-    webamp.store.subscribe(draw);
-    draw();
-  }
-  if (document.readyState === 'complete') requestAnimationFrame(place);
-  else addEventListener('load', () => requestAnimationFrame(place), { once: true });
-
+  const player = window.WinampPlayer;
   const playList = (tracks, from = 0) => {
     const playable = tracks.filter((t) => t?.uri?.startsWith('spotify:track:'));
     if (!playable.length) return status('Nothing playable there.');
     if (!device.id) return status(device.error || 'Spotify is still starting on this device; try again in a moment.');
     status('');
-    device.player?.activateElement?.();
-    webamp?.setTracksToPlay(playable.map(toTrack));
-    if (from > 0) webamp?.setCurrentTrack(Math.min(from, playable.length - 1));
+    player.load(playable, from);
   };
   const enqueue = (tracks) => {
     const playable = tracks.filter((t) => t?.uri?.startsWith('spotify:track:'));
-    webamp?.appendTracks(playable.map(toTrack));
+    player.append(playable);
     status(`Added ${playable.length === 1 ? playable[0].name : `${playable.length} songs`} to the playlist.`);
   };
   device.listeners.add(() => device.error && status(device.error));
@@ -238,6 +151,11 @@
       renderRows();
     } else if (e.key === 'Enter' && rows[pick]) playList(rows, pick);
   });
+  // Winamp's eject and ADD: find music here.
+  window.addEventListener('winamp-find', () => {
+    $('query').focus();
+    $('query').select();
+  });
   addEventListener('keydown', (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') {
       e.preventDefault();
@@ -271,7 +189,7 @@
       if (!(await window.cassiel.dialog.confirm('Spotify', 'Sign out of Spotify in this app?', 'Sign out'))) return;
       auth.signOut();
       device.player?.disconnect();
-      webamp?.stop();
+      player.stop();
       await account();
       return openNode('search');
     }
@@ -328,10 +246,10 @@
         return `reproduciendo ${tracks[0].name} de ${artists(tracks[0])}`;
       },
     },
-    pause: { description: 'Pausa la música.', params: {}, run: () => (webamp?.pause(), 'en pausa') },
-    resume: { description: 'Sigue reproduciendo.', params: {}, run: () => (webamp?.play(), 'reproduciendo') },
-    next: { description: 'Pasa a la siguiente canción.', params: {}, run: () => (webamp?.nextTrack(), 'siguiente canción') },
-    previous: { description: 'Regresa a la canción anterior.', params: {}, run: () => (webamp?.previousTrack(), 'canción anterior') },
+    pause: { description: 'Pausa la música.', params: {}, run: () => (player.state.status === 'play' && player.pause(), 'en pausa') },
+    resume: { description: 'Sigue reproduciendo.', params: {}, run: () => (player.state.status !== 'play' && player.play(), 'reproduciendo') },
+    next: { description: 'Pasa a la siguiente canción.', params: {}, run: () => (player.next(), 'siguiente canción') },
+    previous: { description: 'Regresa a la canción anterior.', params: {}, run: () => (player.previous(), 'canción anterior') },
     now: { description: 'Qué canción está sonando.', params: {}, run: nowPlaying },
   };
   for (const [name, action] of Object.entries(actions)) window.cassiel.actions.register(name, action);
