@@ -8,112 +8,107 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="columns">
-      <main class="stack">
-        <!-- The player, with the window's own title bar. -->
-        <section class="win" id="main">
-          <header class="bar" data-window-drag>
-            <span class="bar-name">WINAMP FOR SPOTIFY</span>
-            <span class="bar-buttons">
-              <button class="tiny" data-window-action="minimize" aria-label="Minimize" data-tooltip="Minimize">_</button>
-              <button class="tiny" data-window-action="maximize" aria-label="Maximize" data-tooltip="Maximize">□</button>
-              <button class="tiny" data-window-action="close" aria-label="Close" data-tooltip="Close">×</button>
-            </span>
-          </header>
-          <div class="body">
-            <div class="top">
-              <div class="lcd display" id="display" data-tooltip="Elapsed or remaining time">
-                <span class="clutter" aria-hidden="true">O<br />A<br />I<br />D<br />V</span>
-                <span class="state" id="state">■</span>
-                <span class="time" id="time">00:00</span>
-                <span class="viz" id="viz" aria-hidden="true"></span>
-              </div>
-              <div class="side">
-                <div class="lcd marquee"><span id="song">WINAMP FOR SPOTIFY</span></div>
-                <div class="facts">
-                  <span class="lcd small" id="album">SPOTIFY</span>
-                  <span class="lcd small" id="device">...</span>
-                  <span class="lit">STEREO</span>
-                </div>
-                <div class="row">
-                  <input type="range" class="volume" id="volume" min="0" max="100" value="66" aria-label="Volume" data-tooltip="Volume" />
-                  <button class="btn light" id="eqToggle" aria-pressed="true">EQ</button>
-                  <button class="btn light" id="plToggle" aria-pressed="true">PL</button>
-                </div>
-              </div>
-            </div>
-            <input type="range" class="seek" id="seek" min="0" max="1000" value="0" aria-label="Position" />
-            <div class="transport">
-              <button class="key" id="prev" aria-label="Previous"><svg viewBox="0 0 24 24"><path d="M6 6h2.4v12H6zM19 6v12l-9-6z" /></svg></button>
-              <button class="key" id="play" aria-label="Play"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l10-6.5z" /></svg></button>
-              <button class="key" id="pause" aria-label="Pause"><svg viewBox="0 0 24 24"><path d="M7 6h3.6v12H7zM13.4 6H17v12h-3.6z" /></svg></button>
-              <button class="key" id="stop" aria-label="Stop"><svg viewBox="0 0 24 24"><path d="M7 7h10v10H7z" /></svg></button>
-              <button class="key" id="next" aria-label="Next"><svg viewBox="0 0 24 24"><path d="M15.6 6H18v12h-2.4zM5 6v12l9-6z" /></svg></button>
-              <button class="key eject" id="eject" aria-label="Find music" data-tooltip="Find music"><svg viewBox="0 0 24 24"><path d="M12 6l7 7.5H5zM5 15.5h14V18H5z" /></svg></button>
-              <span class="spacer"></span>
-              <button class="btn light" id="shuffle" aria-pressed="false">SHUFFLE</button>
-              <button class="btn light" id="repeat" aria-pressed="false" data-tooltip="Repeat the list, or one song">REPEAT</button>
-              <span class="bolt" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M13.5 2 5 13.5h5.5L9 22l9-12h-5.6z" /></svg></span>
-            </div>
-          </div>
-        </section>
-
-        <section class="win" id="eq">
-          <header class="bar" data-window-drag><span class="bar-name">EQUALIZER</span></header>
-          <div class="body">
-            <div class="eq-head">
-              <button class="btn light" disabled>ON</button>
-              <button class="btn light" disabled>AUTO</button>
-              <span class="lcd graph"><svg viewBox="0 0 160 30" preserveAspectRatio="none"><path d="M0 15H160" /></svg></span>
-              <button class="btn" disabled>PRESETS</button>
-            </div>
-            <div class="bands" id="bands"></div>
-            <p class="note">Spotify sends its music protected: nothing here can shape the sound.</p>
-          </div>
-        </section>
-
-        <section class="win grow" id="pl">
-          <header class="bar" data-window-drag><span class="bar-name">PLAYLIST</span></header>
-          <div class="body">
-            <ol class="lcd queue" id="queue" tabindex="0"></ol>
-            <div class="pl-foot">
-              <div class="menu">
-                <button class="btn" id="add">ADD</button>
-                <div class="dropdown" id="addMenu" hidden>
-                  <button data-go="search">Search Spotify…</button>
-                  <button data-go="playlists">My playlists</button>
-                  <button data-go="liked">Liked Songs</button>
-                </div>
-              </div>
-              <button class="btn" id="clear">CLEAR</button>
-              <span class="spacer"></span>
-              <span class="mini">
-                <button class="key small" data-act="prev" aria-label="Previous"><svg viewBox="0 0 24 24"><path d="M6 6h2.4v12H6zM19 6v12l-9-6z" /></svg></button>
-                <button class="key small" data-act="play" aria-label="Play"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l10-6.5z" /></svg></button>
-                <button class="key small" data-act="pause" aria-label="Pause"><svg viewBox="0 0 24 24"><path d="M7 6h3.6v12H7zM13.4 6H17v12h-3.6z" /></svg></button>
-                <button class="key small" data-act="stop" aria-label="Stop"><svg viewBox="0 0 24 24"><path d="M7 7h10v10H7z" /></svg></button>
-                <button class="key small" data-act="next" aria-label="Next"><svg viewBox="0 0 24 24"><path d="M15.6 6H18v12h-2.4zM5 6v12l9-6z" /></svg></button>
-              </span>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <aside class="win library">
-        <header class="bar" data-window-drag><span class="bar-name">LIBRARY</span></header>
-        <div class="body">
-          <div class="account"><span id="who">Not signed in</span><button class="btn" id="sign">SIGN IN</button></div>
-          <form id="search"><input class="lcd" id="query" type="search" placeholder="Search Spotify" autocomplete="off" /></form>
-          <nav class="tabs" role="tablist">
-            <button class="btn" role="tab" data-tab="search" aria-selected="true">SEARCH</button>
-            <button class="btn" role="tab" data-tab="playlists">PLAYLISTS</button>
-            <button class="btn" role="tab" data-tab="liked">LIKED</button>
-          </nav>
-          <ul class="lcd results" id="results" tabindex="0"></ul>
-          <p class="status" id="status">Unofficial. Not made by or affiliated with Spotify or Winamp.</p>
+    <div class="stack">
+      <!-- The main window: Winamp 2's layout, to the pixel, drawn as vectors. -->
+      <section class="wa main" id="main">
+        <header class="title active" data-window-drag>
+          <span class="t-icon" aria-hidden="true"></span>
+          <span class="t-name">WINAMP</span>
+          <button class="t-btn min" data-window-action="minimize" aria-label="Minimize" data-tooltip="Minimize"></button>
+          <button class="t-btn shade" data-window-action="maximize" aria-label="Maximize" data-tooltip="Maximize"></button>
+          <button class="t-btn close" data-window-action="close" aria-label="Close" data-tooltip="Close"></button>
+        </header>
+        <div class="clutter" aria-hidden="true"><b>O</b><b>A</b><b>I</b><b>D</b><b>V</b></div>
+        <div class="display" id="display" data-tooltip="Elapsed or remaining time">
+          <span class="playstate" id="state" data-state="stop"></span>
+          <span class="time" id="time">00:00</span>
+          <span class="viz" id="viz" aria-hidden="true"></span>
         </div>
-      </aside>
+        <div class="songbox"><span id="song">Winamp for Spotify</span></div>
+        <span class="lcdbox kbps" id="kbps"></span><span class="lbl kbps-l">kbps</span>
+        <span class="lcdbox khz" id="khz"></span><span class="lbl khz-l">kHz</span>
+        <span class="lbl mono">mono</span><span class="lbl stereo" id="stereo">stereo</span>
+        <input type="range" class="volume" id="volume" min="0" max="100" value="66" aria-label="Volume" data-tooltip="Volume" />
+        <input type="range" class="balance" min="-100" max="100" value="0" aria-label="Balance" disabled data-tooltip="Balance: Spotify's sound cannot be panned here" />
+        <button class="tog eqb" id="eqToggle" aria-pressed="true">EQ</button>
+        <button class="tog plb" id="plToggle" aria-pressed="true">PL</button>
+        <input type="range" class="posbar" id="seek" min="0" max="1000" value="0" aria-label="Position" />
+        <div class="cbuttons">
+          <button class="cb prev" id="prev" aria-label="Previous"></button>
+          <button class="cb play" id="play" aria-label="Play"></button>
+          <button class="cb pause" id="pause" aria-label="Pause"></button>
+          <button class="cb stop" id="stop" aria-label="Stop"></button>
+          <button class="cb next" id="next" aria-label="Next"></button>
+        </div>
+        <button class="cb eject" id="eject" aria-label="Find music" data-tooltip="Find music"></button>
+        <button class="tog shuffle" id="shuffle" aria-pressed="false">SHUFFLE</button>
+        <button class="tog repeat" id="repeat" aria-pressed="false" aria-label="Repeat" data-tooltip="Repeat the list, one song, or off"></button>
+        <span class="about" aria-hidden="true"></span>
+      </section>
+
+      <!-- The equalizer, as it looks; Spotify's audio cannot be shaped. -->
+      <section class="wa eq" id="eq" data-tooltip="Spotify sends its music protected: the equalizer cannot shape it.">
+        <header class="title" data-window-drag><span class="t-name">WINAMP EQUALIZER</span></header>
+        <button class="tog eq-on" disabled>ON</button>
+        <button class="tog eq-auto" disabled>AUTO</button>
+        <span class="eq-graph"><i></i></span>
+        <button class="small-btn presets" disabled>PRESETS</button>
+        <div class="eq-sliders" id="bands"></div>
+        <span class="db top">+12 db</span><span class="db mid">+0 db</span><span class="db bot">-12 db</span>
+        <span class="eq-l preamp-l">PREAMP</span>
+      </section>
+
+      <!-- The playlist: what was sent to Spotify. -->
+      <section class="wa pl" id="pl">
+        <header class="title" data-window-drag><span class="t-name">WINAMP PLAYLIST</span></header>
+        <ol class="pl-list" id="queue" tabindex="0"></ol>
+        <footer class="pl-bottom">
+          <div class="menu">
+            <button class="small-btn" id="add">ADD</button>
+            <div class="dropdown" id="addMenu" hidden>
+              <button data-go="search">Search Spotify…</button>
+              <button data-go="liked">Liked Songs</button>
+              <button data-go="playlists">My playlists</button>
+            </div>
+          </div>
+          <button class="small-btn" id="rem" data-tooltip="Remove the selected song from this list">REM</button>
+          <button class="small-btn" id="sel" data-tooltip="Select all">SEL</button>
+          <button class="small-btn" id="clear" data-tooltip="Clear the list">MISC</button>
+          <span class="pl-info"><span id="plTotal">0:00/0:00</span></span>
+          <span class="pl-mini">
+            <button data-act="prev" aria-label="Previous"></button><button data-act="play" aria-label="Play"></button><button data-act="pause" aria-label="Pause"></button><button data-act="stop" aria-label="Stop"></button><button data-act="next" aria-label="Next"></button><button data-act="eject" aria-label="Find music"></button>
+          </span>
+          <span class="pl-time" id="plTime">00:00</span>
+          <button class="small-btn list" data-tooltip="Clear the list" id="listOpts">LIST<br />OPTS</button>
+        </footer>
+      </section>
     </div>
+
+    <!-- The Media Library: Spotify, as Winamp's library shows a collection. -->
+    <section class="wa ml" id="ml">
+      <header class="title" data-window-drag><span class="t-name">WINAMP LIBRARY</span></header>
+      <div class="ml-body">
+        <div class="ml-side">
+          <ul class="tree" id="tree" tabindex="0"></ul>
+          <button class="ml-btn" id="sign">Sign in</button>
+        </div>
+        <div class="ml-main">
+          <form class="ml-search" id="search">
+            <label for="query">Search:</label>
+            <input id="query" type="search" autocomplete="off" />
+            <button type="button" class="ml-btn" id="clearSearch">Clear Search</button>
+          </form>
+          <div class="grid">
+            <div class="grid-head"><span>Artist</span><span>Album</span><span>Track #</span><span>Title</span><span>Length</span></div>
+            <ul class="grid-rows" id="results" tabindex="0"></ul>
+          </div>
+          <div class="ml-foot">
+            <button class="ml-btn" id="mlPlay">Play</button><button class="ml-btn arrow" id="mlEnqueue" data-tooltip="Add to the playlist">Enqueue</button>
+            <span class="ml-status" id="status"></span>
+          </div>
+        </div>
+      </div>
+    </section>
     <script src="/sdk/cassiel.js"></script>
     <script src="auth.js"></script>
     <script src="spotify.js"></script>
