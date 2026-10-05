@@ -1,0 +1,30 @@
+{
+  "apps": [
+    {
+      "id": "run.cassiel.checkers",
+      "name": "Checkers",
+      "version": "1.0.0",
+      "description": "Play checkers against Cass.",
+      "author": "Cassiel",
+      "category": "games",
+      "sdk": "1.0",
+      "icon": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/run.cassiel.checkers/icon.svg",
+      "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/run.cassiel.checkers/run.cassiel.checkers-1.0.0.capp",
+      "bytes": 12312,
+      "sha256": "d161a3735a7f98b901c6dcca35e6d382d94cab86eb746daa187ae373627fbc9e"
+    },
+    {
+      "id": "run.cassiel.paint",
+      "name": "Paint",
+      "version": "0.2.0",
+      "description": "Draw, paint and edit pictures.",
+      "author": "Cassiel",
+      "category": "accessories",
+      "sdk": "1.0",
+      "icon": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/run.cassiel.paint/icon.svg",
+      "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/run.cassiel.paint/run.cassiel.paint-0.2.0.capp",
+      "bytes": 229984,
+      "sha256": "b95b07d89965d47f0d2f43138c593ef891fa2e8705696bc678217072ff45f8c2"
+    }
+  ]
+}
