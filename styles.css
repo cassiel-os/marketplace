@@ -1,0 +1,134 @@
+/* Webamp on the left, on black, its three windows stacked (and movable); Spotify's
+   side on the right in Cassiel's look: the account, search, and lists to play. */
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+body {
+  display: flex;
+  background: var(--cassiel-bg);
+  color: var(--cassiel-text);
+  font-size: var(--cassiel-text-sm, 11px);
+}
+.deck {
+  position: relative;
+  flex: none;
+  width: 291px;
+  background: #0f0f17;
+  overflow: hidden;
+}
+.library {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  border-left: var(--cassiel-hairline, 1px) solid var(--cassiel-border);
+}
+.account {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-bottom: var(--cassiel-hairline, 1px) solid var(--cassiel-border);
+}
+.account span {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.search {
+  padding: 6px 8px 4px;
+}
+.search input {
+  width: 100%;
+  box-sizing: border-box;
+}
+.tabs {
+  display: flex;
+  gap: 2px;
+  padding: 0 8px;
+  border-bottom: var(--cassiel-hairline, 1px) solid var(--cassiel-border);
+}
+.tabs button {
+  min-width: 0;
+  padding: 4px 8px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  color: var(--cassiel-text-muted);
+}
+.tabs button[aria-selected='true'] {
+  border-bottom-color: var(--cassiel-accent);
+  color: var(--cassiel-text);
+}
+.list {
+  flex: 1;
+  min-height: 0;
+  margin: 0;
+  padding: 4px 0;
+  overflow: auto;
+  list-style: none;
+  outline: none;
+}
+.list li {
+  display: grid;
+  grid-template-columns: 32px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 8px;
+  cursor: default;
+}
+.list li:hover {
+  background: var(--cassiel-pane-bg);
+}
+.list li[aria-selected='true'] {
+  background: var(--cassiel-accent);
+  color: var(--cassiel-accent-text, #fff);
+}
+.list li[aria-selected='true'] small {
+  color: inherit;
+}
+.list img,
+.list .noart {
+  width: 32px;
+  height: 32px;
+  border-radius: 2px;
+  object-fit: cover;
+  background: var(--cassiel-pane-header);
+}
+.list .text {
+  min-width: 0;
+}
+.list strong,
+.list small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.list strong {
+  font-weight: 500;
+}
+.list small {
+  color: var(--cassiel-text-muted);
+}
+.list .time {
+  color: var(--cassiel-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+.list .note {
+  display: block;
+  padding: 16px 12px;
+  color: var(--cassiel-text-muted);
+  text-align: center;
+}
+.status {
+  padding: 4px 8px;
+  border-top: var(--cassiel-hairline, 1px) solid var(--cassiel-border);
+  color: var(--cassiel-text-muted);
+}

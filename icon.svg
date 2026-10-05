@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- A classic player's face: a dark panel with a green spectrum and a time readout. -->
+  <defs>
+    <linearGradient id="panel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3a3a52"/>
+      <stop offset="1" stop-color="#1c1c28"/>
+    </linearGradient>
+    <linearGradient id="bar" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#1ed760"/>
+      <stop offset="0.6" stop-color="#c8f04a"/>
+      <stop offset="1" stop-color="#ffcc33"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="10" width="56" height="44" rx="5" fill="url(#panel)" stroke="#0d0d14" stroke-width="2"/>
+  <rect x="9" y="15" width="46" height="26" rx="2" fill="#000"/>
+  <g fill="url(#bar)">
+    <rect x="12" y="29" width="4" height="10"/>
+    <rect x="18" y="22" width="4" height="17"/>
+    <rect x="24" y="26" width="4" height="13"/>
+    <rect x="30" y="19" width="4" height="20"/>
+    <rect x="36" y="24" width="4" height="15"/>
+    <rect x="42" y="30" width="4" height="9"/>
+    <rect x="48" y="26" width="4" height="13"/>
+  </g>
+  <g fill="#c9c9d8">
+    <rect x="10" y="45" width="8" height="5" rx="1"/>
+    <rect x="20" y="45" width="8" height="5" rx="1"/>
+    <rect x="30" y="45" width="8" height="5" rx="1"/>
+  </g>
+  <rect x="42" y="46" width="12" height="3" rx="1.5" fill="#1ed760"/>
+</svg>

@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Winamp for Spotify</title>
+    <link rel="stylesheet" href="/sdk/cassiel.css" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="deck" id="deck"></div>
+    <aside class="library">
+      <header class="account">
+        <span id="who">Not signed in</span>
+        <button id="sign">Sign in with Spotify</button>
+      </header>
+      <form class="search" id="search">
+        <input id="query" type="search" placeholder="Search songs, artists, albums, playlists" autocomplete="off" />
+      </form>
+      <nav class="tabs" role="tablist">
+        <button role="tab" data-tab="search" aria-selected="true">Search</button>
+        <button role="tab" data-tab="playlists">Playlists</button>
+        <button role="tab" data-tab="liked">Liked Songs</button>
+      </nav>
+      <ul class="list" id="list" tabindex="0"></ul>
+      <footer class="status" id="status">Unofficial. Not made by or affiliated with Spotify or Winamp.</footer>
+    </aside>
+    <script src="/sdk/cassiel.js"></script>
+    <script src="webamp.js"></script>
+    <script src="auth.js"></script>
+    <script src="spotify.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
