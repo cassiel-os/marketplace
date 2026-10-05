@@ -8,18 +8,34 @@
   const $ = (id) => document.getElementById(id);
   const list = $('list');
 
-  // Webamp, its windows stacked in the left column; they can still be moved.
-  const webamp = new window.Webamp({
-    __customMediaClass: SpotifyMedia,
-    windowLayout: {
-      main: { position: { left: 8, top: 8 } },
-      equalizer: { position: { left: 8, top: 124 } },
-      playlist: { position: { left: 8, top: 240 }, size: { extraHeight: 4, extraWidth: 0 } },
-    },
-    enableHotkeys: false,
-    zIndex: 1,
-  });
-  webamp.renderInto($('deck'));
+  // Webamp in the left column: the player on top and its playlist under it, as tall as
+  // the column (in Winamp's steps of 29 pixels). No equalizer: Spotify's audio is
+  // protected, nothing here can shape it. Webamp centers its windows in the stage, so
+  // the stage is exactly their size, at the top.
+  // Made once the page has its final size (the window is still settling while it
+  // loads), so the playlist can be measured to the column.
+  const MAIN = 116;
+  const PLAYLIST = 116;
+  const STEP = 29;
+  let webamp = null;
+  const place = () => {
+    const room = document.querySelector('.deck').clientHeight - 16;
+    const extraHeight = Math.max(0, Math.floor((room - MAIN - PLAYLIST) / STEP));
+    $('stage').style.height = `${MAIN + PLAYLIST + extraHeight * STEP}px`;
+    webamp = new window.Webamp({
+      __customMediaClass: SpotifyMedia,
+      windowLayout: {
+        main: { position: { left: 0, top: 0 } },
+        equalizer: { position: { left: 0, top: MAIN }, closed: true },
+        playlist: { position: { left: 0, top: MAIN }, size: { extraHeight, extraWidth: 0 } },
+      },
+      enableHotkeys: false,
+      zIndex: 1,
+    });
+    webamp.renderInto($('stage'));
+  };
+  if (document.readyState === 'complete') requestAnimationFrame(place);
+  else addEventListener('load', () => requestAnimationFrame(place), { once: true });
 
   let tab = 'search';
   let rows = []; // what the list shows: { kind, title, sub, art, time, play }
@@ -36,7 +52,7 @@
     if (!playable.length) return status('Nothing playable there.');
     if (!device.id) return status(device.error || 'Spotify is still starting on this device; try again in a moment.');
     status('');
-    webamp.setTracksToPlay(playable.map(toTrack));
+    webamp?.setTracksToPlay(playable.map(toTrack));
   };
 
   function render() {
@@ -189,12 +205,12 @@
     {
       label: '&Play',
       items: [
-        { label: '&Play', action: () => webamp.play() },
-        { label: 'P&ause', action: () => webamp.pause() },
-        { label: '&Stop', action: () => webamp.stop() },
+        { label: '&Play', action: () => webamp?.play() },
+        { label: 'P&ause', action: () => webamp?.pause() },
+        { label: '&Stop', action: () => webamp?.stop() },
         'separator',
-        { label: '&Next', action: () => webamp.nextTrack() },
-        { label: 'P&revious', action: () => webamp.previousTrack() },
+        { label: '&Next', action: () => webamp?.nextTrack() },
+        { label: 'P&revious', action: () => webamp?.previousTrack() },
       ],
     },
     {
@@ -237,10 +253,10 @@
         return `reproduciendo ${pick.kind === 'track' ? 'la canción' : pick.kind === 'artist' ? 'al artista' : pick.kind === 'album' ? 'el álbum' : 'la playlist'} ${pick.title} (${pick.sub})`;
       },
     },
-    pause: { description: 'Pausa la música.', params: {}, run: () => (webamp.pause(), 'en pausa') },
-    resume: { description: 'Sigue reproduciendo.', params: {}, run: () => (webamp.play(), 'reproduciendo') },
-    next: { description: 'Pasa a la siguiente canción.', params: {}, run: () => (webamp.nextTrack(), 'siguiente canción') },
-    previous: { description: 'Regresa a la canción anterior.', params: {}, run: () => (webamp.previousTrack(), 'canción anterior') },
+    pause: { description: 'Pausa la música.', params: {}, run: () => (webamp?.pause(), 'en pausa') },
+    resume: { description: 'Sigue reproduciendo.', params: {}, run: () => (webamp?.play(), 'reproduciendo') },
+    next: { description: 'Pasa a la siguiente canción.', params: {}, run: () => (webamp?.nextTrack(), 'siguiente canción') },
+    previous: { description: 'Regresa a la canción anterior.', params: {}, run: () => (webamp?.previousTrack(), 'canción anterior') },
     now: { description: 'Qué canción está sonando.', params: {}, run: nowPlaying },
   };
   for (const [name, action] of Object.entries(actions)) window.cassiel.actions.register(name, action);

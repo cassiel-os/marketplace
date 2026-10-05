@@ -1,5 +1,17 @@
-/* Webamp on the left, on black, its three windows stacked (and movable); Spotify's
-   side on the right in Cassiel's look: the account, search, and lists to play. */
+/* Winamp's colors throughout: Webamp's player and playlist on the left, pixel-sharp,
+   and the library on the right in the classic playlist's palette (green on black,
+   white for what plays, a deep blue selection), with Winamp-gray bars around it. */
+:root {
+  --wa-bg: #000;
+  --wa-text: #00ff00;
+  --wa-dim: #00a800;
+  --wa-current: #fff;
+  --wa-select: #0000c6;
+  --wa-bar: #282833;
+  --wa-bar-light: #3c3c4c;
+  --wa-bar-dark: #14141c;
+  --wa-bar-text: #d6d6e0;
+}
 html,
 body {
   height: 100%;
@@ -7,30 +19,44 @@ body {
 }
 body {
   display: flex;
-  background: var(--cassiel-bg);
-  color: var(--cassiel-text);
+  background: var(--wa-bar-dark);
+  color: var(--wa-text);
   font-size: var(--cassiel-text-sm, 11px);
 }
+
+/* Webamp: its windows on the column's top, its art never smoothed. */
 .deck {
-  position: relative;
   flex: none;
   width: 291px;
-  background: #0f0f17;
-  overflow: hidden;
+  padding: 8px;
+  box-sizing: border-box;
+  background: var(--wa-bar-dark);
 }
+.stage {
+  position: relative;
+  width: 275px;
+}
+#webamp,
+#webamp * {
+  image-rendering: pixelated;
+}
+
 .library {
   flex: 1;
   min-width: 0;
   display: flex;
   flex-direction: column;
-  border-left: var(--cassiel-hairline, 1px) solid var(--cassiel-border);
+  margin: 8px 8px 8px 0;
+  border: 1px solid var(--wa-bar-light);
+  border-color: var(--wa-bar-light) var(--wa-bar-dark) var(--wa-bar-dark) var(--wa-bar-light);
+  background: var(--wa-bar);
 }
 .account {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 8px;
-  border-bottom: var(--cassiel-hairline, 1px) solid var(--cassiel-border);
+  padding: 5px 6px;
+  color: var(--wa-bar-text);
 }
 .account span {
   flex: 1;
@@ -39,67 +65,86 @@ body {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.library button {
+  min-width: 0;
+  padding: 2px 10px;
+  border: 1px solid;
+  border-color: var(--wa-bar-light) var(--wa-bar-dark) var(--wa-bar-dark) var(--wa-bar-light);
+  border-radius: 0;
+  background: #33334a;
+  box-shadow: none;
+  color: var(--wa-bar-text);
+}
+.library button:active {
+  border-color: var(--wa-bar-dark) var(--wa-bar-light) var(--wa-bar-light) var(--wa-bar-dark);
+}
 .search {
-  padding: 6px 8px 4px;
+  padding: 0 6px 5px;
 }
 .search input {
   width: 100%;
   box-sizing: border-box;
+  border: 1px solid var(--wa-bar-dark);
+  border-radius: 0;
+  background: var(--wa-bg);
+  color: var(--wa-text);
+}
+.search input::placeholder {
+  color: var(--wa-dim);
 }
 .tabs {
   display: flex;
   gap: 2px;
-  padding: 0 8px;
-  border-bottom: var(--cassiel-hairline, 1px) solid var(--cassiel-border);
+  padding: 0 6px;
 }
-.tabs button {
-  min-width: 0;
-  padding: 4px 8px;
-  border: 0;
-  border-bottom: 2px solid transparent;
-  border-radius: 0;
-  background: none;
-  box-shadow: none;
-  color: var(--cassiel-text-muted);
+.library .tabs button {
+  padding: 3px 10px;
+  border-bottom: 0;
+  background: var(--wa-bar);
+  color: var(--wa-bar-text);
 }
-.tabs button[aria-selected='true'] {
-  border-bottom-color: var(--cassiel-accent);
-  color: var(--cassiel-text);
+.library .tabs button[aria-selected='true'] {
+  background: var(--wa-bg);
+  color: var(--wa-text);
 }
+
+/* The list, as Winamp's playlist draws its entries. */
 .list {
   flex: 1;
   min-height: 0;
-  margin: 0;
-  padding: 4px 0;
+  margin: 0 6px;
+  padding: 2px 0;
   overflow: auto;
   list-style: none;
   outline: none;
+  background: var(--wa-bg);
+  border: 1px solid;
+  border-color: var(--wa-bar-dark) var(--wa-bar-light) var(--wa-bar-light) var(--wa-bar-dark);
+  scrollbar-color: var(--wa-bar-light) var(--wa-bg);
 }
 .list li {
   display: grid;
-  grid-template-columns: 32px 1fr auto;
+  grid-template-columns: 28px 1fr auto;
   align-items: center;
   gap: 8px;
-  padding: 3px 8px;
+  padding: 2px 6px;
   cursor: default;
-}
-.list li:hover {
-  background: var(--cassiel-pane-bg);
+  color: var(--wa-text);
 }
 .list li[aria-selected='true'] {
-  background: var(--cassiel-accent);
-  color: var(--cassiel-accent-text, #fff);
+  background: var(--wa-select);
+  color: var(--wa-current);
 }
-.list li[aria-selected='true'] small {
+.list li[aria-selected='true'] small,
+.list li[aria-selected='true'] .time {
   color: inherit;
 }
 .list img,
 .list .noart {
-  width: 32px;
-  height: 32px;
-  border-radius: 2px;
+  width: 28px;
+  height: 28px;
   object-fit: cover;
-  background: var(--cassiel-pane-header);
+  background: #111;
 }
 .list .text {
   min-width: 0;
@@ -115,20 +160,23 @@ body {
   font-weight: 500;
 }
 .list small {
-  color: var(--cassiel-text-muted);
+  color: var(--wa-dim);
 }
 .list .time {
-  color: var(--cassiel-text-muted);
+  color: var(--wa-dim);
   font-variant-numeric: tabular-nums;
 }
 .list .note {
   display: block;
   padding: 16px 12px;
-  color: var(--cassiel-text-muted);
+  color: var(--wa-dim);
   text-align: center;
 }
 .status {
-  padding: 4px 8px;
-  border-top: var(--cassiel-hairline, 1px) solid var(--cassiel-border);
-  color: var(--cassiel-text-muted);
+  padding: 4px 6px;
+  color: var(--wa-bar-text);
+  opacity: 0.75;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
