@@ -12,7 +12,8 @@
     "width": 760,
     "height": 480,
     "minWidth": 600,
-    "minHeight": 400
+    "minHeight": 400,
+    "titleBar": false
   },
   "permissions": ["popups"]
 }

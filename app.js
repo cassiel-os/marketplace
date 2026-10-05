@@ -21,6 +21,55 @@
   });
   webamp.renderInto($('deck'));
 
+  // No desktop title bar: Webamp's are the window's. Dragging one moves the Cassiel
+  // window (not Webamp's window inside it), a double click maximizes it, and Webamp's
+  // close and minimize act on it. Its other keys (shade, the equalizer's and playlist's
+  // close) stay Webamp's.
+  const BARS = '#title-bar, .equalizer-top, .playlist-top';
+  const KEYS = '#option-context, #minimize, #shade, #close, #equalizer-shade, #equalizer-close, #playlist-shade-button, #playlist-close-button';
+  const onBar = (e) => e.target.closest?.(BARS) && !e.target.closest(KEYS);
+  for (const kind of ['mousedown', 'touchstart']) addEventListener(kind, (e) => onBar(e) && e.stopPropagation(), true);
+  addEventListener(
+    'pointerdown',
+    (e) => {
+      if (e.button !== 0 || !onBar(e)) return;
+      e.stopPropagation();
+      let x = e.screenX;
+      let y = e.screenY;
+      const move = (m) => {
+        const dx = m.screenX - x;
+        const dy = m.screenY - y;
+        if (!dx && !dy) return;
+        x = m.screenX;
+        y = m.screenY;
+        window.cassiel.window.moveBy(dx, dy);
+      };
+      const up = () => {
+        removeEventListener('pointermove', move);
+        removeEventListener('pointerup', up);
+        removeEventListener('pointercancel', up);
+      };
+      addEventListener('pointermove', move);
+      addEventListener('pointerup', up);
+      addEventListener('pointercancel', up);
+    },
+    true,
+  );
+  addEventListener(
+    'dblclick',
+    (e) => {
+      if (!onBar(e)) return;
+      e.stopPropagation();
+      window.cassiel.window.toggleMaximize();
+    },
+    true,
+  );
+  webamp.onWillClose((cancel) => {
+    cancel();
+    window.cassiel.close();
+  });
+  webamp.onMinimize(() => window.cassiel.window.minimize());
+
   let tab = 'search';
   let rows = []; // what the list shows: { kind, title, sub, art, time, play }
   let selected = -1;
