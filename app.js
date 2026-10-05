@@ -1,264 +1,254 @@
-// Winamp for Spotify: Winamp 2 (winamp.js, player.js) and a Media Library, playing
-// Spotify. Sign in (Premium plays); the library's tree has Search, Liked Songs and your
-// playlists; double-click a song to play from there in Winamp. Cass can search, play,
-// pause and skip.
+// Winamp for Spotify: Webamp (the Winamp of the web) playing Spotify. Sign in with
+// Spotify (Premium plays), find songs, artists, albums and playlists, or open your own
+// playlists and Liked Songs; double-click (or Enter) plays from there in Webamp. Cass
+// can search, play, pause and skip.
 (() => {
-  const { api, connect, device } = window.SpotifyBridge;
+  const { api, connect, device, SpotifyMedia, toTrack } = window.Spotify4Webamp;
   const auth = window.SpotifyAuth;
   const $ = (id) => document.getElementById(id);
+  const list = $('list');
 
-  const short = (ms) => `${Math.floor(ms / 60000)}:${String(Math.floor(ms / 1000) % 60).padStart(2, '0')}`;
-  const long = (ms) => {
-    const s = Math.floor(ms / 1000);
-    const h = Math.floor(s / 3600);
-    return `${h ? `${h}:` : ''}${String(Math.floor(s / 60) % 60).padStart(h ? 2 : 1, '0')}:${String(s % 60).padStart(2, '0')}`;
-  };
-  const artists = (t) => t.artists?.map((a) => a.name).join(', ') ?? '';
-  let note = '';
-  const status = (text) => {
-    note = text ?? '';
-    renderStatus();
-  };
+  // Webamp, its windows stacked in the left column; they can still be moved.
+  const webamp = new window.Webamp({
+    __customMediaClass: SpotifyMedia,
+    windowLayout: {
+      main: { position: { left: 8, top: 8 } },
+      equalizer: { position: { left: 8, top: 124 } },
+      playlist: { position: { left: 8, top: 240 }, size: { extraHeight: 4, extraWidth: 0 } },
+    },
+    enableHotkeys: false,
+    zIndex: 1,
+  });
+  webamp.renderInto($('deck'));
+
+  let tab = 'search';
+  let rows = []; // what the list shows: { kind, title, sub, art, time, play }
+  let selected = -1;
+  let lastQuery = '';
+
+  const status = (text) => ($('status').textContent = text || 'Unofficial. Not made by or affiliated with Spotify or Winamp.');
   window.addEventListener('spotify-error', (e) => status(e.detail));
+  const minutes = (ms) => `${Math.floor(ms / 60000)}:${String(Math.floor(ms / 1000) % 60).padStart(2, '0')}`;
 
-  // ---------------------------------------------------------------- the player
-
-  const player = window.WinampPlayer;
-  const playList = (tracks, from = 0) => {
-    const playable = tracks.filter((t) => t?.uri?.startsWith('spotify:track:'));
+  /** Plays Spotify tracks in Webamp, from the first. */
+  const playTracks = (tracks) => {
+    const playable = tracks.filter((t) => t && t.uri?.startsWith('spotify:track:'));
     if (!playable.length) return status('Nothing playable there.');
     if (!device.id) return status(device.error || 'Spotify is still starting on this device; try again in a moment.');
     status('');
-    player.load(playable, from);
+    webamp.setTracksToPlay(playable.map(toTrack));
   };
-  const enqueue = (tracks) => {
-    const playable = tracks.filter((t) => t?.uri?.startsWith('spotify:track:'));
-    player.append(playable);
-    status(`Added ${playable.length === 1 ? playable[0].name : `${playable.length} songs`} to the playlist.`);
-  };
-  device.listeners.add(() => device.error && status(device.error));
 
-  // ---------------------------------------------------------------- the library
-
-  let playlists = []; // the person's, for the tree
-  let node = 'search'; // what the tree has selected: 'search', 'liked' or a playlist id
-  let rows = []; // the songs shown
-  let pick = -1;
-  let lastQuery = '';
-  let playlistsOpen = true;
-
-  function renderTree() {
-    const tree = $('tree');
-    tree.replaceChildren();
-    const item = (id, label, depth, lead) => {
-      const li = document.createElement('li');
-      li.dataset.depth = String(depth);
-      li.setAttribute('aria-selected', String(node === id));
-      if (lead) li.append(lead);
-      li.append(document.createTextNode(label));
-      li.addEventListener('click', () => openNode(id));
-      tree.append(li);
-      return li;
-    };
-    const caret = (open) => Object.assign(document.createElement('span'), { className: `caret${open ? '' : ' closed'}` });
-    const bullet = () => Object.assign(document.createElement('span'), { className: 'bullet' });
-    item('root', 'Spotify', 0, caret(true));
-    item('search', 'Search', 1, bullet());
-    item('liked', 'Liked Songs', 1, bullet());
-    const header = item('playlists', 'Playlists', 0, caret(playlistsOpen));
-    header.addEventListener('click', () => {
-      playlistsOpen = !playlistsOpen;
-      renderTree();
-    });
-    if (playlistsOpen) for (const p of playlists) item(p.id, p.name, 1, bullet());
-  }
-
-  function renderRows() {
-    const list = $('results');
+  function render() {
     list.replaceChildren();
-    const empty = (text) => list.append(Object.assign(document.createElement('li'), { className: 'empty', textContent: text }));
-    if (!auth.signedIn()) empty('Sign in with Spotify (bottom left) to see your music. Playing needs Spotify Premium.');
-    else if (!rows.length) empty(node === 'search' ? (lastQuery ? 'Nothing found.' : 'Type in Search to find music on Spotify.') : 'Loading…');
-    rows.forEach((t, i) => {
+    if (!auth.signedIn()) return note('Sign in with Spotify to search and play. Playing needs Spotify Premium.');
+    if (!rows.length) return note(tab === 'search' ? (lastQuery ? 'Nothing found.' : 'Type to search Spotify.') : 'Nothing here yet.');
+    rows.forEach((row, i) => {
       const li = document.createElement('li');
-      li.setAttribute('aria-selected', String(i === pick));
-      for (const text of [artists(t), t.album?.name ?? '', t.track_number ? `${t.track_number}` : '', t.name, short(t.duration_ms)])
-        li.append(Object.assign(document.createElement('span'), { textContent: text }));
-      li.addEventListener('click', () => ((pick = i), renderRows()));
-      li.addEventListener('dblclick', () => playList(rows, i));
+      li.setAttribute('aria-selected', String(i === selected));
+      const art = row.art ? Object.assign(document.createElement('img'), { src: row.art, alt: '', loading: 'lazy' }) : Object.assign(document.createElement('span'), { className: 'noart' });
+      const text = document.createElement('span');
+      text.className = 'text';
+      text.append(Object.assign(document.createElement('strong'), { textContent: row.title }), Object.assign(document.createElement('small'), { textContent: row.sub }));
+      li.append(art, text, Object.assign(document.createElement('span'), { className: 'time', textContent: row.time ?? '' }));
+      li.addEventListener('click', () => ((selected = i), render()));
+      li.addEventListener('dblclick', () => run(row));
       list.append(li);
     });
-    renderStatus();
   }
-  function renderStatus() {
-    const total = rows.reduce((sum, t) => sum + (t.duration_ms ?? 0), 0);
-    $('status').textContent = note || (rows.length ? `${rows.length} items [${long(total)}]` : 'Unofficial. Not made by or affiliated with Spotify or Winamp.');
-  }
-
-  const playlistTracks = async (id) => {
-    const tracks = [];
-    let next = `/playlists/${id}/tracks?limit=100`;
-    while (next && tracks.length < 500) {
-      const page = await api(next);
-      tracks.push(...page.items.map((i) => i.track).filter((t) => t?.uri));
-      next = page.next;
-    }
-    return tracks;
-  };
-  const searchTracks = async (q) => {
-    lastQuery = q;
-    return (await api(`/search?${new URLSearchParams({ q, type: 'track', limit: '50' })}`)).tracks.items.filter(Boolean);
-  };
-
-  async function openNode(id) {
-    if (id === 'playlists' || id === 'root') return;
-    node = id;
-    rows = [];
-    pick = -1;
-    note = '';
-    renderTree();
-    renderRows();
-    if (!auth.signedIn()) return;
+  const note = (text) => list.append(Object.assign(document.createElement('li'), { className: 'note', textContent: text }));
+  const run = async (row) => {
     try {
-      if (id === 'search') rows = lastQuery ? await searchTracks(lastQuery) : [];
-      else if (id === 'liked') rows = (await api('/me/tracks?limit=50')).items.map((i) => i.track);
-      else rows = await playlistTracks(id);
-    } catch (e) {
-      note = e.message;
-    }
-    if (node === id) renderRows();
-  }
-
-  $('search').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const q = $('query').value.trim();
-    if (!q) return;
-    lastQuery = q;
-    openNode('search');
-  });
-  $('clearSearch').addEventListener('click', () => {
-    $('query').value = '';
-    lastQuery = '';
-    openNode('search');
-  });
-  $('mlPlay').addEventListener('click', () => rows.length && playList(rows, Math.max(0, pick)));
-  $('mlEnqueue').addEventListener('click', () => rows[pick] && enqueue([rows[pick]]));
-  $('results').addEventListener('keydown', (e) => {
-    if (!rows.length) return;
-    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-      e.preventDefault();
-      pick = Math.max(0, Math.min(rows.length - 1, pick + (e.key === 'ArrowDown' ? 1 : -1)));
-      renderRows();
-    } else if (e.key === 'Enter' && rows[pick]) playList(rows, pick);
-  });
-  // Winamp's eject and ADD: find music here.
-  window.addEventListener('winamp-find', () => {
-    $('query').focus();
-    $('query').select();
-  });
-  addEventListener('keydown', (e) => {
-    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') {
-      e.preventDefault();
-      $('query').focus();
-      $('query').select();
-    }
-  });
-
-  // ---------------------------------------------------------------- the account
-
-  async function account() {
-    if (!auth.signedIn()) {
-      $('sign').textContent = 'Sign in';
-      playlists = [];
-      renderTree();
-      return;
-    }
-    try {
-      const me = await api('/me');
-      $('sign').textContent = me.display_name ?? me.id;
-      $('sign').dataset.tooltip = `Signed in to Spotify${me.product === 'premium' ? '' : ' (playing needs Premium)'}. Click to sign out.`;
-      connect();
-      playlists = (await api('/me/playlists?limit=50')).items.filter(Boolean);
+      device.player?.activateElement?.();
+      await row.play();
     } catch (e) {
       status(e.message);
     }
-    renderTree();
+  };
+
+  // Rows for each kind of thing Spotify returns.
+  const trackRow = (t, all) => ({
+    kind: 'track',
+    title: t.name,
+    sub: `${t.artists.map((a) => a.name).join(', ')} / ${t.album?.name ?? ''}`,
+    art: t.album?.images?.at(-1)?.url,
+    time: minutes(t.duration_ms),
+    play: () => playTracks(all.slice(all.indexOf(t))),
+  });
+  const collectionRow = (kind, item, sub, tracksOf) => ({
+    kind,
+    title: item.name,
+    sub,
+    art: item.images?.at(-1)?.url,
+    play: async () => playTracks(await tracksOf(item)),
+  });
+  const playlistTracks = async (p) => (await api(`/playlists/${p.id}/tracks?limit=100`)).items.map((i) => i.track);
+  const albumTracks = async (a) => {
+    const album = await api(`/albums/${a.id}`);
+    return album.tracks.items.map((t) => ({ ...t, album }));
+  };
+  const artistTracks = async (a) => (await api(`/artists/${a.id}/top-tracks?market=from_token`)).tracks;
+
+  async function search(q) {
+    lastQuery = q;
+    const r = await api(`/search?${new URLSearchParams({ q, type: 'track,artist,album,playlist', limit: '8' })}`);
+    const tracks = r.tracks.items.filter(Boolean);
+    return [
+      ...tracks.map((t) => trackRow(t, tracks)),
+      ...r.artists.items.filter(Boolean).map((a) => collectionRow('artist', a, 'Artist: its top songs', artistTracks)),
+      ...r.albums.items.filter(Boolean).map((a) => collectionRow('album', a, `Album / ${a.artists.map((x) => x.name).join(', ')}`, albumTracks)),
+      ...r.playlists.items.filter(Boolean).map((p) => collectionRow('playlist', p, `Playlist / ${p.owner?.display_name ?? ''}`, playlistTracks)),
+    ];
   }
+  const myPlaylists = async () =>
+    (await api('/me/playlists?limit=50')).items.filter(Boolean).map((p) => collectionRow('playlist', p, `${p.tracks?.total ?? ''} songs`, playlistTracks));
+  async function liked() {
+    const tracks = (await api('/me/tracks?limit=50')).items.map((i) => i.track);
+    return tracks.map((t) => trackRow(t, tracks));
+  }
+
+  async function show(nextTab) {
+    tab = nextTab;
+    for (const b of document.querySelectorAll('[role=tab]')) b.setAttribute('aria-selected', String(b.dataset.tab === tab));
+    selected = -1;
+    rows = [];
+    render();
+    if (!auth.signedIn()) return;
+    try {
+      rows = tab === 'search' ? (lastQuery ? await search(lastQuery) : []) : tab === 'playlists' ? await myPlaylists() : await liked();
+    } catch (e) {
+      status(e.message);
+    }
+    render();
+  }
+
+  async function account() {
+    setMenus();
+    if (!auth.signedIn()) {
+      $('who').textContent = 'Not signed in';
+      $('sign').textContent = 'Sign in with Spotify';
+      return;
+    }
+    $('sign').textContent = 'Sign out';
+    try {
+      const me = await api('/me');
+      $('who').textContent = `${me.display_name ?? me.id}${me.product === 'premium' ? '' : ' (playing needs Premium)'}`;
+      connect();
+    } catch (e) {
+      $('who').textContent = 'Signed in';
+      status(e.message);
+    }
+  }
+
   $('sign').addEventListener('click', async () => {
     if (auth.signedIn()) {
-      if (!(await window.cassiel.dialog.confirm('Spotify', 'Sign out of Spotify in this app?', 'Sign out'))) return;
       auth.signOut();
       device.player?.disconnect();
-      player.stop();
       await account();
-      return openNode('search');
+      return show(tab);
     }
     try {
       await auth.signIn();
       status('');
       await account();
-      openNode(node);
+      show(tab);
     } catch (e) {
       status(e.message);
     }
   });
+  $('search').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const q = $('query').value.trim();
+    if (!q) return;
+    lastQuery = q;
+    show('search');
+  });
+  for (const b of document.querySelectorAll('[role=tab]')) b.addEventListener('click', () => show(b.dataset.tab));
+  list.addEventListener('keydown', (e) => {
+    if (!rows.length) return;
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      selected = Math.max(0, Math.min(rows.length - 1, selected + (e.key === 'ArrowDown' ? 1 : -1)));
+      render();
+    } else if (e.key === 'Enter' && rows[selected]) run(rows[selected]);
+  });
+  device.listeners.add(() => device.error && status(device.error));
 
-  // ---------------------------------------------------------------- Cass
+  /** The menu bar; set again when signing in or out (its first item says which). */
+  const setMenus = () => window.cassiel.menu.set([
+    {
+      label: '&Spotify',
+      items: [
+        { label: auth.signedIn() ? 'Sign &Out' : 'Sign &In…', action: () => $('sign').click() },
+        'separator',
+        { label: '&Search…', shortcut: 'Ctrl+F', action: () => ($('query').focus(), $('query').select()) },
+        { label: 'My &Playlists', action: () => show('playlists') },
+        { label: '&Liked Songs', action: () => show('liked') },
+      ],
+    },
+    {
+      label: '&Play',
+      items: [
+        { label: '&Play', action: () => webamp.play() },
+        { label: 'P&ause', action: () => webamp.pause() },
+        { label: '&Stop', action: () => webamp.stop() },
+        'separator',
+        { label: '&Next', action: () => webamp.nextTrack() },
+        { label: 'P&revious', action: () => webamp.previousTrack() },
+      ],
+    },
+    {
+      label: '&Help',
+      items: [
+        {
+          label: '&About',
+          action: () =>
+            window.cassiel.dialog.alert(
+              'About',
+              'Winamp for Spotify 0.1\n\nPlays Spotify in Webamp, the Winamp of the web by Jordan Eldredge (MIT). Needs Spotify Premium.\n\n' +
+                'Unofficial: not made by, affiliated with or endorsed by Spotify or Winamp. Spotify and its music belong to Spotify AB; Winamp is a trademark of its owners.',
+            ),
+        },
+      ],
+    },
+  ]);
 
   // What Cass can do here. Its words go to the model, so they are in its language.
   const nowPlaying = () => {
     const t = device.state?.track_window?.current_track;
     if (!t) return 'no suena nada en Winamp for Spotify';
-    return `${device.state.paused ? 'en pausa' : 'sonando'}: ${t.name} de ${artists(t)} (${t.album?.name ?? ''})`;
+    return `${device.state.paused ? 'en pausa' : 'sonando'}: ${t.name} de ${t.artists.map((a) => a.name).join(', ')} (${t.album?.name ?? ''})`;
   };
   const actions = {
     play: {
-      description: 'Busca en Spotify y reproduce: una canción, un artista (sus canciones más populares), un álbum o una playlist (de la persona o pública). Dile qué buscar.',
+      description: 'Busca en Spotify y reproduce en Winamp: una canción, un artista (sus canciones más populares), un álbum o una playlist. Dile qué buscar.',
       params: { query: 'qué buscar, por ejemplo "Bohemian Rhapsody" o "playlist lofi"' },
       run: async ({ query }) => {
         if (!auth.signedIn()) throw new Error('la persona no ha iniciado sesión en Spotify');
-        const q = String(query ?? '');
-        const mine = playlists.find((p) => p.name.length > 2 && q.toLowerCase().includes(p.name.toLowerCase()));
-        if (mine) {
-          playList(await playlistTracks(mine.id));
-          return `reproduciendo tu playlist ${mine.name}`;
-        }
-        const r = await api(`/search?${new URLSearchParams({ q, type: 'track,artist,album,playlist', limit: '5' })}`);
-        const kind = /playlist/i.test(q) ? 'playlist' : /álbum|album|disco/i.test(q) ? 'album' : /artista|artist/i.test(q) ? 'artist' : 'track';
-        if (kind === 'playlist' && r.playlists.items.find(Boolean)) {
-          const p = r.playlists.items.find(Boolean);
-          playList(await playlistTracks(p.id));
-          return `reproduciendo la playlist ${p.name}`;
-        }
-        if (kind === 'album' && r.albums.items.find(Boolean)) {
-          const a = await api(`/albums/${r.albums.items.find(Boolean).id}`);
-          playList(a.tracks.items.map((t) => ({ ...t, album: a })));
-          return `reproduciendo el álbum ${a.name} de ${artists(a)}`;
-        }
-        if (kind === 'artist' && r.artists.items.find(Boolean)) {
-          const a = r.artists.items.find(Boolean);
-          playList((await api(`/artists/${a.id}/top-tracks?market=from_token`)).tracks);
-          return `reproduciendo lo más escuchado de ${a.name}`;
-        }
-        const tracks = r.tracks.items.filter(Boolean);
-        if (!tracks.length) return 'no encontré nada';
-        playList(tracks);
-        return `reproduciendo ${tracks[0].name} de ${artists(tracks[0])}`;
+        const found = await search(String(query ?? ''));
+        $('query').value = String(query ?? '');
+        rows = found;
+        tab = 'search';
+        render();
+        const wantsList = /playlist|álbum|album|artista|artist/i.test(String(query));
+        const pick = (wantsList && found.find((r) => r.kind !== 'track')) || found[0];
+        if (!pick) return 'no encontré nada';
+        await pick.play();
+        return `reproduciendo ${pick.kind === 'track' ? 'la canción' : pick.kind === 'artist' ? 'al artista' : pick.kind === 'album' ? 'el álbum' : 'la playlist'} ${pick.title} (${pick.sub})`;
       },
     },
-    pause: { description: 'Pausa la música.', params: {}, run: () => (player.state.status === 'play' && player.pause(), 'en pausa') },
-    resume: { description: 'Sigue reproduciendo.', params: {}, run: () => (player.state.status !== 'play' && player.play(), 'reproduciendo') },
-    next: { description: 'Pasa a la siguiente canción.', params: {}, run: () => (player.next(), 'siguiente canción') },
-    previous: { description: 'Regresa a la canción anterior.', params: {}, run: () => (player.previous(), 'canción anterior') },
+    pause: { description: 'Pausa la música.', params: {}, run: () => (webamp.pause(), 'en pausa') },
+    resume: { description: 'Sigue reproduciendo.', params: {}, run: () => (webamp.play(), 'reproduciendo') },
+    next: { description: 'Pasa a la siguiente canción.', params: {}, run: () => (webamp.nextTrack(), 'siguiente canción') },
+    previous: { description: 'Regresa a la canción anterior.', params: {}, run: () => (webamp.previousTrack(), 'canción anterior') },
     now: { description: 'Qué canción está sonando.', params: {}, run: nowPlaying },
   };
   for (const [name, action] of Object.entries(actions)) window.cassiel.actions.register(name, action);
 
-  // The tokens come with the SDK's storage, once it is ready.
+  // Tokens come with the SDK's storage, once it is ready.
   window.cassiel.ready.then(async () => {
     await account();
-    openNode('search');
+    show('search');
   });
-  renderTree();
-  renderRows();
+  render();
 })();

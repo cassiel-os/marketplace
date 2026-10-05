@@ -6,132 +6,29 @@
     <title>Winamp for Spotify</title>
     <link rel="stylesheet" href="/sdk/cassiel.css" />
     <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="winamp.css" />
   </head>
   <body>
-    <!-- Winamp 2: the main window, the equalizer and the playlist, stacked on the left,
-         drawn in CSS (winamp.css) to the original's sizes. Their title bars move the
-         Cassiel window. -->
-    <div class="deck">
-      <section class="wa-window main stop" id="main" aria-label="Winamp">
-        <header class="titlebar" data-window-drag>
-          <span class="t-name">WINAMP</span>
-          <button class="tb option" id="about" aria-label="About" data-tooltip="Winamp for Spotify: unofficial, not made by or affiliated with Spotify or Winamp"></button>
-          <button class="tb minimize" data-window-action="minimize" aria-label="Minimize" data-tooltip="Minimize"></button>
-          <button class="tb shade" data-window-action="maximize" aria-label="Maximize" data-tooltip="Maximize"></button>
-          <button class="tb close" data-window-action="close" aria-label="Close" data-tooltip="Close"></button>
-        </header>
-        <div class="clutter" aria-hidden="true"><i>O</i><i>A</i><i>I</i><i>D</i><i>V</i></div>
-        <div class="state" aria-hidden="true"></div>
-        <button class="time" id="time" aria-label="Time" data-tooltip="Elapsed or remaining time">
-          <span class="minus"></span><span class="d" id="m1"></span><span class="d" id="m2"></span><span class="colon"></span><span class="d" id="s1"></span><span class="d" id="s2"></span>
-        </button>
-        <div class="marquee" aria-live="off"><span id="marquee"></span></div>
-        <div class="kbps" id="kbps"></div>
-        <div class="khz" id="khz"></div>
-        <span class="kbps-label">kbps</span><span class="khz-label">kHz</span>
-        <div class="mono" id="mono">mono</div>
-        <div class="stereo" id="stereo">stereo</div>
-        <div class="volume" id="volumeStrip"><input type="range" id="volume" min="0" max="100" value="80" aria-label="Volume" /></div>
-        <div class="balance" id="balanceStrip"><input type="range" id="balance" min="-100" max="100" value="0" aria-label="Balance" data-tooltip="Balance: Spotify plays it centered" /></div>
-        <button class="key toggle eq-btn selected" id="eqButton" aria-label="Equalizer" data-tooltip="Show or hide the equalizer">EQ</button>
-        <button class="key toggle pl-btn selected" id="plButton" aria-label="Playlist" data-tooltip="Show or hide the playlist">PL</button>
-        <div class="position"><input type="range" id="position" min="0" max="1000" value="0" aria-label="Position" /></div>
-        <button class="key transport previous" id="previous" aria-label="Previous" data-tooltip="Previous (Z)"></button>
-        <button class="key transport play" id="play" aria-label="Play" data-tooltip="Play (X)"></button>
-        <button class="key transport pause" id="pause" aria-label="Pause" data-tooltip="Pause (C)"></button>
-        <button class="key transport stop-btn" id="stop" aria-label="Stop" data-tooltip="Stop (V)"></button>
-        <button class="key transport next" id="next" aria-label="Next" data-tooltip="Next (B)"></button>
-        <button class="key eject" id="eject" aria-label="Open" data-tooltip="Find music (L)"></button>
-        <button class="key toggle shuffle" id="shuffle" aria-label="Shuffle" data-tooltip="Shuffle (S)">SHUFFLE</button>
-        <button class="key toggle repeat" id="repeat" aria-label="Repeat" data-tooltip="Repeat (R)"></button>
-        <div class="logo" aria-hidden="true"></div>
-      </section>
-
-      <section class="wa-window eq selected" id="eq" aria-label="Equalizer" data-tooltip="">
-        <header class="titlebar" data-window-drag>
-          <span class="t-name">WINAMP EQUALIZER</span>
-          <button class="tb shade" data-window-action="maximize" aria-label="Maximize" data-tooltip="Maximize"></button>
-          <button class="tb close" id="eqClose" aria-label="Close the equalizer" data-tooltip="Close the equalizer"></button>
-        </header>
-        <button class="key toggle eq-on selected" id="eqOn" aria-label="Equalizer on">ON</button>
-        <button class="key toggle eq-auto" id="eqAuto" aria-label="Auto">AUTO</button>
-        <svg class="eq-graph" id="eqGraph" viewBox="0 0 113 19" aria-hidden="true"></svg>
-        <button class="key eq-presets" id="eqPresets" aria-label="Presets" aria-haspopup="menu">PRESETS</button>
-        <span class="db plus">+12 db</span><span class="db zero">+0 db</span><span class="db minus">-12 db</span>
-        <div class="bands" id="bands"></div>
-        <ul class="wa-menu" id="presetMenu" role="menu" hidden></ul>
-      </section>
-
-      <section class="wa-window pl selected" id="pl" aria-label="Playlist">
-        <header class="titlebar" data-window-drag>
-          <span class="t-name">WINAMP PLAYLIST</span>
-          <button class="tb shade" data-window-action="maximize" aria-label="Maximize" data-tooltip="Maximize"></button>
-          <button class="tb close" id="plClose" aria-label="Close the playlist" data-tooltip="Close the playlist"></button>
-        </header>
-        <div class="pl-middle">
-          <ul class="pl-list" id="plList" tabindex="0" role="listbox" aria-label="Playlist"></ul>
-          <div class="pl-scroll"><div class="pl-thumb" id="plThumb"></div></div>
-        </div>
-        <footer class="pl-bottom">
-          <button class="key pl-key add" id="plAdd" data-tooltip="Add music: find it in the library">ADD</button>
-          <button class="key pl-key rem" id="plRem" data-tooltip="Remove the selected songs (Del)">REM</button>
-          <button class="key pl-key sel" id="plSel" data-tooltip="Select all, or none (Ctrl+A)">SEL</button>
-          <button class="key pl-key misc" id="plMisc" data-tooltip="Sort by artist, then title">MISC</button>
-          <div class="pl-total" id="plTotal"></div>
-          <div class="pl-mini">
-            <button class="mini previous" data-do="previous" aria-label="Previous"></button>
-            <button class="mini play" data-do="play" aria-label="Play"></button>
-            <button class="mini pause" data-do="pause" aria-label="Pause"></button>
-            <button class="mini stop-btn" data-do="stop" aria-label="Stop"></button>
-            <button class="mini next" data-do="next" aria-label="Next"></button>
-            <button class="mini eject" data-do="eject" aria-label="Find music"></button>
-          </div>
-          <div class="pl-time" id="plTime"></div>
-          <button class="key pl-key list" id="plList2" data-tooltip="Clear the playlist">LIST<br />OPTS</button>
-          <button class="pl-arrow up" id="plUp" aria-label="Scroll up"></button>
-          <button class="pl-arrow down" id="plDown" aria-label="Scroll down"></button>
-          <div class="pl-grip" aria-hidden="true"></div>
-        </footer>
-      </section>
-    </div>
-
-    <!-- The Media Library: Spotify, as Winamp's library shows a collection. Its title
-         bar is the window's. -->
-    <section class="wa ml" id="ml">
-      <header class="title" data-window-drag>
-        <span class="t-name">WINAMP LIBRARY</span>
-        <button class="t-btn min" data-window-action="minimize" aria-label="Minimize" data-tooltip="Minimize"></button>
-        <button class="t-btn shade" data-window-action="maximize" aria-label="Maximize" data-tooltip="Maximize"></button>
-        <button class="t-btn close" data-window-action="close" aria-label="Close" data-tooltip="Close"></button>
+    <div class="deck" id="deck"></div>
+    <aside class="library">
+      <header class="account">
+        <span id="who">Not signed in</span>
+        <button id="sign">Sign in with Spotify</button>
       </header>
-      <div class="ml-body">
-        <div class="ml-side">
-          <ul class="tree" id="tree" tabindex="0"></ul>
-          <button class="ml-btn" id="sign">Sign in</button>
-        </div>
-        <div class="ml-main">
-          <form class="ml-search" id="search">
-            <label for="query">Search:</label>
-            <input id="query" type="search" autocomplete="off" />
-            <button type="button" class="ml-btn" id="clearSearch">Clear Search</button>
-          </form>
-          <div class="grid">
-            <div class="grid-head"><span>Artist</span><span>Album</span><span>Track #</span><span>Title</span><span>Length</span></div>
-            <ul class="grid-rows" id="results" tabindex="0"></ul>
-          </div>
-          <div class="ml-foot">
-            <button class="ml-btn" id="mlPlay">Play</button><button class="ml-btn" id="mlEnqueue" data-tooltip="Add to the playlist">Enqueue</button>
-            <span class="ml-status" id="status"></span>
-          </div>
-        </div>
-      </div>
-    </section>
+      <form class="search" id="search">
+        <input id="query" type="search" placeholder="Search songs, artists, albums, playlists" autocomplete="off" />
+      </form>
+      <nav class="tabs" role="tablist">
+        <button role="tab" data-tab="search" aria-selected="true">Search</button>
+        <button role="tab" data-tab="playlists">Playlists</button>
+        <button role="tab" data-tab="liked">Liked Songs</button>
+      </nav>
+      <ul class="list" id="list" tabindex="0"></ul>
+      <footer class="status" id="status">Unofficial. Not made by or affiliated with Spotify or Winamp.</footer>
+    </aside>
     <script src="/sdk/cassiel.js"></script>
+    <script src="webamp.js"></script>
     <script src="auth.js"></script>
     <script src="spotify.js"></script>
-    <script src="player.js"></script>
-    <script src="winamp.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
