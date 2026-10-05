@@ -17,17 +17,9 @@
   let emu = null; // the running Nostalgist
   let playing = null; // the game it plays
   let paused = false;
-  let fps = 0;
 
   // ------------------------------------------------------------ bytes
 
-  /** Base64 (the SDK's way for bytes) to a Blob, in chunks: ROMs are big. */
-  const toBlob = (b64, type = 'application/octet-stream') => {
-    const bin = atob(b64);
-    const bytes = new Uint8Array(bin.length);
-    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-    return new Blob([bytes], { type });
-  };
   const toBase64 = (blob) =>
     new Promise((done, fail) => {
       const r = new FileReader();
@@ -35,7 +27,14 @@
       r.onerror = () => fail(r.error);
       r.readAsDataURL(blob);
     });
-  const read = async (path, type) => toBlob(await window.cassiel.files.readBytes(path), type);
+  /** A file of the person's as a Blob. Read through a stream URL, not as base64: ROMs
+   * are big (some Neo Geo ones near 100 MB). */
+  const read = async (path, type) => {
+    const response = await fetch(await window.cassiel.files.streamUrl(path));
+    if (!response.ok) throw new Error(`${path.split('/').pop()}: ${response.status}`);
+    const blob = await response.blob();
+    return type ? new Blob([blob], { type }) : blob;
+  };
 
   // ------------------------------------------------------------ the library
 
@@ -147,9 +146,9 @@
     state.className = 'state';
     if (emu && playing) {
       state.classList.add(paused ? 'warn' : 'ok');
-      state.textContent = paused ? 'En pausa' : `Jugando · ${fps} FPS`;
+      state.textContent = paused ? 'En pausa' : 'Jugando';
     } else if (g) {
-      const needsBios = g.known && !hasBios;
+      const needsBios = g.known && !window.NEO_NOT_NEOGEO.has(g.set) && !hasBios;
       state.classList.add(needsBios ? 'bad' : g.known ? 'ok' : 'warn');
       state.textContent = needsBios ? 'Falta neogeo.zip' : g.known ? 'Compatible' : 'Sin verificar';
     } else state.textContent = '';
@@ -178,7 +177,10 @@
     try {
       const [rom, bios] = await Promise.all([read(g.path), hasBios ? read(`${folder}/${BIOS}`) : null]);
       if (playing !== g) return;
+      // The canvas needs its size while the emulator starts: shown, but not seen yet.
       const canvas = $('canvas');
+      canvas.style.visibility = 'hidden';
+      canvas.hidden = false;
       emu = await window.Nostalgist.launch({
         element: canvas,
         core: 'fbneo',
@@ -190,7 +192,7 @@
       });
       if (playing !== g) return stop();
       $('empty').hidden = true;
-      canvas.hidden = false;
+      canvas.style.visibility = '';
       canvas.focus();
       started = performance.now();
       line(g);
@@ -198,6 +200,7 @@
     } catch (e) {
       emu = null;
       playing = null;
+      $('canvas').style.visibility = '';
       show();
       problem(`No arrancó: ${e.message}`);
     }
@@ -258,21 +261,11 @@
     }
   }
 
-  // Frames each second while it plays, and a picture for a game that has none.
+  // A picture for a game that has none, once it has played a while.
   let started = 0;
-  let frames = 0;
-  let since = performance.now();
-  (function count(now) {
-    if (emu && !paused) frames++;
-    if (now - since >= 1000) {
-      fps = Math.round((frames * 1000) / (now - since));
-      frames = 0;
-      since = now;
-      if (emu && playing) line(playing);
-      if (emu && playing && !playing.snap && !paused && now - started > SNAP_AFTER_MS) capture();
-    }
-    requestAnimationFrame(count);
-  })(performance.now());
+  setInterval(() => {
+    if (emu && playing && !playing.snap && !paused && performance.now() - started > SNAP_AFTER_MS) capture();
+  }, 1000);
 
   const fullscreen = () => (emu ? $('canvas') : $('screen')).requestFullscreen?.();
 

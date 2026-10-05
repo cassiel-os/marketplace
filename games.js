@@ -1,8 +1,10 @@
-// Neo Geo games by their set name (the zip's name, as FBNeo and MAME call them):
+// Neo Geo games (and the arcade games MAME's authors let anyone play for free, at
+// mamedev.org/roms) by their set name (the zip's name, as FBNeo and MAME call them):
 // title, year, maker. A zip not listed here still plays if FBNeo knows it; it is only
 // shown by its file name and marked unverified.
 window.NEO_GAMES = {
   '2020bb': ['Super Baseball 2020', 1991, 'SNK'],
+  alienar: ['Alien Arena', 1985, 'Duncan Brown'],
   aodk: ['Aggressors of Dark Kombat', 1994, 'ADK'],
   aof: ['Art of Fighting', 1992, 'SNK'],
   aof2: ['Art of Fighting 2', 1994, 'SNK'],
@@ -20,6 +22,7 @@ window.NEO_GAMES = {
   galaxyfg: ['Galaxy Fight', 1995, 'Sunsoft'],
   garou: ['Garou: Mark of the Wolves', 1999, 'SNK'],
   gpilots: ['Ghost Pilots', 1991, 'SNK'],
+  gridlee: ['Gridlee', 1982, 'Videa'],
   jockeygp: ['Jockey Grand Prix', 2001, 'Sun Amusement'],
   karnovr: ["Karnov's Revenge", 1994, 'Data East'],
   kizuna: ['Kizuna Encounter', 1996, 'SNK'],
@@ -60,6 +63,7 @@ window.NEO_GAMES = {
   rbff1: ['Real Bout Fatal Fury', 1995, 'SNK'],
   rbff2: ['Real Bout Fatal Fury 2', 1998, 'SNK'],
   rbffspec: ['Real Bout Fatal Fury Special', 1996, 'SNK'],
+  robby: ['The Adventures of Robby Roto!', 1981, 'Dave Nutting / Bally Midway'],
   roboarmy: ['Robo Army', 1991, 'SNK'],
   rotd: ['Rage of the Dragons', 2002, 'Evoga / Noise Factory'],
   samsh5sp: ['Samurai Shodown V Special', 2004, 'Yuki / SNK Playmore'],
@@ -87,3 +91,5 @@ window.NEO_GAMES = {
   wjammers: ['Windjammers', 1994, 'Data East'],
   zedblade: ['Zed Blade', 1994, 'NMK'],
 };
+// Of those, the ones that are not Neo Geo: they need no BIOS.
+window.NEO_NOT_NEOGEO = new Set(['alienar', 'gridlee', 'robby']);
