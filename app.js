@@ -11,7 +11,8 @@
   let controller = null; // Spotify's player, once its API has loaded
   let waiting = null; // a URI asked for before then
   let current = null; // { uri, link }
-  let playback = { paused: true, position: 0, duration: 0 };
+  let playback = { paused: true, position: 0, duration: 0, playing: null }; // playing: the song's URI
+  let playWhenReady = false; // the embed reloads with each link: play once it is ready
 
   /** spotify:<type>:<id> for a Spotify link or URI, or null. */
   const toUri = (text) => {
@@ -56,10 +57,11 @@
     $('link').value = current.link;
     remember(current.link);
     setMenus();
+    playback = { paused: true, position: 0, duration: 0, playing: null };
     if (!controller) waiting = { uri, play };
     else {
-      controller.loadUri(uri);
-      if (play) controller.play();
+      playWhenReady = play;
+      controller.loadEntity(uri);
     }
     return current;
   }
@@ -71,9 +73,16 @@
     api.createController(holder, { width: '100%', height: '100%', uri: waiting?.uri ?? '' }, (made) => {
       controller = made;
       controller.addListener('playback_update', (e) => {
-        playback = { paused: e.data.isPaused, position: e.data.position, duration: e.data.duration };
+        playback = { paused: e.data.isPaused, position: e.data.position, duration: e.data.duration, playing: e.data.playingURI ?? null };
       });
-      if (waiting?.play) controller.addListener('ready', () => controller.play());
+      // Browsers may block playing before the person has touched the page (Safari
+      // always does): then Spotify's own play button starts it.
+      controller.addListener('ready', () => {
+        if (!playWhenReady) return;
+        playWhenReady = false;
+        controller.play();
+      });
+      playWhenReady = !!waiting?.play;
       waiting = null;
     });
   };
@@ -163,11 +172,12 @@
       },
     },
     now: {
-      description: 'Qué está abierto en Spotify y si suena.',
+      description: 'Qué está abierto en Spotify, qué canción suena (su dirección; ábrela con web_open si necesitas el título) y si está en pausa.',
       params: {},
       run: () =>
         current
           ? `${KIND[current.uri.split(':')[1]]} ${current.link}, ${playback.paused ? 'en pausa' : 'sonando'}` +
+            (playback.playing && playback.playing !== current.uri ? `; la canción es ${toLink(playback.playing)}` : '') +
             (playback.duration ? ` (${minutes(playback.position)} de ${minutes(playback.duration)})` : '')
           : 'no hay nada abierto en Spotify',
     },
