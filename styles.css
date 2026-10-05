@@ -1,16 +1,25 @@
-/* Winamp's colors throughout: Webamp's player and playlist on the left, pixel-sharp,
-   and the library on the right in the classic playlist's palette (green on black,
-   white for what plays, a deep blue selection), with Winamp-gray bars around it. */
+/* Classic Winamp, in HD: the 2.x look (blue-gray beveled frames, gold-striped title
+   bars, green LCDs, gray keys, yellow sliders) drawn with CSS and vectors, so it is
+   sharp at any size instead of scaled pixels. The window has no title bar of the
+   desktop's; the player's bar is the window's. */
 :root {
-  --wa-bg: #000;
-  --wa-text: #00ff00;
-  --wa-dim: #00a800;
-  --wa-current: #fff;
-  --wa-select: #0000c6;
-  --wa-bar: #282833;
-  --wa-bar-light: #3c3c4c;
-  --wa-bar-dark: #14141c;
-  --wa-bar-text: #d6d6e0;
+  --frame-hi: #5b5b7a;
+  --frame: #33334a;
+  --frame-lo: #191926;
+  --frame-deep: #0c0c14;
+  --gold-hi: #f1dc8c;
+  --gold: #c4a64a;
+  --gold-lo: #6d5a22;
+  --lcd: #000;
+  --lcd-green: #19ff3c;
+  --lcd-dim: #0b8f22;
+  --lcd-ghost: #062a0e;
+  --key-hi: #e3e3ea;
+  --key: #b4b4c0;
+  --key-lo: #6c6c7c;
+  --text: #dcdce6;
+  --select: #1d3fd0;
+  color-scheme: dark;
 }
 html,
 body {
@@ -18,45 +27,537 @@ body {
   margin: 0;
 }
 body {
+  background: var(--frame-deep);
+  color: var(--text);
+  font-family: var(--cassiel-font, system-ui, sans-serif);
+  font-size: 12px;
+  user-select: none;
+}
+button {
+  font: inherit;
+  color: inherit;
+}
+.columns {
   display: flex;
-  background: var(--wa-bar-dark);
-  color: var(--wa-text);
-  font-size: var(--cassiel-text-sm, 11px);
-}
-
-/* Webamp: its windows on the column's top, its art never smoothed. */
-.deck {
-  flex: none;
-  width: 291px;
-  padding: 8px;
+  gap: 4px;
+  height: 100%;
+  padding: 4px;
   box-sizing: border-box;
-  background: var(--wa-bar-dark);
 }
-.stage {
-  position: relative;
-  width: 275px;
-}
-#webamp,
-#webamp * {
-  image-rendering: pixelated;
+.stack {
+  flex: none;
+  width: 470px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 0;
 }
 
+/* A Winamp window: beveled blue-gray frame, gold-striped title bar. */
+.win {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid;
+  border-color: var(--frame-hi) var(--frame-deep) var(--frame-deep) var(--frame-hi);
+  border-radius: 3px;
+  background: linear-gradient(180deg, #3b3b56, #262636 70%, #20202d);
+  box-shadow: inset 0 0 0 1px var(--frame-lo);
+}
+.win[hidden] {
+  display: none;
+}
+.win.grow,
 .library {
+  flex: 1;
+  min-height: 0;
+}
+.bar {
+  --bar-bg: linear-gradient(180deg, #2c2c40, #1a1a26);
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 20px;
+  padding: 0 4px 0 8px;
+  /* Gold stripes across; the name and the buttons sit on top with the bar's own color. */
+  background:
+    repeating-linear-gradient(180deg, var(--gold-hi) 0 1px, var(--gold-lo) 1px 2px, transparent 2px 4px) center / calc(100% - 16px) 9px no-repeat,
+    var(--bar-bg);
+  border-bottom: 1px solid var(--frame-deep);
+}
+.bar-name {
+  margin: 0 auto;
+  padding: 0 10px;
+  background: var(--bar-bg);
+  color: #e8e8f0;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  line-height: 20px;
+  text-shadow: 0 1px 0 #000;
+}
+.bar-buttons {
+  padding-left: 4px;
+  background: var(--bar-bg);
+  line-height: 0;
+}
+.bar-buttons {
+  display: flex;
+  align-items: center;
+  height: 20px;
+  gap: 2px;
+}
+.tiny {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 14px;
+  min-width: 0;
+  padding: 0;
+  border: 1px solid;
+  border-color: var(--key-hi) var(--key-lo) var(--key-lo) var(--key-hi);
+  border-radius: 1px;
+  background: linear-gradient(180deg, #c9c9d3, #8d8d9b);
+  box-shadow: none;
+  color: #1b1b26;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+}
+.body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 10px 10px;
+}
+
+/* An LCD: black, sunk into the frame. */
+.lcd {
+  border: 1px solid;
+  border-color: var(--frame-deep) var(--frame-hi) var(--frame-hi) var(--frame-deep);
+  background: var(--lcd);
+  color: var(--lcd-green);
+}
+
+/* Gray keys (transport) and small beveled buttons with a light. */
+.key {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 30px;
+  min-width: 0;
+  padding: 0;
+  border: 1px solid;
+  border-color: var(--key-hi) var(--key-lo) var(--key-lo) var(--key-hi);
+  border-radius: 2px;
+  background: linear-gradient(180deg, #d3d3dc, #9a9aa8);
+  box-shadow: 0 1px 0 var(--frame-deep);
+}
+.key:active {
+  border-color: var(--key-lo) var(--key-hi) var(--key-hi) var(--key-lo);
+  background: linear-gradient(180deg, #9a9aa8, #c4c4ce);
+}
+.key svg {
+  width: 20px;
+  height: 20px;
+  fill: #20202c;
+}
+.key.small {
+  width: 22px;
+  height: 18px;
+}
+.key.small svg {
+  width: 12px;
+  height: 12px;
+}
+.btn {
+  position: relative;
+  min-width: 0;
+  height: 20px;
+  padding: 0 8px;
+  border: 1px solid;
+  border-color: var(--frame-hi) var(--frame-deep) var(--frame-deep) var(--frame-hi);
+  border-radius: 2px;
+  background: linear-gradient(180deg, #4a4a66, #2b2b3d);
+  box-shadow: none;
+  color: var(--text);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+.btn:active:not(:disabled) {
+  border-color: var(--frame-deep) var(--frame-hi) var(--frame-hi) var(--frame-deep);
+}
+.btn:disabled {
+  color: #7b7b90;
+}
+.btn.light {
+  padding-left: 16px;
+}
+.btn.light::before {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 6px;
+  width: 6px;
+  height: 6px;
+  border-radius: 1px;
+  background: #1c3a20;
+}
+.btn.light[aria-pressed='true']::before {
+  background: var(--lcd-green);
+  box-shadow: 0 0 5px var(--lcd-green);
+}
+.spacer {
+  flex: 1;
+}
+
+/* The player. */
+.top {
+  display: flex;
+  gap: 8px;
+}
+.display {
+  position: relative;
+  flex: none;
+  width: 160px;
+  height: 84px;
+  cursor: pointer;
+  /* A faint LCD grid. */
+  background:
+    repeating-linear-gradient(90deg, transparent 0 3px, #031105 3px 4px),
+    repeating-linear-gradient(0deg, transparent 0 3px, #031105 3px 4px),
+    var(--lcd);
+}
+.clutter {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 12px;
+  padding-top: 4px;
+  background: #1a1a24;
+  color: #8a8aa0;
+  font-size: 8px;
+  line-height: 15px;
+  text-align: center;
+}
+.state {
+  position: absolute;
+  left: 20px;
+  top: 10px;
+  color: var(--lcd-green);
+  font-size: 11px;
+}
+.time {
+  position: absolute;
+  right: 10px;
+  top: 2px;
+  color: var(--lcd-green);
+  font-family: var(--cassiel-font-mono, ui-monospace, monospace);
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 6px rgb(25 255 60 / 0.55);
+}
+.viz {
+  position: absolute;
+  left: 20px;
+  right: 8px;
+  bottom: 6px;
+  height: 30px;
+  display: flex;
+  align-items: flex-end;
+  gap: 1px;
+}
+.viz i {
+  flex: 1;
+  height: 0;
+  background: linear-gradient(0deg, #12d03a 0%, #c7e831 55%, #f6a21c 80%, #e23b16 100%) bottom / 100% 30px no-repeat;
+  transition: height 160ms ease-out;
+}
+.side {
   flex: 1;
   min-width: 0;
   display: flex;
   flex-direction: column;
-  margin: 8px 8px 8px 0;
-  border: 1px solid var(--wa-bar-light);
-  border-color: var(--wa-bar-light) var(--wa-bar-dark) var(--wa-bar-dark) var(--wa-bar-light);
-  background: var(--wa-bar);
+  gap: 6px;
+}
+.marquee {
+  height: 22px;
+  display: flex;
+  align-items: center;
+  padding: 0 6px;
+  overflow: hidden;
+  font-family: var(--cassiel-font-mono, ui-monospace, monospace);
+  font-size: 11px;
+  white-space: nowrap;
+  text-shadow: 0 0 4px rgb(25 255 60 / 0.45);
+}
+.marquee span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.facts {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.lcd.small {
+  max-width: 130px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 1px 5px;
+  font-family: var(--cassiel-font-mono, ui-monospace, monospace);
+  font-size: 10px;
+  text-transform: uppercase;
+}
+.lit {
+  margin-left: auto;
+  color: var(--lcd-green);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 4px rgb(25 255 60 / 0.6);
+}
+.row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Sliders: a sunk groove, filled up to a gold thumb (--p, in %). */
+input[type='range'] {
+  --p: 0%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 8px;
+  margin: 0;
+  border: 1px solid;
+  border-color: var(--frame-deep) var(--frame-hi) var(--frame-hi) var(--frame-deep);
+  border-radius: 1px;
+  background: linear-gradient(var(--fill), var(--fill)) 0 / var(--p) 100% no-repeat, #121219;
+}
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px;
+  height: 12px;
+  border: 1px solid;
+  border-color: var(--gold-hi) var(--gold-lo) var(--gold-lo) var(--gold-hi);
+  border-radius: 2px;
+  background: linear-gradient(180deg, #f6e7a4, #c9a945);
+}
+.volume {
+  --fill: linear-gradient(90deg, #1fa83a, #c4d82b 70%, #e0492c);
+  flex: 1;
+}
+.seek {
+  --fill: linear-gradient(90deg, #2c5bd8, #5f8cff);
+  width: 100%;
+  height: 10px;
+  margin: 10px 0 !important;
+}
+.seek::-webkit-slider-thumb {
+  width: 30px;
+}
+.transport {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.transport .eject {
+  margin-left: 8px;
+  width: 32px;
+}
+.transport .btn {
+  margin-left: 4px;
+}
+.bolt {
+  margin-left: 6px;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 3px;
+  background: radial-gradient(circle at 35% 30%, #f5e49b, #b38f2a 70%);
+  box-shadow: inset 0 0 0 1px var(--gold-lo);
+}
+.bolt svg {
+  width: 16px;
+  height: 16px;
+  fill: #2a1f05;
+}
+
+/* The equalizer, as Winamp's; Spotify's audio cannot be shaped, so it is off. */
+.eq-head {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.graph {
+  flex: 1;
+  height: 24px;
+  margin: 0 6px;
+}
+.graph svg {
+  width: 100%;
+  height: 100%;
+}
+.graph path {
+  fill: none;
+  stroke: var(--lcd-dim);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+.bands {
+  display: grid;
+  grid-template-columns: 40px 46px repeat(10, 1fr);
+  align-items: end;
+  margin-top: 8px;
+  opacity: 0.5;
+}
+.band {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  color: #b9b9c8;
+  font-size: 9px;
+  font-weight: 700;
+}
+.band i {
+  position: relative;
+  width: 6px;
+  height: 64px;
+  border: 1px solid;
+  border-color: var(--frame-deep) var(--frame-hi) var(--frame-hi) var(--frame-deep);
+  background: linear-gradient(0deg, #1f7f2e, #b8c52a 50%, #c84a20);
+}
+.band i::after {
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: calc(50% - 4px);
+  width: 16px;
+  height: 8px;
+  border: 1px solid;
+  border-color: var(--gold-hi) var(--gold-lo) var(--gold-lo) var(--gold-hi);
+  border-radius: 1px;
+  background: linear-gradient(180deg, #f6e7a4, #c9a945);
+}
+.db {
+  display: grid;
+  height: 64px;
+  align-content: space-between;
+  margin-bottom: 15px;
+  color: #b9b9c8;
+  font-size: 9px;
+}
+.note {
+  margin: 6px 0 0;
+  color: #8a8aa0;
+  font-size: 10px;
+  text-align: center;
+}
+
+/* The playlist and the library lists: green on black, white for what plays, blue
+   selection, as Winamp's playlist. */
+.queue,
+.results {
+  flex: 1;
+  min-height: 60px;
+  margin: 0;
+  padding: 3px 0;
+  overflow: auto;
+  list-style: none;
+  outline: none;
+  font-size: 12px;
+  scrollbar-color: #4a4a66 #000;
+}
+.queue li,
+.results li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 2px 6px;
+  color: var(--lcd-green);
+}
+.queue li span,
+.results .text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.queue li.current {
+  color: #fff;
+}
+.queue li[aria-selected='true'],
+.results li[aria-selected='true'] {
+  background: var(--select);
+}
+.queue .len,
+.results .len {
+  font-variant-numeric: tabular-nums;
+}
+.empty {
+  display: block !important;
+  padding: 16px 8px !important;
+  color: var(--lcd-dim) !important;
+  text-align: center;
+}
+.pl-foot {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+}
+.mini {
+  display: flex;
+  gap: 1px;
+}
+.menu {
+  position: relative;
+}
+.dropdown {
+  position: absolute;
+  left: 0;
+  bottom: 24px;
+  z-index: 2;
+  display: grid;
+  min-width: 150px;
+  padding: 2px;
+  border: 1px solid;
+  border-color: var(--frame-hi) var(--frame-deep) var(--frame-deep) var(--frame-hi);
+  background: #2b2b3d;
+  box-shadow: 0 6px 18px rgb(0 0 0 / 0.5);
+}
+.dropdown[hidden] {
+  display: none;
+}
+.dropdown button {
+  padding: 5px 8px;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  text-align: left;
+}
+.dropdown button:hover {
+  background: var(--select);
+}
+
+/* The library. */
+.library .body {
+  gap: 8px;
 }
 .account {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 5px 6px;
-  color: var(--wa-bar-text);
+  gap: 8px;
 }
 .account span {
   flex: 1;
@@ -65,117 +566,63 @@ body {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.library button {
-  min-width: 0;
-  padding: 2px 10px;
-  border: 1px solid;
-  border-color: var(--wa-bar-light) var(--wa-bar-dark) var(--wa-bar-dark) var(--wa-bar-light);
-  border-radius: 0;
-  background: #33334a;
-  box-shadow: none;
-  color: var(--wa-bar-text);
-}
-.library button:active {
-  border-color: var(--wa-bar-dark) var(--wa-bar-light) var(--wa-bar-light) var(--wa-bar-dark);
-}
-.search {
-  padding: 0 6px 5px;
-}
-.search input {
+#query {
   width: 100%;
   box-sizing: border-box;
-  border: 1px solid var(--wa-bar-dark);
+  height: 24px;
+  padding: 0 6px;
   border-radius: 0;
-  background: var(--wa-bg);
-  color: var(--wa-text);
+  font: inherit;
 }
-.search input::placeholder {
-  color: var(--wa-dim);
+#query::placeholder {
+  color: var(--lcd-dim);
 }
 .tabs {
   display: flex;
-  gap: 2px;
-  padding: 0 6px;
+  gap: 3px;
 }
-.library .tabs button {
-  padding: 3px 10px;
-  border-bottom: 0;
-  background: var(--wa-bar);
-  color: var(--wa-bar-text);
+.tabs .btn[aria-selected='true'] {
+  border-color: var(--frame-deep) var(--frame-hi) var(--frame-hi) var(--frame-deep);
+  background: #15151f;
+  color: var(--lcd-green);
 }
-.library .tabs button[aria-selected='true'] {
-  background: var(--wa-bg);
-  color: var(--wa-text);
+.results li {
+  grid-template-columns: 30px 1fr auto auto;
 }
-
-/* The list, as Winamp's playlist draws its entries. */
-.list {
-  flex: 1;
-  min-height: 0;
-  margin: 0 6px;
-  padding: 2px 0;
-  overflow: auto;
-  list-style: none;
-  outline: none;
-  background: var(--wa-bg);
-  border: 1px solid;
-  border-color: var(--wa-bar-dark) var(--wa-bar-light) var(--wa-bar-light) var(--wa-bar-dark);
-  scrollbar-color: var(--wa-bar-light) var(--wa-bg);
-}
-.list li {
-  display: grid;
-  grid-template-columns: 28px 1fr auto;
-  align-items: center;
-  gap: 8px;
-  padding: 2px 6px;
-  cursor: default;
-  color: var(--wa-text);
-}
-.list li[aria-selected='true'] {
-  background: var(--wa-select);
-  color: var(--wa-current);
-}
-.list li[aria-selected='true'] small,
-.list li[aria-selected='true'] .time {
-  color: inherit;
-}
-.list img,
-.list .noart {
-  width: 28px;
-  height: 28px;
+.results img,
+.results .noart {
+  width: 30px;
+  height: 30px;
   object-fit: cover;
   background: #111;
 }
-.list .text {
-  min-width: 0;
-}
-.list strong,
-.list small {
+.results strong,
+.results small {
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.list strong {
+.results strong {
   font-weight: 500;
 }
-.list small {
-  color: var(--wa-dim);
+.results small {
+  color: var(--lcd-dim);
 }
-.list .time {
-  color: var(--wa-dim);
-  font-variant-numeric: tabular-nums;
+.results li[aria-selected='true'] small {
+  color: #b6c4ff;
 }
-.list .note {
-  display: block;
-  padding: 16px 12px;
-  color: var(--wa-dim);
-  text-align: center;
+.results .add {
+  visibility: hidden;
+}
+.results li:hover .add,
+.results li[aria-selected='true'] .add {
+  visibility: visible;
 }
 .status {
-  padding: 4px 6px;
-  color: var(--wa-bar-text);
-  opacity: 0.75;
+  margin: 0;
+  color: #8a8aa0;
+  font-size: 10px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
