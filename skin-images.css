@@ -66,115 +66,94 @@
 #webamp #playlist-list-menu .hover .load-list  { background-image: url("skin/54.png") !important; background-size: 22px 18px !important; }
 #webamp #playlist-list-menu .save-list  { background-image: url("skin/55.png") !important; background-size: 22px 18px !important; }
 #webamp #playlist-list-menu .hover .save-list  { background-image: url("skin/56.png") !important; background-size: 22px 18px !important; }
-#webamp #equalizer-window:not(.shade)  { background-image: url("skin/57.png") !important; background-size: 275px 116px !important; }
-#webamp .equalizer-top  { background-image: url("skin/58.png") !important; background-size: 275px 14px !important; }
-#webamp .selected .equalizer-top  { background-image: url("skin/59.png") !important; background-size: 275px 14px !important; }
-#webamp .band  { background-image: url("skin/60.png") !important; background-size: 209px 129px !important; }
-#webamp .band .slider-handle  { background-image: url("skin/61.png") !important; background-size: 11px 11px !important; }
-#webamp .band.winamp-active .slider-handle  { background-image: url("skin/62.png") !important; background-size: 11px 11px !important; }
-#webamp #on  { background-image: url("skin/63.png") !important; background-size: 26px 12px !important; }
-#webamp #on.winamp-active  { background-image: url("skin/64.png") !important; background-size: 26px 12px !important; }
-#webamp #on.selected  { background-image: url("skin/65.png") !important; background-size: 26px 12px !important; }
-#webamp #on.selected.winamp-active  { background-image: url("skin/66.png") !important; background-size: 26px 12px !important; }
-#webamp #auto  { background-image: url("skin/67.png") !important; background-size: 32px 12px !important; }
-#webamp #auto.winamp-active  { background-image: url("skin/68.png") !important; background-size: 32px 12px !important; }
-#webamp #auto.selected  { background-image: url("skin/69.png") !important; background-size: 32px 12px !important; }
-#webamp #auto.selected.winamp-active  { background-image: url("skin/70.png") !important; background-size: 32px 12px !important; }
-#webamp #eqGraph  { background-image: url("skin/71.png") !important; background-size: 113px 19px !important; }
-#webamp #presets  { background-image: url("skin/72.png") !important; background-size: 44px 12px !important; }
-#webamp #presets.winamp-active  { background-image: url("skin/73.png") !important; background-size: 44px 12px !important; }
-#webamp #preamp-line  { background-image: url("skin/74.png") !important; background-size: 113px 1px !important; }
-#webamp #equalizer-window.shade  { background-image: url("skin/75.png") !important; background-size: 275px 14px !important; }
-#webamp #equalizer-window.shade.selected  { background-image: url("skin/76.png") !important; background-size: 275px 14px !important; }
-#webamp #equalizer-volume.left::-webkit-slider-thumb  { background-image: url("skin/77.png") !important; background-size: 3px 7px !important; }
-#webamp #equalizer-volume.left::-moz-range-thumb  { background-image: url("skin/77.png") !important; background-size: 3px 7px !important; }
-#webamp #equalizer-volume.center::-webkit-slider-thumb  { background-image: url("skin/78.png") !important; background-size: 3px 7px !important; }
-#webamp #equalizer-volume.center::-moz-range-thumb  { background-image: url("skin/78.png") !important; background-size: 3px 7px !important; }
-#webamp #equalizer-volume.right::-webkit-slider-thumb  { background-image: url("skin/79.png") !important; background-size: 3px 7px !important; }
-#webamp #equalizer-volume.right::-moz-range-thumb  { background-image: url("skin/79.png") !important; background-size: 3px 7px !important; }
-#webamp #equalizer-balance.left::-webkit-slider-thumb  { background-image: url("skin/77.png") !important; background-size: 3px 7px !important; }
-#webamp #equalizer-balance.left::-moz-range-thumb  { background-image: url("skin/77.png") !important; background-size: 3px 7px !important; }
-#webamp #equalizer-balance.center::-webkit-slider-thumb  { background-image: url("skin/78.png") !important; background-size: 3px 7px !important; }
-#webamp #equalizer-balance.center::-moz-range-thumb  { background-image: url("skin/78.png") !important; background-size: 3px 7px !important; }
-#webamp #equalizer-balance.right::-webkit-slider-thumb  { background-image: url("skin/79.png") !important; background-size: 3px 7px !important; }
-#webamp #equalizer-balance.right::-moz-range-thumb  { background-image: url("skin/79.png") !important; background-size: 3px 7px !important; }
-#webamp #equalizer-shade.winamp-active  { background-image: url("skin/80.png") !important; background-size: 9px 9px !important; }
-#webamp #equalizer-window.shade #equalizer-shade.winamp-active  { background-image: url("skin/81.png") !important; background-size: 9px 9px !important; }
-#webamp #equalizer-window.selected #eq-buttons.clicked #equalizer-close  { background-image: url("skin/82.png") !important; background-size: 9px 9px !important; }
-#webamp #equalizer-window.selected #eq-buttons.clicked #equalizer-close.winamp-active  { background-image: url("skin/83.png") !important; background-size: 9px 9px !important; }
-#webamp #equalizer-window.shade.selected #eq-buttons.clicked #equalizer-close  { background-image: url("skin/84.png") !important; background-size: 9px 9px !important; }
-#webamp #equalizer-window.shade.selected #eq-buttons.clicked #equalizer-close.winamp-active  { background-image: url("skin/85.png") !important; background-size: 9px 9px !important; }
-#webamp .gen-window .gen-top  { background-image: url("skin/86.png") !important; background-size: 25px 20px !important; }
-#webamp .gen-window .gen-top-left  { background-image: url("skin/87.png") !important; background-size: 25px 20px !important; }
-#webamp .gen-window .gen-top-left-end  { background-image: url("skin/88.png") !important; background-size: 25px 20px !important; }
-#webamp .gen-window .gen-top-right  { background-image: url("skin/89.png") !important; background-size: 25px 20px !important; }
-#webamp .gen-window .gen-top-right-end  { background-image: url("skin/90.png") !important; background-size: 25px 20px !important; }
-#webamp .gen-window .gen-top-left-fill  { background-image: url("skin/91.png") !important; background-size: 25px 20px !important; }
-#webamp .gen-window .gen-top-right-fill  { background-image: url("skin/91.png") !important; background-size: 25px 20px !important; }
-#webamp .gen-window.selected .gen-top  { background-image: url("skin/86.png") !important; background-size: 25px 20px !important; }
-#webamp .gen-window.selected .gen-top-left  { background-image: url("skin/92.png") !important; background-size: 25px 20px !important; }
-#webamp .gen-window.selected .gen-top-left-end  { background-image: url("skin/93.png") !important; background-size: 25px 20px !important; }
-#webamp .gen-window.selected .gen-top-right  { background-image: url("skin/94.png") !important; background-size: 25px 20px !important; }
-#webamp .gen-window.selected .gen-top-right-end  { background-image: url("skin/95.png") !important; background-size: 25px 20px !important; }
-#webamp .gen-window.selected .gen-top-left-fill  { background-image: url("skin/96.png") !important; background-size: 25px 20px !important; }
-#webamp .gen-window.selected .gen-top-right-fill  { background-image: url("skin/96.png") !important; background-size: 25px 20px !important; }
-#webamp .gen-window .gen-bottom-left  { background-image: url("skin/97.png") !important; background-size: 125px 14px !important; }
-#webamp .gen-window .gen-bottom-right  { background-image: url("skin/98.png") !important; background-size: 125px 14px !important; }
-#webamp .gen-window .gen-bottom  { background-image: url("skin/99.png") !important; background-size: 25px 14px !important; }
-#webamp .gen-window .gen-middle-left  { background-image: url("skin/100.png") !important; background-size: 11px 29px !important; }
-#webamp .gen-window .gen-middle-left-bottom  { background-image: url("skin/101.png") !important; background-size: 11px 24px !important; }
-#webamp .gen-window .gen-middle-right  { background-image: url("skin/102.png") !important; background-size: 8px 29px !important; }
-#webamp .gen-window .gen-middle-right-bottom  { background-image: url("skin/103.png") !important; background-size: 8px 24px !important; }
-#webamp .gen-window .gen-close.winamp-active  { background-image: url("skin/85.png") !important; background-size: 9px 9px !important; }
-#webamp .gen-text-a  { background-image: url("skin/104.png") !important; background-size: 6px 7px !important; }
-#webamp .gen-window.selected .gen-text-a  { background-image: url("skin/105.png") !important; background-size: 6px 7px !important; }
-#webamp .gen-text-b  { background-image: url("skin/106.png") !important; background-size: 7px 7px !important; }
-#webamp .gen-window.selected .gen-text-b  { background-image: url("skin/107.png") !important; background-size: 7px 7px !important; }
-#webamp .gen-text-c  { background-image: url("skin/108.png") !important; background-size: 7px 7px !important; }
-#webamp .gen-window.selected .gen-text-c  { background-image: url("skin/109.png") !important; background-size: 7px 7px !important; }
-#webamp .gen-text-d  { background-image: url("skin/110.png") !important; background-size: 6px 7px !important; }
-#webamp .gen-window.selected .gen-text-d  { background-image: url("skin/111.png") !important; background-size: 6px 7px !important; }
-#webamp .gen-text-e  { background-image: url("skin/112.png") !important; background-size: 6px 7px !important; }
-#webamp .gen-window.selected .gen-text-e  { background-image: url("skin/113.png") !important; background-size: 6px 7px !important; }
-#webamp .gen-text-f  { background-image: url("skin/114.png") !important; background-size: 6px 7px !important; }
-#webamp .gen-window.selected .gen-text-f  { background-image: url("skin/115.png") !important; background-size: 6px 7px !important; }
-#webamp .gen-text-g  { background-image: url("skin/116.png") !important; background-size: 7px 7px !important; }
-#webamp .gen-window.selected .gen-text-g  { background-image: url("skin/117.png") !important; background-size: 7px 7px !important; }
-#webamp .gen-text-h  { background-image: url("skin/118.png") !important; background-size: 6px 7px !important; }
-#webamp .gen-window.selected .gen-text-h  { background-image: url("skin/119.png") !important; background-size: 6px 7px !important; }
-#webamp .gen-text-i  { background-image: url("skin/120.png") !important; background-size: 4px 7px !important; }
-#webamp .gen-window.selected .gen-text-i  { background-image: url("skin/121.png") !important; background-size: 4px 7px !important; }
-#webamp .gen-text-j  { background-image: url("skin/122.png") !important; background-size: 6px 7px !important; }
-#webamp .gen-window.selected .gen-text-j  { background-image: url("skin/123.png") !important; background-size: 6px 7px !important; }
-#webamp .gen-text-k  { background-image: url("skin/124.png") !important; background-size: 7px 7px !important; }
-#webamp .gen-window.selected .gen-text-k  { background-image: url("skin/125.png") !important; background-size: 7px 7px !important; }
-#webamp .gen-text-l  { background-image: url("skin/126.png") !important; background-size: 5px 7px !important; }
-#webamp .gen-window.selected .gen-text-l  { background-image: url("skin/127.png") !important; background-size: 5px 7px !important; }
-#webamp .gen-text-m  { background-image: url("skin/128.png") !important; background-size: 8px 7px !important; }
-#webamp .gen-window.selected .gen-text-m  { background-image: url("skin/129.png") !important; background-size: 8px 7px !important; }
-#webamp .gen-text-n  { background-image: url("skin/130.png") !important; background-size: 6px 7px !important; }
-#webamp .gen-window.selected .gen-text-n  { background-image: url("skin/131.png") !important; background-size: 6px 7px !important; }
-#webamp .gen-text-o  { background-image: url("skin/132.png") !important; background-size: 6px 7px !important; }
-#webamp .gen-window.selected .gen-text-o  { background-image: url("skin/133.png") !important; background-size: 6px 7px !important; }
-#webamp .gen-text-p  { background-image: url("skin/134.png") !important; background-size: 6px 7px !important; }
-#webamp .gen-window.selected .gen-text-p  { background-image: url("skin/135.png") !important; background-size: 6px 7px !important; }
-#webamp .gen-text-q  { background-image: url("skin/136.png") !important; background-size: 7px 7px !important; }
-#webamp .gen-window.selected .gen-text-q  { background-image: url("skin/137.png") !important; background-size: 7px 7px !important; }
-#webamp .gen-text-r  { background-image: url("skin/138.png") !important; background-size: 7px 7px !important; }
-#webamp .gen-window.selected .gen-text-r  { background-image: url("skin/139.png") !important; background-size: 7px 7px !important; }
-#webamp .gen-text-s  { background-image: url("skin/140.png") !important; background-size: 6px 7px !important; }
-#webamp .gen-window.selected .gen-text-s  { background-image: url("skin/141.png") !important; background-size: 6px 7px !important; }
-#webamp .gen-text-t  { background-image: url("skin/142.png") !important; background-size: 5px 7px !important; }
-#webamp .gen-window.selected .gen-text-t  { background-image: url("skin/143.png") !important; background-size: 5px 7px !important; }
-#webamp .gen-text-u  { background-image: url("skin/144.png") !important; background-size: 6px 7px !important; }
-#webamp .gen-window.selected .gen-text-u  { background-image: url("skin/145.png") !important; background-size: 6px 7px !important; }
-#webamp .gen-text-v  { background-image: url("skin/146.png") !important; background-size: 6px 7px !important; }
-#webamp .gen-window.selected .gen-text-v  { background-image: url("skin/147.png") !important; background-size: 6px 7px !important; }
-#webamp .gen-text-w  { background-image: url("skin/148.png") !important; background-size: 8px 7px !important; }
-#webamp .gen-window.selected .gen-text-w  { background-image: url("skin/149.png") !important; background-size: 8px 7px !important; }
-#webamp .gen-text-x  { background-image: url("skin/150.png") !important; background-size: 7px 7px !important; }
-#webamp .gen-window.selected .gen-text-x  { background-image: url("skin/151.png") !important; background-size: 7px 7px !important; }
-#webamp .gen-text-y  { background-image: url("skin/152.png") !important; background-size: 6px 7px !important; }
-#webamp .gen-window.selected .gen-text-y  { background-image: url("skin/153.png") !important; background-size: 6px 7px !important; }
-#webamp .gen-text-z  { background-image: url("skin/154.png") !important; background-size: 11px 7px !important; }
-#webamp .gen-window.selected .gen-text-z  { background-image: url("skin/155.png") !important; background-size: 11px 7px !important; }
+#webamp #equalizer-window.shade  { background-image: url("skin/57.png") !important; background-size: 275px 14px !important; }
+#webamp #equalizer-window.shade.selected  { background-image: url("skin/58.png") !important; background-size: 275px 14px !important; }
+#webamp #equalizer-volume.left::-webkit-slider-thumb  { background-image: url("skin/59.png") !important; background-size: 3px 7px !important; }
+#webamp #equalizer-volume.left::-moz-range-thumb  { background-image: url("skin/59.png") !important; background-size: 3px 7px !important; }
+#webamp #equalizer-volume.center::-webkit-slider-thumb  { background-image: url("skin/60.png") !important; background-size: 3px 7px !important; }
+#webamp #equalizer-volume.center::-moz-range-thumb  { background-image: url("skin/60.png") !important; background-size: 3px 7px !important; }
+#webamp #equalizer-volume.right::-webkit-slider-thumb  { background-image: url("skin/61.png") !important; background-size: 3px 7px !important; }
+#webamp #equalizer-volume.right::-moz-range-thumb  { background-image: url("skin/61.png") !important; background-size: 3px 7px !important; }
+#webamp #equalizer-balance.left::-webkit-slider-thumb  { background-image: url("skin/59.png") !important; background-size: 3px 7px !important; }
+#webamp #equalizer-balance.left::-moz-range-thumb  { background-image: url("skin/59.png") !important; background-size: 3px 7px !important; }
+#webamp #equalizer-balance.center::-webkit-slider-thumb  { background-image: url("skin/60.png") !important; background-size: 3px 7px !important; }
+#webamp #equalizer-balance.center::-moz-range-thumb  { background-image: url("skin/60.png") !important; background-size: 3px 7px !important; }
+#webamp #equalizer-balance.right::-webkit-slider-thumb  { background-image: url("skin/61.png") !important; background-size: 3px 7px !important; }
+#webamp #equalizer-balance.right::-moz-range-thumb  { background-image: url("skin/61.png") !important; background-size: 3px 7px !important; }
+#webamp #equalizer-window.shade #equalizer-shade.winamp-active  { background-image: url("skin/62.png") !important; background-size: 9px 9px !important; }
+#webamp #equalizer-window.shade.selected #eq-buttons.clicked #equalizer-close  { background-image: url("skin/63.png") !important; background-size: 9px 9px !important; }
+#webamp #equalizer-window.shade.selected #eq-buttons.clicked #equalizer-close.winamp-active  { background-image: url("skin/64.png") !important; background-size: 9px 9px !important; }
+#webamp .gen-window .gen-top  { background-image: url("skin/65.png") !important; background-size: 25px 20px !important; }
+#webamp .gen-window .gen-top-left  { background-image: url("skin/66.png") !important; background-size: 25px 20px !important; }
+#webamp .gen-window .gen-top-left-end  { background-image: url("skin/67.png") !important; background-size: 25px 20px !important; }
+#webamp .gen-window .gen-top-right  { background-image: url("skin/68.png") !important; background-size: 25px 20px !important; }
+#webamp .gen-window .gen-top-right-end  { background-image: url("skin/69.png") !important; background-size: 25px 20px !important; }
+#webamp .gen-window .gen-top-left-fill  { background-image: url("skin/70.png") !important; background-size: 25px 20px !important; }
+#webamp .gen-window .gen-top-right-fill  { background-image: url("skin/70.png") !important; background-size: 25px 20px !important; }
+#webamp .gen-window.selected .gen-top  { background-image: url("skin/65.png") !important; background-size: 25px 20px !important; }
+#webamp .gen-window.selected .gen-top-left  { background-image: url("skin/71.png") !important; background-size: 25px 20px !important; }
+#webamp .gen-window.selected .gen-top-left-end  { background-image: url("skin/72.png") !important; background-size: 25px 20px !important; }
+#webamp .gen-window.selected .gen-top-right  { background-image: url("skin/73.png") !important; background-size: 25px 20px !important; }
+#webamp .gen-window.selected .gen-top-right-end  { background-image: url("skin/74.png") !important; background-size: 25px 20px !important; }
+#webamp .gen-window.selected .gen-top-left-fill  { background-image: url("skin/75.png") !important; background-size: 25px 20px !important; }
+#webamp .gen-window.selected .gen-top-right-fill  { background-image: url("skin/75.png") !important; background-size: 25px 20px !important; }
+#webamp .gen-window .gen-bottom-left  { background-image: url("skin/76.png") !important; background-size: 125px 14px !important; }
+#webamp .gen-window .gen-bottom-right  { background-image: url("skin/77.png") !important; background-size: 125px 14px !important; }
+#webamp .gen-window .gen-bottom  { background-image: url("skin/78.png") !important; background-size: 25px 14px !important; }
+#webamp .gen-window .gen-middle-left  { background-image: url("skin/79.png") !important; background-size: 11px 29px !important; }
+#webamp .gen-window .gen-middle-left-bottom  { background-image: url("skin/80.png") !important; background-size: 11px 24px !important; }
+#webamp .gen-window .gen-middle-right  { background-image: url("skin/81.png") !important; background-size: 8px 29px !important; }
+#webamp .gen-window .gen-middle-right-bottom  { background-image: url("skin/82.png") !important; background-size: 8px 24px !important; }
+#webamp .gen-window .gen-close.winamp-active  { background-image: url("skin/64.png") !important; background-size: 9px 9px !important; }
+#webamp .gen-text-a  { background-image: url("skin/83.png") !important; background-size: 6px 7px !important; }
+#webamp .gen-window.selected .gen-text-a  { background-image: url("skin/84.png") !important; background-size: 6px 7px !important; }
+#webamp .gen-text-b  { background-image: url("skin/85.png") !important; background-size: 7px 7px !important; }
+#webamp .gen-window.selected .gen-text-b  { background-image: url("skin/86.png") !important; background-size: 7px 7px !important; }
+#webamp .gen-text-c  { background-image: url("skin/87.png") !important; background-size: 7px 7px !important; }
+#webamp .gen-window.selected .gen-text-c  { background-image: url("skin/88.png") !important; background-size: 7px 7px !important; }
+#webamp .gen-text-d  { background-image: url("skin/89.png") !important; background-size: 6px 7px !important; }
+#webamp .gen-window.selected .gen-text-d  { background-image: url("skin/90.png") !important; background-size: 6px 7px !important; }
+#webamp .gen-text-e  { background-image: url("skin/91.png") !important; background-size: 6px 7px !important; }
+#webamp .gen-window.selected .gen-text-e  { background-image: url("skin/92.png") !important; background-size: 6px 7px !important; }
+#webamp .gen-text-f  { background-image: url("skin/93.png") !important; background-size: 6px 7px !important; }
+#webamp .gen-window.selected .gen-text-f  { background-image: url("skin/94.png") !important; background-size: 6px 7px !important; }
+#webamp .gen-text-g  { background-image: url("skin/95.png") !important; background-size: 7px 7px !important; }
+#webamp .gen-window.selected .gen-text-g  { background-image: url("skin/96.png") !important; background-size: 7px 7px !important; }
+#webamp .gen-text-h  { background-image: url("skin/97.png") !important; background-size: 6px 7px !important; }
+#webamp .gen-window.selected .gen-text-h  { background-image: url("skin/98.png") !important; background-size: 6px 7px !important; }
+#webamp .gen-text-i  { background-image: url("skin/99.png") !important; background-size: 4px 7px !important; }
+#webamp .gen-window.selected .gen-text-i  { background-image: url("skin/100.png") !important; background-size: 4px 7px !important; }
+#webamp .gen-text-j  { background-image: url("skin/101.png") !important; background-size: 6px 7px !important; }
+#webamp .gen-window.selected .gen-text-j  { background-image: url("skin/102.png") !important; background-size: 6px 7px !important; }
+#webamp .gen-text-k  { background-image: url("skin/103.png") !important; background-size: 7px 7px !important; }
+#webamp .gen-window.selected .gen-text-k  { background-image: url("skin/104.png") !important; background-size: 7px 7px !important; }
+#webamp .gen-text-l  { background-image: url("skin/105.png") !important; background-size: 5px 7px !important; }
+#webamp .gen-window.selected .gen-text-l  { background-image: url("skin/106.png") !important; background-size: 5px 7px !important; }
+#webamp .gen-text-m  { background-image: url("skin/107.png") !important; background-size: 8px 7px !important; }
+#webamp .gen-window.selected .gen-text-m  { background-image: url("skin/108.png") !important; background-size: 8px 7px !important; }
+#webamp .gen-text-n  { background-image: url("skin/109.png") !important; background-size: 6px 7px !important; }
+#webamp .gen-window.selected .gen-text-n  { background-image: url("skin/110.png") !important; background-size: 6px 7px !important; }
+#webamp .gen-text-o  { background-image: url("skin/111.png") !important; background-size: 6px 7px !important; }
+#webamp .gen-window.selected .gen-text-o  { background-image: url("skin/112.png") !important; background-size: 6px 7px !important; }
+#webamp .gen-text-p  { background-image: url("skin/113.png") !important; background-size: 6px 7px !important; }
+#webamp .gen-window.selected .gen-text-p  { background-image: url("skin/114.png") !important; background-size: 6px 7px !important; }
+#webamp .gen-text-q  { background-image: url("skin/115.png") !important; background-size: 7px 7px !important; }
+#webamp .gen-window.selected .gen-text-q  { background-image: url("skin/116.png") !important; background-size: 7px 7px !important; }
+#webamp .gen-text-r  { background-image: url("skin/117.png") !important; background-size: 7px 7px !important; }
+#webamp .gen-window.selected .gen-text-r  { background-image: url("skin/118.png") !important; background-size: 7px 7px !important; }
+#webamp .gen-text-s  { background-image: url("skin/119.png") !important; background-size: 6px 7px !important; }
+#webamp .gen-window.selected .gen-text-s  { background-image: url("skin/120.png") !important; background-size: 6px 7px !important; }
+#webamp .gen-text-t  { background-image: url("skin/121.png") !important; background-size: 5px 7px !important; }
+#webamp .gen-window.selected .gen-text-t  { background-image: url("skin/122.png") !important; background-size: 5px 7px !important; }
+#webamp .gen-text-u  { background-image: url("skin/123.png") !important; background-size: 6px 7px !important; }
+#webamp .gen-window.selected .gen-text-u  { background-image: url("skin/124.png") !important; background-size: 6px 7px !important; }
+#webamp .gen-text-v  { background-image: url("skin/125.png") !important; background-size: 6px 7px !important; }
+#webamp .gen-window.selected .gen-text-v  { background-image: url("skin/126.png") !important; background-size: 6px 7px !important; }
+#webamp .gen-text-w  { background-image: url("skin/127.png") !important; background-size: 8px 7px !important; }
+#webamp .gen-window.selected .gen-text-w  { background-image: url("skin/128.png") !important; background-size: 8px 7px !important; }
+#webamp .gen-text-x  { background-image: url("skin/129.png") !important; background-size: 7px 7px !important; }
+#webamp .gen-window.selected .gen-text-x  { background-image: url("skin/130.png") !important; background-size: 7px 7px !important; }
+#webamp .gen-text-y  { background-image: url("skin/131.png") !important; background-size: 6px 7px !important; }
+#webamp .gen-window.selected .gen-text-y  { background-image: url("skin/132.png") !important; background-size: 6px 7px !important; }
+#webamp .gen-text-z  { background-image: url("skin/133.png") !important; background-size: 11px 7px !important; }
+#webamp .gen-window.selected .gen-text-z  { background-image: url("skin/134.png") !important; background-size: 11px 7px !important; }

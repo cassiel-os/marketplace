@@ -11,8 +11,9 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const SCALE = 4;
-// What skin.css draws: the main window.
+// What skin.css draws: the main window, and the equalizer (not its shade mode).
 const DRAWN = /#main-window|#title-bar|\.actions|#eject|#shuffle|#repeat|#volume|#balance|#position|#clutter-bar|#button-|#play-pause|#work-indicator|\.digit-|#minus-sign|\.media-info|\.windows|#equalizer-button|#playlist-button|\.character|#about/;
+const EQ_DRAWN = /#equalizer-window:not\(\.shade\)|\.equalizer-top|#on\b|#auto\b|#presets\b|#eqGraph|\.band|#preamp-line|#equalizer-window\.selected #eq-buttons|^#webamp #equalizer-shade/;
 const bundle = readFileSync(join(ROOT, 'webamp.js'), 'utf8');
 const out = join(ROOT, 'skin');
 rmSync(out, { recursive: true, force: true });
@@ -32,6 +33,7 @@ let n = 0;
 while ((m = rule.exec(bundle))) {
   const [, selector, data] = m;
   if (DRAWN.test(selector) && !/equalizer-window|playlist-window|gen-window/.test(selector)) continue;
+  if (EQ_DRAWN.test(selector) && !/\.shade(?!\))/.test(selector)) continue;
   let name = byData.get(data);
   if (!name) {
     name = `${byData.size}.png`;

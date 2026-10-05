@@ -51,7 +51,60 @@
       window.cassiel.close();
     });
     webamp.onMinimize(() => window.cassiel.window.minimize());
-    webamp.renderInto($('stage'));
+    webamp.renderInto($('stage')).then(eqShapes);
+  }
+
+  // The equalizer's lit parts, drawn as shapes (skin.css): each slider's slot in the
+  // color of its level, green at -12 dB to red at +12 as in Winamp's 28 steps, and the
+  // graph's curve through the ten bands with the preamp's line under it.
+  const LEVELS = [
+    '#2a9a16', '#2a9a16', '#5ab02c', '#71cd34', '#71cd34', '#89e230', '#89e230', '#a4e238', '#a4e238', '#c4db32',
+    '#c4db32', '#c4db32', '#c4db32', '#c4db32', '#e0cd30', '#e0cd30', '#e0cd30', '#e0cd30', '#e0b228', '#e09228',
+    '#e09228', '#dc771f', '#c6780f', '#dc771f', '#e0541e', '#e0541e', '#d3221b', '#d3221b',
+  ];
+  const BANDS = [60, 170, 310, 600, 1000, 3000, 6000, 12000, 14000, 16000];
+  const SVG = 'http://www.w3.org/2000/svg';
+  function eqShapes() {
+    const graph = document.createElementNS(SVG, 'svg');
+    graph.classList.add('eq-curve');
+    graph.setAttribute('viewBox', '0 0 113 19');
+    graph.innerHTML = `
+      <defs><linearGradient id="eq-heat" x1="0" y1="1" x2="0" y2="18" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#d3221b"/><stop offset="0.3" stop-color="#e09228"/>
+        <stop offset="0.5" stop-color="#e0cd30"/><stop offset="0.75" stop-color="#89e230"/>
+        <stop offset="1" stop-color="#2a9a16"/></linearGradient></defs>
+      <g stroke="#6c6c7e" stroke-width="1">${BANDS.map((_, i) => `<line x1="${2.5 + 12 * i}" y1="0" x2="${2.5 + 12 * i}" y2="19"/>`).join('')}</g>
+      <line class="preamp" x1="0" x2="113" stroke="#bacbdd" stroke-width="1"/>
+      <path class="curve" fill="none" stroke="url(#eq-heat)" stroke-width="1.2" stroke-linejoin="round"/>`;
+    const y = (value) => 1.5 + ((100 - value) / 100) * 16;
+    let last = null;
+    const draw = () => {
+      const sliders = webamp.store.getState().equalizer.sliders;
+      if (sliders === last && graph.isConnected) return;
+      last = sliders;
+      const eq = document.querySelector('#equalizer-window');
+      if (!eq) return;
+      if (!graph.isConnected) eq.append(graph);
+      for (const [key, value] of Object.entries(sliders)) {
+        const band = eq.querySelector(key === 'preamp' ? '#preamp' : `#band-${key}`);
+        band?.style.setProperty('--level', LEVELS[Math.round((value / 100) * 27)]);
+      }
+      const at = (value) => y(value).toFixed(2);
+      graph.querySelector('.preamp').setAttribute('y1', at(sliders.preamp));
+      graph.querySelector('.preamp').setAttribute('y2', at(sliders.preamp));
+      // A smooth curve through the bands (Catmull-Rom, as cubic Béziers).
+      const p = BANDS.map((band, i) => [2.5 + 12 * i, y(sliders[band])]);
+      let d = `M${p[0][0]},${p[0][1].toFixed(2)}`;
+      for (let i = 0; i < p.length - 1; i++) {
+        const [a, b, c, e] = [p[i - 1] ?? p[i], p[i], p[i + 1], p[i + 2] ?? p[i + 1]];
+        const c1 = [b[0] + (c[0] - a[0]) / 6, b[1] + (c[1] - a[1]) / 6];
+        const c2 = [c[0] - (e[0] - b[0]) / 6, c[1] - (e[1] - b[1]) / 6];
+        d += ` C${c1[0].toFixed(2)},${Math.min(18, Math.max(1, c1[1])).toFixed(2)} ${c2[0].toFixed(2)},${Math.min(18, Math.max(1, c2[1])).toFixed(2)} ${c[0]},${c[1].toFixed(2)}`;
+      }
+      graph.querySelector('.curve').setAttribute('d', d);
+    };
+    webamp.store.subscribe(draw);
+    draw();
   }
   if (document.readyState === 'complete') requestAnimationFrame(place);
   else addEventListener('load', () => requestAnimationFrame(place), { once: true });
