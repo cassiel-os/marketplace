@@ -1,4 +1,4 @@
-// Neo Arcade: the zips in its own folder (Programs/Neo Arcade/roms, where the person
+// Neo Arcade: the zips in its own folder (App Files/Neo Arcade/roms, where the person
 // drops them), played by FinalBurn Neo (Nostalgist runs RetroArch's FBNeo core, served
 // from this app's folder: it works offline). The library lists the games with a
 // picture of each (snaps/<set>.png, taken here after a while of play); the screen shows
@@ -262,10 +262,10 @@
 
   // ------------------------------------------------------------ the folder
 
-  /** Where the ROMs go, as the person sees it in Files: Programs/Neo Arcade/roms. */
+  /** Where the ROMs go, as the person sees it in Files: App Files/Neo Arcade/roms. */
   const shortWhere = () => {
-    const at = where.indexOf('/Programs/');
-    return `${at >= 0 ? where.slice(at + 1) : where || 'Programs/Neo Arcade'}/${ROMS}`;
+    const at = where.indexOf('/App Files/');
+    return `${at >= 0 ? where.slice(at + 1) : where || 'App Files/Neo Arcade'}/${ROMS}`;
   };
   $('folder').addEventListener('click', () => scan());
 

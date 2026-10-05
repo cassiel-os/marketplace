@@ -4,7 +4,7 @@ Neo Geo and arcade games from your own ROMs, in Cassiel. FinalBurn Neo plays the
 through [Nostalgist](https://nostalgist.js.org) (RetroArch in the browser); the core
 ships in `core/`, so it works offline.
 
-- Its folder is Programs/Neo Arcade (Cassiel's folder of its own for each app): put
+- Its folder is App Files/Neo Arcade (its folder in App Files, code and all): put
   your ROMs in `roms/` (zip files named by their set: `mslug.zip`) with `neogeo.zip`,
   the Neo Geo BIOS. It needs no permission to reach them.
 - Pictures: `snaps/<set>.png`; a game without one gets it after a while of play (F12
