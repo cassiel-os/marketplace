@@ -1,11 +1,12 @@
 {
-  "id": "checkers",
+  "id": "run.cassiel.checkers",
   "name": "Checkers",
   "version": "1.0.0",
   "description": "Play checkers against Cass.",
   "author": "Cassiel",
   "category": "games",
   "icon": "icon.svg",
+  "sdk": "1.0",
   "entry": "index.html",
   "window": {
     "width": 560,
