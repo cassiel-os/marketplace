@@ -8,6 +8,10 @@ from here; the Setup wizard shows what the app may do before it is installed.
 branch and carries its SHA-256: Cassiel lists only entries from here and refuses a
 download that is not byte for byte the approved package.
 
+**Branches.** `main` holds only what is published: the catalog and the packages. Each
+app's source is a branch named after its id (`run.cassiel.paint`), where it is built
+into the package that a pull request then brings to `main`.
+
 ## Apps
 
 <!-- apps -->
@@ -19,8 +23,9 @@ download that is not byte for byte the approved package.
 
 ## Publishing an app
 
-1. Build the package from your app's folder (see Cassiel's `docs/app-sdk.md`):
-   `scripts/pack-app.sh path/to/app` in the Cassiel repo makes `build/<id>.capp`.
+1. Keep the app's source in its own branch here, named after its id. Build the package
+   from it (see Cassiel's `docs/app-sdk.md`): `scripts/pack-app.sh path/to/app` in the
+   Cassiel repo makes `build/<id>.capp`.
 2. Here: `node scripts/publish.mjs path/to/<id>.capp`. It checks the manifest (`id`,
    `name`, a `version` newer than the published one, `sdk`, `category`), copies the
    package to `apps/<id>/<id>-<version>.capp`, takes out its icon, writes the catalog
