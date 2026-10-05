@@ -3,6 +3,7 @@
   "name": "Paint",
   "version": "0.2.0",
   "description": "Draw, paint and edit pictures.",
+  "author": "Cassiel, based on JS Paint by Isaiah Odhner",
   "category": "accessories",
   "icon": "images/icons/jspaint.svg",
   "entry": "index.html",
