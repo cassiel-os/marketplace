@@ -164,3 +164,10 @@ input {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+/* The playlist reaches the column's foot: Webamp sizes it in steps of 29 pixels, so
+   its height is set here to the exact room left under the main window and the
+   equalizer; its list area grows with it. */
+#webamp #playlist-window {
+  height: calc(100vh - 232px) !important;
+}
