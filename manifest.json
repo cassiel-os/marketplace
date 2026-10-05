@@ -1,8 +1,8 @@
 {
   "id": "run.cassiel.winamp-spotify",
   "name": "Winamp for Spotify",
-  "version": "0.3.0",
-  "description": "Winamp 2 and its Media Library, sharp at any size, playing Spotify: search, your playlists and Liked Songs. Needs Spotify Premium. Unofficial: not made by or affiliated with Spotify or Winamp.",
+  "version": "0.4.0",
+  "description": "Winamp 2 (Webamp, its skin made sharp) and a Media Library, playing Spotify: search, your playlists and Liked Songs. Needs Spotify Premium. Unofficial: not made by or affiliated with Spotify or Winamp.",
   "author": "Cassiel",
   "category": "multimedia",
   "icon": "icon.svg",
@@ -10,9 +10,9 @@
   "entry": "index.html",
   "window": {
     "width": 950,
-    "height": 487,
+    "height": 580,
     "minWidth": 700,
-    "minHeight": 440,
+    "minHeight": 480,
     "titleBar": false
   },
   "permissions": [

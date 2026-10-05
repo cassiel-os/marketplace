@@ -6,87 +6,21 @@
     <title>Winamp for Spotify</title>
     <link rel="stylesheet" href="/sdk/cassiel.css" />
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="skin.css" />
   </head>
   <body>
-    <div class="stack">
-      <!-- The main window: Winamp 2's layout, to the pixel, drawn as vectors. -->
-      <section class="wa main" id="main">
-        <header class="title active" data-window-drag>
-          <span class="t-icon" aria-hidden="true"></span>
-          <span class="t-name">WINAMP</span>
-          <button class="t-btn min" data-window-action="minimize" aria-label="Minimize" data-tooltip="Minimize"></button>
-          <button class="t-btn shade" data-window-action="maximize" aria-label="Maximize" data-tooltip="Maximize"></button>
-          <button class="t-btn close" data-window-action="close" aria-label="Close" data-tooltip="Close"></button>
-        </header>
-        <div class="clutter" aria-hidden="true"><b>O</b><b>A</b><b>I</b><b>D</b><b>V</b></div>
-        <div class="display" id="display" data-tooltip="Elapsed or remaining time">
-          <span class="playstate" id="state" data-state="stop"></span>
-          <span class="time" id="time">00:00</span>
-          <span class="viz" id="viz" aria-hidden="true"></span>
-        </div>
-        <div class="songbox"><span id="song">Winamp for Spotify</span></div>
-        <span class="lcdbox kbps" id="kbps"></span><span class="lbl kbps-l">kbps</span>
-        <span class="lcdbox khz" id="khz"></span><span class="lbl khz-l">kHz</span>
-        <span class="lbl mono">mono</span><span class="lbl stereo" id="stereo">stereo</span>
-        <input type="range" class="volume" id="volume" min="0" max="100" value="66" aria-label="Volume" data-tooltip="Volume" />
-        <input type="range" class="balance" min="-100" max="100" value="0" aria-label="Balance" disabled data-tooltip="Balance: Spotify's sound cannot be panned here" />
-        <button class="tog eqb" id="eqToggle" aria-pressed="true">EQ</button>
-        <button class="tog plb" id="plToggle" aria-pressed="true">PL</button>
-        <input type="range" class="posbar" id="seek" min="0" max="1000" value="0" aria-label="Position" />
-        <div class="cbuttons">
-          <button class="cb prev" id="prev" aria-label="Previous"></button>
-          <button class="cb play" id="play" aria-label="Play"></button>
-          <button class="cb pause" id="pause" aria-label="Pause"></button>
-          <button class="cb stop" id="stop" aria-label="Stop"></button>
-          <button class="cb next" id="next" aria-label="Next"></button>
-        </div>
-        <button class="cb eject" id="eject" aria-label="Find music" data-tooltip="Find music"></button>
-        <button class="tog shuffle" id="shuffle" aria-pressed="false">SHUFFLE</button>
-        <button class="tog repeat" id="repeat" aria-pressed="false" aria-label="Repeat" data-tooltip="Repeat the list, one song, or off"></button>
-        <span class="about" aria-hidden="true"></span>
-      </section>
+    <!-- Webamp (Winamp 2, its base skin made sharp: skin.css) on the left. -->
+    <div class="deck"><div class="stage" id="stage"></div></div>
 
-      <!-- The equalizer, as it looks; Spotify's audio cannot be shaped. -->
-      <section class="wa eq" id="eq" data-tooltip="Spotify sends its music protected: the equalizer cannot shape it.">
-        <header class="title" data-window-drag><span class="t-name">WINAMP EQUALIZER</span></header>
-        <button class="tog eq-on" disabled>ON</button>
-        <button class="tog eq-auto" disabled>AUTO</button>
-        <span class="eq-graph"><i></i></span>
-        <button class="small-btn presets" disabled>PRESETS</button>
-        <div class="eq-sliders" id="bands"></div>
-        <span class="db top">+12 db</span><span class="db mid">+0 db</span><span class="db bot">-12 db</span>
-        <span class="eq-l preamp-l">PREAMP</span>
-      </section>
-
-      <!-- The playlist: what was sent to Spotify. -->
-      <section class="wa pl" id="pl">
-        <header class="title" data-window-drag><span class="t-name">WINAMP PLAYLIST</span></header>
-        <ol class="pl-list" id="queue" tabindex="0"></ol>
-        <footer class="pl-bottom">
-          <div class="menu">
-            <button class="small-btn" id="add">ADD</button>
-            <div class="dropdown" id="addMenu" hidden>
-              <button data-go="search">Search Spotify…</button>
-              <button data-go="liked">Liked Songs</button>
-              <button data-go="playlists">My playlists</button>
-            </div>
-          </div>
-          <button class="small-btn" id="rem" data-tooltip="Remove the selected song from this list">REM</button>
-          <button class="small-btn" id="sel" data-tooltip="Select all">SEL</button>
-          <button class="small-btn" id="clear" data-tooltip="Clear the list">MISC</button>
-          <span class="pl-info"><span id="plTotal">0:00/0:00</span></span>
-          <span class="pl-mini">
-            <button data-act="prev" aria-label="Previous"></button><button data-act="play" aria-label="Play"></button><button data-act="pause" aria-label="Pause"></button><button data-act="stop" aria-label="Stop"></button><button data-act="next" aria-label="Next"></button><button data-act="eject" aria-label="Find music"></button>
-          </span>
-          <span class="pl-time" id="plTime">00:00</span>
-          <button class="small-btn list" data-tooltip="Clear the list" id="listOpts">LIST<br />OPTS</button>
-        </footer>
-      </section>
-    </div>
-
-    <!-- The Media Library: Spotify, as Winamp's library shows a collection. -->
+    <!-- The Media Library: Spotify, as Winamp's library shows a collection. Its title
+         bar is the window's. -->
     <section class="wa ml" id="ml">
-      <header class="title" data-window-drag><span class="t-name">WINAMP LIBRARY</span></header>
+      <header class="title" data-window-drag>
+        <span class="t-name">WINAMP LIBRARY</span>
+        <button class="t-btn min" data-window-action="minimize" aria-label="Minimize" data-tooltip="Minimize"></button>
+        <button class="t-btn shade" data-window-action="maximize" aria-label="Maximize" data-tooltip="Maximize"></button>
+        <button class="t-btn close" data-window-action="close" aria-label="Close" data-tooltip="Close"></button>
+      </header>
       <div class="ml-body">
         <div class="ml-side">
           <ul class="tree" id="tree" tabindex="0"></ul>
@@ -103,13 +37,14 @@
             <ul class="grid-rows" id="results" tabindex="0"></ul>
           </div>
           <div class="ml-foot">
-            <button class="ml-btn" id="mlPlay">Play</button><button class="ml-btn arrow" id="mlEnqueue" data-tooltip="Add to the playlist">Enqueue</button>
+            <button class="ml-btn" id="mlPlay">Play</button><button class="ml-btn" id="mlEnqueue" data-tooltip="Add to the playlist">Enqueue</button>
             <span class="ml-status" id="status"></span>
           </div>
         </div>
       </div>
     </section>
     <script src="/sdk/cassiel.js"></script>
+    <script src="webamp.js"></script>
     <script src="auth.js"></script>
     <script src="spotify.js"></script>
     <script src="app.js"></script>
