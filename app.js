@@ -1,17 +1,18 @@
-// Neo Arcade: the zips in a folder of yours, played by FinalBurn Neo (Nostalgist runs
-// RetroArch's FBNeo core, served from this app's folder: it works offline). The
-// library lists the games with a picture of each (snap/<set>.png, as MAME keeps them,
-// or <set>.png beside the zip, taken here after a while of play); the screen shows the
-// chosen one's picture, and the game when it plays. Neo Geo games need neogeo.zip, the
-// BIOS, in the same folder.
+// Neo Arcade: the zips in its own folder (Programs/Neo Arcade/roms, where the person
+// drops them), played by FinalBurn Neo (Nostalgist runs RetroArch's FBNeo core, served
+// from this app's folder: it works offline). The library lists the games with a
+// picture of each (snaps/<set>.png, taken here after a while of play); the screen shows
+// the chosen one's picture, and the game when it plays. Saved games go to saves/. Neo
+// Geo games need neogeo.zip, the BIOS, in roms/ too.
 (() => {
   const $ = (id) => document.getElementById(id);
   const GAMES = window.NEO_GAMES;
   const BIOS = 'neogeo.zip';
   const SNAP_AFTER_MS = 25000; // a game with no picture gets one after this much play
 
-  let folder = null; // the ROMs' folder
-  let games = []; // { set, file, path, title, year, maker, known, snap }
+  const ROMS = 'roms';
+  let where = ''; // the app's folder, to say where the ROMs go
+  let games = []; // { set, file, path, title, year, maker, known, snap } (paths in the app's folder)
   let pick = -1;
   let hasBios = false;
   let emu = null; // the running Nostalgist
@@ -27,10 +28,10 @@
       r.onerror = () => fail(r.error);
       r.readAsDataURL(blob);
     });
-  /** A file of the person's as a Blob. Read through a stream URL, not as base64: ROMs
-   * are big (some Neo Geo ones near 100 MB). */
+  /** A file in the app's folder as a Blob. Read through a stream URL, not as base64:
+   * ROMs are big (some Neo Geo ones near 100 MB). */
   const read = async (path, type) => {
-    const response = await fetch(await window.cassiel.files.streamUrl(path));
+    const response = await fetch(await window.cassiel.appFiles.streamUrl(path));
     if (!response.ok) throw new Error(`${path.split('/').pop()}: ${response.status}`);
     const blob = await response.blob();
     return type ? new Blob([blob], { type }) : blob;
@@ -38,35 +39,28 @@
 
   // ------------------------------------------------------------ the library
 
-  const parent = (path) => path.replace(/\/[^/]+$/, '') || '/';
   const setOf = (file) => file.replace(/\.zip$/i, '').toLowerCase();
 
+  const listed = async (dir) => {
+    try {
+      return (await window.cassiel.appFiles.list(dir)).items;
+    } catch {
+      return [];
+    }
+  };
   async function scan() {
     games = [];
     hasBios = false;
-    if (!folder) return render();
-    let items = [];
-    let snaps = new Map();
-    try {
-      items = (await window.cassiel.files.list(folder)).items;
-    } catch (e) {
-      return problem(`No se pudo leer ${folder}: ${e.message}`);
-    }
-    for (const it of items) if (it.kind === 'file' && /\.png$/i.test(it.name)) snaps.set(it.name.slice(0, -4).toLowerCase(), it.path);
-    const snapDir = items.find((it) => it.kind === 'folder' && it.name.toLowerCase() === 'snap');
-    if (snapDir) {
-      try {
-        for (const it of (await window.cassiel.files.list(snapDir.path)).items)
-          if (/\.png$/i.test(it.name)) snaps.set(it.name.slice(0, -4).toLowerCase(), it.path);
-      } catch {}
-    }
+    const items = await listed(ROMS);
+    const snaps = new Map();
+    for (const it of await listed('snaps')) if (/\.png$/i.test(it.name)) snaps.set(it.name.slice(0, -4).toLowerCase(), `snaps/${it.name}`);
     hasBios = items.some((it) => it.kind === 'file' && it.name.toLowerCase() === BIOS);
     games = items
       .filter((it) => it.kind === 'file' && /\.zip$/i.test(it.name) && it.name.toLowerCase() !== BIOS)
       .map((it) => {
         const set = setOf(it.name);
         const [title, year, maker] = GAMES[set] ?? [it.name.replace(/\.zip$/i, ''), null, null];
-        return { set, file: it.name, path: it.path, title, year, maker, known: set in GAMES, snap: snaps.get(set) ?? null };
+        return { set, file: it.name, path: `${ROMS}/${it.name}`, title, year, maker, known: set in GAMES, snap: snaps.get(set) ?? null };
       })
       .sort((a, b) => a.title.localeCompare(b.title));
     pick = games.length ? 0 : -1;
@@ -85,10 +79,9 @@
     const list = $('games');
     $('count').textContent = String(games.length);
     const info = $('romInfo');
-    if (info) info.innerHTML = folder ? `${games.length} ROMS · BIOS <span class="${hasBios ? 'acc' : 'no'}">${hasBios ? 'OK' : 'NO'}</span>` : 'SIN CARPETA';
+    if (info) info.innerHTML = `${games.length} ROMS · BIOS <span class="${hasBios ? 'acc' : 'no'}">${hasBios ? 'OK' : 'NO'}</span>`;
     list.replaceChildren();
-    if (!folder) return list.append(note('Elige la carpeta donde tienes tus ROMs (zip). Neo Geo necesita también neogeo.zip ahí.'));
-    if (!games.length) return list.append(note('No hay ROMs (zip) en esta carpeta.'));
+    if (!games.length) return list.append(note(`Pon tus ROMs (zip) en ${shortWhere()}, y neogeo.zip para Neo Geo.`));
     games.forEach((g, i) => {
       const li = document.createElement('li');
       li.role = 'option';
@@ -120,10 +113,10 @@
     const snap = $('snap');
     const empty = $('empty');
     line(g);
-    if (!folder) {
+    if (!g) {
       snap.hidden = true;
       empty.hidden = false;
-      empty.innerHTML = '<b>Neo Arcade</b>Tus juegos de Neo Geo y maquinitas, con FinalBurn Neo. Elige la carpeta de tus ROMs abajo a la izquierda.';
+      empty.innerHTML = `<b>Neo Arcade</b>Tus juegos de Neo Geo y maquinitas, con FinalBurn Neo.<br />Copia tus ROMs (zip) y neogeo.zip a <kbd>${escape(shortWhere())}</kbd> y pulsa <kbd>F5</kbd>.`;
       return;
     }
     const url = await picture(g);
@@ -173,7 +166,7 @@
     state.className = 'state warn';
     state.textContent = 'Cargando';
     try {
-      const [rom, bios] = await Promise.all([read(g.path), hasBios ? read(`${folder}/${BIOS}`) : null]);
+      const [rom, bios] = await Promise.all([read(g.path), hasBios ? read(`${ROMS}/${BIOS}`) : null]);
       if (playing !== g) return;
       // The canvas needs its size while the emulator starts: shown, but not seen yet.
       const canvas = $('canvas');
@@ -230,8 +223,8 @@
     if (!emu || !g) return;
     try {
       const blob = await emu.screenshot();
-      const path = `${folder}/${g.set}.png`;
-      await window.cassiel.files.writeBytes(path, await toBase64(blob));
+      const path = `snaps/${g.set}.png`;
+      await window.cassiel.appFiles.writeBytes(path, await toBase64(blob));
       thumbs.set(path, Promise.resolve(URL.createObjectURL(blob)));
       g.snap = path;
       render();
@@ -244,7 +237,7 @@
     if (!emu || !playing) return;
     try {
       const { state } = await emu.saveState();
-      await window.cassiel.files.writeBytes(`${folder}/${playing.set}.state`, await toBase64(state));
+      await window.cassiel.appFiles.writeBytes(`saves/${playing.set}.state`, await toBase64(state));
       window.cassiel.notify('Neo Arcade', `Partida guardada: ${playing.title}`);
     } catch (e) {
       problem(`No se guardó la partida: ${e.message}`);
@@ -253,7 +246,7 @@
   async function loadState() {
     if (!emu || !playing) return;
     try {
-      await emu.loadState(await read(`${folder}/${playing.set}.state`));
+      await emu.loadState(await read(`saves/${playing.set}.state`));
     } catch {
       problem('No hay partida guardada de este juego.');
     }
@@ -269,16 +262,12 @@
 
   // ------------------------------------------------------------ the folder
 
-  async function chooseFolder() {
-    const r = await window.cassiel.dialog.openFile({ title: 'Elige una ROM de tu carpeta de juegos', types: [{ label: 'ROMs (zip)', extensions: ['zip'] }] });
-    if (!r) return;
-    folder = parent(r.path);
-    await window.cassiel.storage.set('folder', folder);
-    await scan();
-    const i = games.findIndex((g) => g.path === r.path);
-    if (i >= 0) choose(i);
-  }
-  $('folder').addEventListener('click', chooseFolder);
+  /** Where the ROMs go, as the person sees it in Files: Programs/Neo Arcade/roms. */
+  const shortWhere = () => {
+    const at = where.indexOf('/Programs/');
+    return `${at >= 0 ? where.slice(at + 1) : where || 'Programs/Neo Arcade'}/${ROMS}`;
+  };
+  $('folder').addEventListener('click', () => scan());
 
   // ------------------------------------------------------------ keys and menus
 
@@ -314,8 +303,7 @@
     {
       label: 'Archivo',
       items: [
-        { label: 'Elegir carpeta de ROMs…', action: chooseFolder },
-        { label: 'Volver a leer la carpeta', shortcut: 'F5', action: scan, enabled: () => !!folder },
+        { label: 'Volver a leer las ROMs', shortcut: 'F5', action: scan },
         'separator',
         { label: 'Salir', action: () => window.cassiel.close() },
       ],
@@ -424,7 +412,7 @@
   render();
   show();
   window.cassiel.ready.then(async () => {
-    folder = (await window.cassiel.storage.get('folder')) ?? null;
+    where = await window.cassiel.appFiles.folder().catch(() => '');
     await scan();
   });
 })();
