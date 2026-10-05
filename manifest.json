@@ -1,7 +1,7 @@
 {
   "id": "run.cassiel.spotify",
   "name": "Spotify",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Unofficial Spotify player for Cassiel. Not made by or affiliated with Spotify.",
   "author": "Cassiel",
   "category": "multimedia",

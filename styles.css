@@ -1,5 +1,5 @@
-/* A Spotify link bar, Spotify's own player under it, and a status line saying the app
-   is not Spotify's. */
+/* A Spotify link bar, Spotify's own player under it, Play and Pause with what is
+   playing, and a status line saying the app is not Spotify's. */
 html,
 body {
   height: 100%;
@@ -30,34 +30,41 @@ body {
 }
 .embed,
 .embed iframe {
+  display: block;
   width: 100%;
   height: 100%;
   border: 0;
 }
-.empty {
+.loading {
   position: absolute;
   inset: 0;
   display: grid;
-  place-content: center;
-  justify-items: center;
-  gap: 8px;
-  padding: 24px;
-  color: #fff;
-  text-align: center;
-}
-.empty p {
-  max-width: 280px;
+  place-items: center;
   margin: 0;
-  line-height: 1.4;
-}
-.empty .muted {
   color: #a7a7a7;
 }
-.empty[hidden] {
+.loading[hidden] {
   display: none;
+}
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px;
+  border-top: var(--cassiel-hairline, 1px) solid var(--cassiel-border);
+}
+.state {
+  flex: 1;
+  min-width: 0;
+  margin-left: 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--cassiel-text-muted);
+  font-variant-numeric: tabular-nums;
 }
 .status {
   padding: 4px 8px;
   border-top: var(--cassiel-hairline, 1px) solid var(--cassiel-border);
-  color: var(--cassiel-text-muted, #666);
+  color: var(--cassiel-text-muted);
 }
