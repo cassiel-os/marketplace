@@ -5,7 +5,6 @@
   "description": "Plays your own MUGEN characters and stages (in App Files/M.U.G.E.N/game), with mugen-js. No game data included. Not affiliated with Elecbyte.",
   "author": "Cassiel",
   "category": "games",
-  "icon": "icon.svg",
   "sdk": "1.0",
   "entry": "index.html",
   "window": {
