@@ -5,6 +5,8 @@ import { createEngine } from './mugen.min.js';
 
 const GAME = 'game';
 const CONFIG = 'data/mugen.cfg';
+// The dark title screen. More characters: edit data/select.def, as with any MUGEN.
+const MOTIF = 'data/system.def';
 /** Folders listed at once: a roster has hundreds. */
 const LIST_AT_ONCE = 8;
 
@@ -31,6 +33,29 @@ const TEXT = {
 
 const $ = (id) => document.getElementById(id);
 const text = () => TEXT[(document.documentElement.lang || 'en').slice(0, 2)] ?? TEXT.en;
+
+/** The motif's localcoord: the size the game is made for. */
+async function motifSize() {
+  const motif = await cassiel.appFiles.readText(`${GAME}/${MOTIF}`);
+  const found = /^\s*localcoord\s*=\s*(\d+)\s*,\s*(\d+)/im.exec(motif);
+  return found ? [Number(found[1]), Number(found[2])] : [320, 240];
+}
+
+/**
+ * The window takes the motif's size; afterwards the canvas draws at as many whole
+ * pixels per motif unit as the window needs, so it stays sharp when maximized.
+ */
+function fitWindow(engine, canvas, [width, height]) {
+  void cassiel.window.setContentSize?.(width, height);
+  let zoom = 0;
+  new ResizeObserver(() => {
+    const scale = Math.min(canvas.clientWidth / width, canvas.clientHeight / height) * devicePixelRatio;
+    const next = Math.max(1, Math.ceil(scale));
+    if (next === zoom) return;
+    zoom = next;
+    engine.setZoom(next);
+  }).observe(canvas);
+}
 
 /** Every file below the game folder, as paths relative to it. */
 async function listFiles() {
@@ -146,10 +171,10 @@ async function start() {
   const engine = await createEngine({
     canvas,
     source: folderSource(files),
-    // The dark title screen. More characters: edit data/select.def, as with any MUGEN.
-    motif: 'data/system.def',
+    motif: MOTIF,
     onExit: () => cassiel.close(),
   });
+  fitWindow(engine, canvas, await motifSize());
   if (engine.config.fullScreen) startFullscreen();
   engine.start();
   canvas.focus();

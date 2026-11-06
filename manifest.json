@@ -9,8 +9,8 @@
   "sdk": "1.0",
   "entry": "index.html",
   "window": {
-    "width": 640,
-    "height": 480,
+    "width": 320,
+    "height": 240,
     "minWidth": 320,
     "minHeight": 240,
     "single": true
