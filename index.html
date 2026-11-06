@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>M.U.G.E.N.js</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/sdk/cassiel.css" />
+    <style>
+      html, body { height: 100%; margin: 0; overflow: hidden; background: #000; color: #ccc; }
+      body { display: grid; place-items: center; }
+      canvas { display: block; outline: none; image-rendering: pixelated; width: auto; height: auto; max-width: 100vw; max-height: 100vh; }
+      canvas[hidden] { display: none; }
+      #status { position: fixed; top: 8px; left: 12px; color: #999; pointer-events: none; }
+      #setup { max-width: 34em; padding: 16px; line-height: 1.5; }
+      #setup[hidden] { display: none; }
+      #setup code { user-select: all; }
+    </style>
+  </head>
+  <body>
+    <div id="status" role="status"></div>
+    <canvas id="screen" tabindex="0" hidden></canvas>
+    <div id="setup" hidden>
+      <h2 id="setup-title"></h2>
+      <p id="setup-text"></p>
+      <p><code id="setup-path"></code></p>
+      <p><button id="setup-retry"></button></p>
+    </div>
+    <script src="/sdk/cassiel.js"></script>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

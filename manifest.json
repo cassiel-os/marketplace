@@ -1,0 +1,19 @@
+{
+  "id": "run.cassiel.mugen",
+  "name": "M.U.G.E.N.js",
+  "version": "0.1.0",
+  "description": "Plays your own MUGEN characters and stages (in App Files/M.U.G.E.N.js/game), with mugen-js. No game data included. Not affiliated with Elecbyte.",
+  "author": "Cassiel",
+  "category": "games",
+  "icon": "icon.svg",
+  "sdk": "1.0",
+  "entry": "index.html",
+  "window": {
+    "width": 960,
+    "height": 600,
+    "minWidth": 480,
+    "minHeight": 320,
+    "single": true
+  },
+  "folders": ["game"]
+}
