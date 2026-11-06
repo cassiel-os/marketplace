@@ -22,7 +22,7 @@ Plays your own MUGEN characters and stages in Cassiel, with
 
 ## Build
 
-`mugen.min.js` is the file from mugen-js's release (now v0.1.0).
+`mugen.min.js` is the file from mugen-js's release (now v0.1.1).
 
 ```sh
 cd ~/apps/cassiel && scripts/pack-app.sh ~/apps/cassiel-mugen   # build/run.cassiel.mugen.capp
@@ -31,6 +31,6 @@ scripts/install-app.sh ~/apps/cassiel-mugen                     # into the dev d
 
 ## Third parties
 
-`mugen.min.js` is mugen-js 0.1.0. Its license and what it does not cover are in
+`mugen.min.js` is mugen-js 0.1.1. Its license and what it does not cover are in
 `LICENSE-mugen-js.txt`. M.U.G.E.N is a name of Elecbyte; this app is not affiliated with
 or endorsed by them.
