@@ -1,5 +1,5 @@
-// M.U.G.E.N.js for Cassiel: the engine from mugen.min.js, the files from the app's
-// own folder (App Files/M.U.G.E.N.js/game), and the desktop's menus and dialogs.
+// M.U.G.E.N for Cassiel: the engine from mugen.min.js, the files from the app's own
+// folder (App Files/M.U.G.E.N/game), a plain window like the original's.
 
 import { createEngine } from './mugen.min.js';
 
@@ -15,18 +15,12 @@ const TEXT = {
     setupTitle: 'Add your MUGEN folder',
     setupText: 'This app brings the engine, not the game. Copy what is inside your MUGEN folder (data, chars, stages, font...) here:',
     retry: 'Try again',
-    game: '&Game',
-    fullscreen: '&Full Screen',
-    exit: 'E&xit',
     failed: 'Could not start',
   },
   es: {
     setupTitle: 'Agrega tu carpeta de MUGEN',
     setupText: 'Esta app trae el motor, no el juego. Copia aquí lo que hay dentro de tu carpeta de MUGEN (data, chars, stages, font...):',
     retry: 'Intentar de nuevo',
-    game: '&Juego',
-    fullscreen: '&Pantalla completa',
-    exit: '&Salir',
     failed: 'No se pudo iniciar',
   },
 };
@@ -111,24 +105,6 @@ function toggleFullscreen() {
   return document.documentElement.requestFullscreen();
 }
 
-function setMenu() {
-  const t = text();
-  cassiel.menu.set(
-    [
-      {
-        label: t.game,
-        items: [
-          { label: t.fullscreen, shortcut: 'Alt+Enter', windowAction: 'fullscreen', action: toggleFullscreen },
-          'separator',
-          { label: t.exit, action: () => cassiel.close() },
-        ],
-      },
-    ],
-    // The game has the keyboard; Alt+Enter is handled below.
-    { shortcuts: false },
-  );
-}
-
 // Alt+Enter is the window's, not the game's: Enter must not reach it as a button.
 addEventListener(
   'keydown',
@@ -174,6 +150,9 @@ async function start() {
     motif: MOTIF,
     onExit: () => cassiel.close(),
   });
+  // [Video] KeepAspect: bars when the window isn't the game's shape; 0 stretches it.
+  const config = await cassiel.appFiles.readText(`${GAME}/${CONFIG}`);
+  canvas.classList.toggle('stretch', /^\s*keepaspect\s*=\s*0/im.test(config));
   fitWindow(engine, canvas, await motifSize());
   if (engine.config.fullScreen) startFullscreen();
   engine.start();
@@ -185,7 +164,6 @@ async function start() {
 $('setup-retry').addEventListener('click', () => void start());
 
 cassiel.ready.then(async () => {
-  setMenu();
   try {
     await start();
   } catch (error) {

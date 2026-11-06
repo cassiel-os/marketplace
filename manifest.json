@@ -1,8 +1,8 @@
 {
   "id": "run.cassiel.mugen",
-  "name": "M.U.G.E.N.js",
+  "name": "M.U.G.E.N",
   "version": "0.1.0",
-  "description": "Plays your own MUGEN characters and stages (in App Files/M.U.G.E.N.js/game), with mugen-js. No game data included. Not affiliated with Elecbyte.",
+  "description": "Plays your own MUGEN characters and stages (in App Files/M.U.G.E.N/game), with mugen-js. No game data included. Not affiliated with Elecbyte.",
   "author": "Cassiel",
   "category": "games",
   "icon": "icon.svg",
