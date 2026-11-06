@@ -13,13 +13,8 @@ const TEXT = {
     setupTitle: 'Add your MUGEN folder',
     setupText: 'This app brings the engine, not the game. Copy what is inside your MUGEN folder (data, chars, stages, font...) here:',
     retry: 'Try again',
-    listing: 'Reading your files...',
-    loading: 'Loading',
-    phases: { motif: 'motif', characters: 'characters', hud: 'HUD', loading: 'match' },
-    sound: 'Press a key or click for sound',
     game: '&Game',
     fullscreen: '&Full Screen',
-    fullscreenHint: 'Press a key or click for full screen',
     exit: 'E&xit',
     failed: 'Could not start',
   },
@@ -27,13 +22,8 @@ const TEXT = {
     setupTitle: 'Agrega tu carpeta de MUGEN',
     setupText: 'Esta app trae el motor, no el juego. Copia aquí lo que hay dentro de tu carpeta de MUGEN (data, chars, stages, font...):',
     retry: 'Intentar de nuevo',
-    listing: 'Leyendo tus archivos...',
-    loading: 'Cargando',
-    phases: { motif: 'motif', characters: 'personajes', hud: 'HUD', loading: 'partida' },
-    sound: 'Pulsa una tecla o haz clic para oír el sonido',
     game: '&Juego',
     fullscreen: '&Pantalla completa',
-    fullscreenHint: 'Pulsa una tecla o haz clic para pantalla completa',
     exit: '&Salir',
     failed: 'No se pudo iniciar',
   },
@@ -81,19 +71,8 @@ function folderSource(files) {
   };
 }
 
-function showProgress(progress) {
-  const t = text();
-  if (!progress) {
-    $('status').textContent = '';
-    return;
-  }
-  const count = progress.phase === 'characters' && progress.done !== undefined ? ` ${progress.done}/${progress.total}` : '';
-  $('status').textContent = `${t.loading} ${t.phases[progress.phase]}...${count}`;
-}
-
 async function showSetup() {
   const t = text();
-  $('status').textContent = '';
   $('setup-title').textContent = t.setupTitle;
   $('setup-text').textContent = t.setupText;
   $('setup-retry').textContent = t.retry;
@@ -145,23 +124,18 @@ addEventListener(
  */
 function startFullscreen() {
   void cassiel.window.toggleMaximize();
-  let waiting = true;
   const enter = (event) => {
     removeEventListener('keydown', enter, true);
     removeEventListener('pointerdown', enter, true);
-    waiting = false;
     if (event.altKey && event.code?.endsWith('Enter')) return;
     if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
   };
   addEventListener('keydown', enter, true);
   addEventListener('pointerdown', enter, true);
-  return () => waiting;
 }
 
 async function start() {
-  const t = text();
   $('setup').hidden = true;
-  $('status').textContent = t.listing;
   const files = await listFiles();
   if (!files.some((path) => path.toLowerCase() === CONFIG)) {
     await showSetup();
@@ -174,18 +148,11 @@ async function start() {
     source: folderSource(files),
     // The dark title screen. More characters: edit data/select.def, as with any MUGEN.
     motif: 'data/system.def',
-    onProgress: showProgress,
     onExit: () => cassiel.close(),
   });
-  const waitingForFullscreen = engine.config.fullScreen ? startFullscreen() : () => false;
+  if (engine.config.fullScreen) startFullscreen();
   engine.start();
   canvas.focus();
-  // A gamepad alone can't start the sound: browsers want a key press, click or touch.
-  setInterval(() => {
-    if (engine.loading) return;
-    if (waitingForFullscreen()) $('status').textContent = t.fullscreenHint;
-    else $('status').textContent = engine.running && engine.audioLocked ? t.sound : '';
-  }, 500);
   // The game has the keyboard while the window is on screen: clicks give it back.
   addEventListener('pointerdown', () => canvas.focus());
 }
@@ -197,7 +164,6 @@ cassiel.ready.then(async () => {
   try {
     await start();
   } catch (error) {
-    $('status').textContent = '';
     await cassiel.dialog.alert(text().failed, String(error?.message ?? error), 'error');
   }
 });
