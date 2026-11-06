@@ -14,6 +14,18 @@
       "sha256": "d161a3735a7f98b901c6dcca35e6d382d94cab86eb746daa187ae373627fbc9e"
     },
     {
+      "id": "run.cassiel.mugen",
+      "name": "M.U.G.E.N",
+      "version": "0.1.0",
+      "description": "Plays your own MUGEN characters and stages (in App Files/M.U.G.E.N/game), with mugen-js. No game data included. Not affiliated with Elecbyte.",
+      "author": "Jonathan Ayala",
+      "category": "games",
+      "sdk": "1.0",
+      "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/run.cassiel.mugen/run.cassiel.mugen-0.1.0.capp",
+      "bytes": 126052,
+      "sha256": "c23f41bad2ffed7dd69d03eb36038fd914719c3951529529b6e0b5578449db91"
+    },
+    {
       "id": "run.cassiel.paint",
       "name": "Paint",
       "version": "0.2.0",
