@@ -18,7 +18,7 @@ into the package that a pull request then brings to `main`.
 | | App | Version | By | |
 |---|---|---|---|---|
 | <img src="apps/run.cassiel.checkers/icon.svg" width="24" alt=""> | **Checkers** | 1.0.0 | Cassiel | Play checkers against Cass. |
-|  | **M.U.G.E.N** | 0.1.0 | Jonathan Ayala | Plays your own MUGEN characters and stages (in App Files/M.U.G.E.N/game), with mugen-js. No game data included. Not affiliated with Elecbyte. |
+|  | **M.U.G.E.N** | 0.1.1 | Jonathan Ayala | Plays your own MUGEN characters and stages (in App Files/M.U.G.E.N/game), with mugen-js. No game data included. Not affiliated with Elecbyte. |
 | <img src="apps/run.cassiel.paint/icon.svg" width="24" alt=""> | **Paint** | 0.2.0 | Cassiel | Draw, paint and edit pictures. |
 <!-- /apps -->
 
