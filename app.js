@@ -37,13 +37,14 @@ async function motifSize() {
 
 /**
  * The window takes the motif's size; afterwards the canvas draws at as many whole
- * pixels per motif unit as the window needs, so it stays sharp when maximized.
+ * pixels per motif unit as the window has, so it stays sharp when maximized. Screen
+ * pixels don't count: at 320x240 it is the original's 320x240, on any display.
  */
 function fitWindow(engine, canvas, [width, height]) {
   void cassiel.window.setContentSize?.(width, height);
   let zoom = 0;
   new ResizeObserver(() => {
-    const scale = Math.min(canvas.clientWidth / width, canvas.clientHeight / height) * devicePixelRatio;
+    const scale = Math.min(canvas.clientWidth / width, canvas.clientHeight / height);
     const next = Math.max(1, Math.ceil(scale));
     if (next === zoom) return;
     zoom = next;
