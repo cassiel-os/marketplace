@@ -19,6 +19,7 @@ const TEXT = {
     sound: 'Press a key or click for sound',
     game: '&Game',
     fullscreen: '&Full Screen',
+    fullscreenHint: 'Press a key or click for full screen',
     exit: 'E&xit',
     failed: 'Could not start',
   },
@@ -32,6 +33,7 @@ const TEXT = {
     sound: 'Pulsa una tecla o haz clic para oír el sonido',
     game: '&Juego',
     fullscreen: '&Pantalla completa',
+    fullscreenHint: 'Pulsa una tecla o haz clic para pantalla completa',
     exit: '&Salir',
     failed: 'No se pudo iniciar',
   },
@@ -99,18 +101,61 @@ async function showSetup() {
   $('setup').hidden = false;
 }
 
+/** Video_HandleFullscreenKey: toggles full screen, which browsers only allow from a key press or click. */
+function toggleFullscreen() {
+  if (document.fullscreenElement) return document.exitFullscreen();
+  return document.documentElement.requestFullscreen();
+}
+
 function setMenu() {
   const t = text();
-  cassiel.menu.set([
-    {
-      label: t.game,
-      items: [
-        { label: t.fullscreen, windowAction: 'fullscreen', action: () => $('screen').requestFullscreen?.() },
-        'separator',
-        { label: t.exit, action: () => cassiel.close() },
-      ],
-    },
-  ]);
+  cassiel.menu.set(
+    [
+      {
+        label: t.game,
+        items: [
+          { label: t.fullscreen, shortcut: 'Alt+Enter', windowAction: 'fullscreen', action: toggleFullscreen },
+          'separator',
+          { label: t.exit, action: () => cassiel.close() },
+        ],
+      },
+    ],
+    // The game has the keyboard; Alt+Enter is handled below.
+    { shortcuts: false },
+  );
+}
+
+// Alt+Enter is the window's, not the game's: Enter must not reach it as a button.
+addEventListener(
+  'keydown',
+  (event) => {
+    if (event.code !== 'Enter' && event.code !== 'NumpadEnter') return;
+    if (!event.altKey) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    if (!event.repeat) void toggleFullscreen();
+  },
+  { capture: true },
+);
+
+/**
+ * [Video] FullScreen = 1. A browser refuses full screen until the person does
+ * something, so the window fills the desktop first and the first key or click
+ * finishes the job.
+ */
+function startFullscreen() {
+  void cassiel.window.toggleMaximize();
+  let waiting = true;
+  const enter = (event) => {
+    removeEventListener('keydown', enter, true);
+    removeEventListener('pointerdown', enter, true);
+    waiting = false;
+    if (event.altKey && event.code?.endsWith('Enter')) return;
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
+  };
+  addEventListener('keydown', enter, true);
+  addEventListener('pointerdown', enter, true);
+  return () => waiting;
 }
 
 async function start() {
@@ -127,14 +172,19 @@ async function start() {
   const engine = await createEngine({
     canvas,
     source: folderSource(files),
+    // The dark title screen. More characters: edit data/select.def, as with any MUGEN.
+    motif: 'data/system.def',
     onProgress: showProgress,
     onExit: () => cassiel.close(),
   });
+  const waitingForFullscreen = engine.config.fullScreen ? startFullscreen() : () => false;
   engine.start();
   canvas.focus();
   // A gamepad alone can't start the sound: browsers want a key press, click or touch.
   setInterval(() => {
-    if (!engine.loading) $('status').textContent = engine.running && engine.audioLocked ? t.sound : '';
+    if (engine.loading) return;
+    if (waitingForFullscreen()) $('status').textContent = t.fullscreenHint;
+    else $('status').textContent = engine.running && engine.audioLocked ? t.sound : '';
   }, 500);
   // The game has the keyboard while the window is on screen: clicks give it back.
   addEventListener('pointerdown', () => canvas.focus());

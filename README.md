@@ -6,7 +6,11 @@ Plays your own MUGEN characters and stages in Cassiel, with
 **No game data is included.** Copy what is inside your MUGEN folder (`data`, `chars`,
 `stages`, `font`...) to `App Files/M.U.G.E.N.js/game`. It needs no permission to reach them.
 
+- It uses the dark title screen (`data/system.def`). To add characters, edit
+  `data/select.def`, and the grid's `rows` and `columns` in `data/system.def`, as with any MUGEN.
 - Options, key configuration and debug mode work as `data/mugen.cfg` sets them.
+- `[Video] FullScreen = 1` starts it full screen: browsers need a key press or click first, so
+  until then the window fills the desktop. Alt+Enter switches, as in MUGEN.
 - Keyboard and game controllers work. A controller alone can't start the sound, which
   browsers only allow after a key press, click or touch.
 - Music plays from MP3, Ogg and WAV files your `.def` files point at. MIDI and tracker
