@@ -36,20 +36,19 @@ async function motifSize() {
 }
 
 /**
- * The window takes the motif's size; afterwards the canvas draws at as many whole
- * pixels per motif unit as the window has, so it stays sharp when maximized. Screen
- * pixels don't count: at 320x240 it is the original's 320x240, on any display.
+ * The window takes the motif's size. The game always draws at that size and the page
+ * scales the whole picture, as the original scales its game resolution to the window:
+ * the height in pixels, and the width by the picture's shape (all of it with KeepAspect 0).
  */
-function fitWindow(engine, canvas, [width, height]) {
+function fitWindow(canvas, [width, height], keepAspect) {
   void cassiel.window.setContentSize?.(width, height);
-  let zoom = 0;
-  new ResizeObserver(() => {
-    const scale = Math.min(canvas.clientWidth / width, canvas.clientHeight / height);
-    const next = Math.max(1, Math.ceil(scale));
-    if (next === zoom) return;
-    zoom = next;
-    engine.setZoom(next);
-  }).observe(canvas);
+  const fit = () => {
+    const scale = Math.min(innerWidth / width, innerHeight / height);
+    canvas.style.height = `${keepAspect ? Math.round(height * scale) : innerHeight}px`;
+    canvas.style.width = `${keepAspect ? Math.round(width * scale) : innerWidth}px`;
+  };
+  addEventListener('resize', fit);
+  fit();
 }
 
 /** Every file below the game folder, as paths relative to it. */
@@ -149,12 +148,12 @@ async function start() {
     canvas,
     source: folderSource(files),
     motif: MOTIF,
+    zoom: 1,
     onExit: () => cassiel.close(),
   });
   // [Video] KeepAspect: bars when the window isn't the game's shape; 0 stretches it.
   const config = await cassiel.appFiles.readText(`${GAME}/${CONFIG}`);
-  canvas.classList.toggle('stretch', /^\s*keepaspect\s*=\s*0/im.test(config));
-  fitWindow(engine, canvas, await motifSize());
+  fitWindow(canvas, await motifSize(), !/^\s*keepaspect\s*=\s*0/im.test(config));
   if (engine.config.fullScreen) startFullscreen();
   engine.start();
   canvas.focus();
