@@ -36,12 +36,11 @@ async function motifSize() {
 }
 
 /**
- * The window takes the motif's size. The game always draws at that size and the page
+ * The game always draws at the motif's size and the page
  * scales the whole picture, as the original scales its game resolution to the window:
  * the height in pixels, and the width by the picture's shape (all of it with KeepAspect 0).
  */
 function fitWindow(canvas, [width, height], keepAspect) {
-  void cassiel.window.setContentSize?.(width, height);
   const fit = () => {
     const scale = Math.min(innerWidth / width, innerHeight / height);
     canvas.style.height = `${keepAspect ? Math.round(height * scale) : innerHeight}px`;
@@ -142,6 +141,9 @@ async function start() {
     await showSetup();
     return;
   }
+  // At once, for a motif of another size: not after the engine has loaded.
+  const size = await motifSize();
+  void cassiel.window.setContentSize?.(size[0], size[1]);
   const canvas = $('screen');
   canvas.hidden = false;
   const engine = await createEngine({
@@ -153,7 +155,7 @@ async function start() {
   });
   // [Video] KeepAspect: bars when the window isn't the game's shape; 0 stretches it.
   const config = await cassiel.appFiles.readText(`${GAME}/${CONFIG}`);
-  fitWindow(canvas, await motifSize(), !/^\s*keepaspect\s*=\s*0/im.test(config));
+  fitWindow(canvas, size, !/^\s*keepaspect\s*=\s*0/im.test(config));
   if (engine.config.fullScreen) startFullscreen();
   engine.start();
   canvas.focus();
