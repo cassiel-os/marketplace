@@ -1,6 +1,6 @@
-# M.U.G.E.N for Cassiel
+# M.U.G.E.N for Kino
 
-Plays your own MUGEN characters and stages in Cassiel, with
+Plays your own MUGEN characters and stages in Kino, with
 [mugen-js](https://github.com/yojona/mugen-js), a browser version of the MUGEN 1.1 engine.
 
 **No game data is included.** Copy what is inside your MUGEN folder (`data`, `chars`,
@@ -25,8 +25,8 @@ Plays your own MUGEN characters and stages in Cassiel, with
 `mugen.min.js` is the file from mugen-js's release (now v0.1.1).
 
 ```sh
-cd ~/apps/cassiel && scripts/pack-app.sh ~/apps/cassiel-mugen   # build/run.cassiel.mugen.capp
-scripts/install-app.sh ~/apps/cassiel-mugen                     # into the dev desktop
+cd ~/apps/kino && scripts/pack-app.sh ~/apps/kino-mugen   # build/run.kino.mugen.capp
+scripts/install-app.sh ~/apps/kino-mugen                     # into the dev desktop
 ```
 
 ## Third parties

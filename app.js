@@ -1,4 +1,4 @@
-// M.U.G.E.N for Cassiel: the engine from mugen.min.js, the files from the app's own
+// M.U.G.E.N for Kino: the engine from mugen.min.js, the files from the app's own
 // folder (App Files/M.U.G.E.N/game), a plain window like the original's.
 
 import { createEngine } from './mugen.min.js';
@@ -30,7 +30,7 @@ const text = () => TEXT[(document.documentElement.lang || 'en').slice(0, 2)] ?? 
 
 /** The motif's localcoord: the size the game is made for. */
 async function motifSize() {
-  const motif = await cassiel.appFiles.readText(`${GAME}/${MOTIF}`);
+  const motif = await kino.appFiles.readText(`${GAME}/${MOTIF}`);
   const found = /^\s*localcoord\s*=\s*(\d+)\s*,\s*(\d+)/im.exec(motif);
   return found ? [Number(found[1]), Number(found[2])] : [320, 240];
 }
@@ -56,7 +56,7 @@ async function listFiles() {
   const pending = [''];
   const walk = async () => {
     for (let dir = pending.pop(); dir !== undefined; dir = pending.pop()) {
-      const { items } = await cassiel.appFiles.list(dir ? `${GAME}/${dir}` : GAME);
+      const { items } = await kino.appFiles.list(dir ? `${GAME}/${dir}` : GAME);
       for (const item of items) {
         const path = dir ? `${dir}/${item.name}` : item.name;
         if (item.kind === 'folder') pending.push(path);
@@ -72,7 +72,7 @@ async function listFiles() {
 /** The engine's FileSource over the app's folder. */
 function folderSource(files) {
   const open = async (path, init) => {
-    const response = await fetch(await cassiel.appFiles.streamUrl(`${GAME}/${path}`), init);
+    const response = await fetch(await kino.appFiles.streamUrl(`${GAME}/${path}`), init);
     if (!response.ok) throw new Error(`HTTP ${response.status} reading ${path}`);
     return response;
   };
@@ -94,7 +94,7 @@ async function showSetup() {
   $('setup-title').textContent = t.setupTitle;
   $('setup-text').textContent = t.setupText;
   $('setup-retry').textContent = t.retry;
-  $('setup-path').textContent = `${await cassiel.appFiles.folder()}/${GAME}`;
+  $('setup-path').textContent = `${await kino.appFiles.folder()}/${GAME}`;
   $('setup').hidden = false;
 }
 
@@ -123,7 +123,7 @@ addEventListener(
  * finishes the job.
  */
 function startFullscreen() {
-  void cassiel.window.toggleMaximize();
+  void kino.window.toggleMaximize();
   const enter = (event) => {
     removeEventListener('keydown', enter, true);
     removeEventListener('pointerdown', enter, true);
@@ -143,7 +143,7 @@ async function start() {
   }
   // At once, for a motif of another size: not after the engine has loaded.
   const size = await motifSize();
-  void cassiel.window.setContentSize?.(size[0], size[1]);
+  void kino.window.setContentSize?.(size[0], size[1]);
   const canvas = $('screen');
   canvas.hidden = false;
   const engine = await createEngine({
@@ -151,10 +151,10 @@ async function start() {
     source: folderSource(files),
     motif: MOTIF,
     zoom: 1,
-    onExit: () => cassiel.close(),
+    onExit: () => kino.close(),
   });
   // [Video] KeepAspect: bars when the window isn't the game's shape; 0 stretches it.
-  const config = await cassiel.appFiles.readText(`${GAME}/${CONFIG}`);
+  const config = await kino.appFiles.readText(`${GAME}/${CONFIG}`);
   fitWindow(canvas, size, !/^\s*keepaspect\s*=\s*0/im.test(config));
   if (engine.config.fullScreen) startFullscreen();
   engine.start();
@@ -165,10 +165,10 @@ async function start() {
 
 $('setup-retry').addEventListener('click', () => void start());
 
-cassiel.ready.then(async () => {
+kino.ready.then(async () => {
   try {
     await start();
   } catch (error) {
-    await cassiel.dialog.alert(text().failed, String(error?.message ?? error), 'error');
+    await kino.dialog.alert(text().failed, String(error?.message ?? error), 'error');
   }
 });
