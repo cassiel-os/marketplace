@@ -1,5 +1,5 @@
 // @ts-check
-// Paint on Cassiel is in English, like the desktop. The interface text goes through
+// Paint on Kino is in English, like the desktop. The interface text goes through
 // localize() all the same (so a translation can come back later); here it only fills in
 // the %1, %2… placeholders.
 

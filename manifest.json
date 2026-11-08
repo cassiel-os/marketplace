@@ -1,9 +1,9 @@
 {
-  "id": "run.cassiel.paint",
+  "id": "run.kino.paint",
   "name": "Paint",
   "version": "0.2.0",
   "description": "Draw, paint and edit pictures.",
-  "author": "Cassiel",
+  "author": "Kino",
   "category": "accessories",
   "icon": "images/icons/jspaint.svg",
   "sdk": "1.0",

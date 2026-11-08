@@ -91,7 +91,7 @@ const menus = {
 			label: localize("E&xit"),
 			// Alt+F4 closes the browser window (in most window managers)
 			action: () => {
-				are_you_sure(() => window.cassiel.close());
+				are_you_sure(() => window.kino.close());
 			},
 			description: localize("Quits Paint."),
 		},

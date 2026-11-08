@@ -117,7 +117,7 @@ function show_edit_colors_window($swatch_to_edit, color_selection_slot_to_edit) 
 // Repurposable color picker modeled after the Windows system color picker
 // The color dialog is the desktop's (it keeps the custom colors too).
 function choose_color(initial_color, callback) {
-	window.cassiel.dialog.chooseColor({ title: localize("Edit Colors"), color: initial_color, customColors: custom_colors }).then((result) => {
+	window.kino.dialog.chooseColor({ title: localize("Edit Colors"), color: initial_color, customColors: custom_colors }).then((result) => {
 		if (!result) return;
 		custom_colors.splice(0, custom_colors.length, ...result.customColors);
 		callback(result.color);

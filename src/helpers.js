@@ -343,4 +343,4 @@ export {
 };
 // Temporary globals until all dependent code is converted to ES Modules
 window.make_canvas = make_canvas; // used by app-state.js
-window.get_format_from_extension = get_format_from_extension; // used by cassiel-integration.js
+window.get_format_from_extension = get_format_from_extension; // used by kino-integration.js

@@ -1,13 +1,13 @@
 #!/bin/sh
-# Builds Paint for Cassiel: only what it uses at run time, minified, into build/paint/
+# Builds Paint for Kino: only what it uses at run time, minified, into build/paint/
 # and build/paint.capp (a zip the Setup wizard installs). The sources stay as they are
 # (this is a fork of jspaint; the trimming happens here).
-#   cassiel/pack.sh            → build/paint.capp
-#   cassiel/pack.sh --install  → also installs it in the dev desktop (cassiel-dev)
+#   kino/pack.sh            → build/paint.capp
+#   kino/pack.sh --install  → also installs it in the dev desktop (kino-dev)
 set -eu
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 OUT="$ROOT/build/paint"
-ESBUILD="${ESBUILD:-$HOME/apps/cassiel/node_modules/.bin/esbuild}"
+ESBUILD="${ESBUILD:-$HOME/apps/kino/node_modules/.bin/esbuild}"
 rm -rf "$OUT" && mkdir -p "$OUT"
 cd "$ROOT"
 
@@ -27,7 +27,7 @@ copy images/modern/options-transparency.svg \
 rm -f "$OUT"/src/*.d.ts
 
 # Every module import must point at a file that is in the package (a missing one stops
-# Paint from starting). Dynamic imports of what Cassiel never runs (Discord) are fine.
+# Paint from starting). Dynamic imports of what Kino never runs (Discord) are fine.
 python3 - "$OUT" <<'PY'
 import glob, os, re, sys
 out = sys.argv[1]
@@ -84,7 +84,7 @@ PY
 "$ESBUILD" "$OUT/src/paint-start.js" "$OUT/src/app.js" --bundle --splitting --format=esm --minify --log-level=error \
   --outdir="$OUT/bundle" --entry-names='[name]' --chunk-names='chunk-[hash]'
 # Only the classic scripts stay in src/.
-find "$OUT/src" -name '*.js' ! -name 'cassiel-integration.js' ! -name 'error-handling-basic.js' ! -name 'app-localization.js' ! -name 'app-state.js' -delete
+find "$OUT/src" -name '*.js' ! -name 'kino-integration.js' ! -name 'error-handling-basic.js' ! -name 'app-localization.js' ! -name 'app-state.js' -delete
 
 # Vector art without editor metadata (Inkscape's), losslessly.
 find "$OUT" -type f -name '*.svg' -size +8k | while read -r f; do npx --yes svgo@3 --quiet --multipass "$f" -o "$f"; done
@@ -97,7 +97,7 @@ find "$OUT" -type f -name '*.svg' -size +8k | while read -r f; do npx --yes svgo
 du -sh "$OUT" "$ROOT/build/paint.capp"
 if [ "${1:-}" = "--install" ]; then
   ID="$(sed -n 's/.*"id": *"\([^"]*\)".*/\1/p' manifest.json | head -1)"
-  docker exec cassiel-dev sh -c "rm -rf /data/apps/$ID && mkdir -p /data/apps"
-  docker cp "$OUT" "cassiel-dev:/data/apps/$ID"
+  docker exec kino-dev sh -c "rm -rf /data/apps/$ID && mkdir -p /data/apps"
+  docker cp "$OUT" "kino-dev:/data/apps/$ID"
   echo "Installed $ID; reload the desktop."
 fi
