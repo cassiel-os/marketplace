@@ -10,8 +10,8 @@
       "sdk": "1.0",
       "icon": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.checkers/icon.svg",
       "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.checkers/net.ludei.checkers-1.0.0.app",
-      "bytes": 12317,
-      "sha256": "03f57a69923241ba5378f4b71782b6ea06282018097a2a9220aaf9f0b4bc3dbb"
+      "bytes": 12311,
+      "sha256": "bdfc806c0007dc57528bd0d7c0d1bef46bcdd0668ece678103f69d1ef1d14050"
     },
     {
       "id": "net.ludei.msgr",
@@ -23,8 +23,8 @@
       "sdk": "1.21",
       "icon": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.msgr/icon.png",
       "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.msgr/net.ludei.msgr-1.0.0.app",
-      "bytes": 2022140,
-      "sha256": "9167f7ecb901c66071aecf7625ecd0f85e773d24cd3ce3b812fbcbb07b1b1c7a"
+      "bytes": 2021685,
+      "sha256": "ce614cbacd9c9e6925590a060813ff8d932c8ae35001543cd25d797718b15c61"
     },
     {
       "id": "net.ludei.mugen",
@@ -35,8 +35,8 @@
       "category": "games",
       "sdk": "1.0",
       "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.mugen/net.ludei.mugen-0.1.1.app",
-      "bytes": 126084,
-      "sha256": "80a8fa4f46c3e62297d93f5efabd07ea4bbe293b6995d0c3f1fb5e1b4ad78424"
+      "bytes": 126076,
+      "sha256": "8a752088fee27ad9e0c33e07c413c3b9f52be4239325fc32caa042f019e5d1e3"
     },
     {
       "id": "org.nodejs.node22",
@@ -58,8 +58,8 @@
       "sdk": "1.0",
       "icon": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.paint/icon.svg",
       "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.paint/net.ludei.paint-0.2.0.app",
-      "bytes": 230386,
-      "sha256": "2db047b9a1cde3e35c2aeca4d5f89c2775e8d6ed9afbb560a3cc70bb09921b43"
+      "bytes": 229976,
+      "sha256": "30fa6ba4799324622526bfcb07ce1cec15fb0beb4751b30160369a121f3a82e7"
     }
   ]
 }
