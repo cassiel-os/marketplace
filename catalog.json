@@ -14,6 +14,19 @@
       "sha256": "d161a3735a7f98b901c6dcca35e6d382d94cab86eb746daa187ae373627fbc9e"
     },
     {
+      "id": "com.kino.msgr",
+      "name": "Live Chat Messenger",
+      "version": "1.0.0",
+      "description": "A chat messenger in the style of Windows Live Messenger 2009 that works with WhatsApp. Unofficial client: WhatsApp may restrict or ban accounts linked to unofficial apps; use it at your own risk. Messages go straight between this computer and WhatsApp, through no server of ours. Not affiliated with WhatsApp LLC or Meta Platforms, Inc.",
+      "author": "Kino",
+      "category": "internet",
+      "sdk": "1.21",
+      "icon": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/com.kino.msgr/icon.png",
+      "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/com.kino.msgr/com.kino.msgr-1.0.0.capp",
+      "bytes": 2501426,
+      "sha256": "a544c7f542e2ef94e67932c95eaec247a98bb7f3e9f2c7082276784acc3b2c7b"
+    },
+    {
       "id": "run.cassiel.mugen",
       "name": "M.U.G.E.N",
       "version": "0.1.1",

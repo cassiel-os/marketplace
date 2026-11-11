@@ -18,6 +18,7 @@ into the package that a pull request then brings to `main`.
 | | App | Version | By | |
 |---|---|---|---|---|
 | <img src="apps/run.cassiel.checkers/icon.svg" width="24" alt=""> | **Checkers** | 1.0.0 | Cassiel | Play checkers against Cass. |
+| <img src="apps/com.kino.msgr/icon.png" width="24" alt=""> | **Live Chat Messenger** | 1.0.0 | Kino | A chat messenger in the style of Windows Live Messenger 2009 that works with WhatsApp. Unofficial client: WhatsApp may restrict or ban accounts linked to unofficial apps; use it at your own risk. Messages go straight between this computer and WhatsApp, through no server of ours. Not affiliated with WhatsApp LLC or Meta Platforms, Inc. |
 |  | **M.U.G.E.N** | 0.1.1 | Jonathan Ayala | Plays your own MUGEN characters and stages (in App Files/M.U.G.E.N/game), with mugen-js. No game data included. Not affiliated with Elecbyte. |
 | <img src="apps/run.cassiel.paint/icon.svg" width="24" alt=""> | **Paint** | 0.2.0 | Cassiel | Draw, paint and edit pictures. |
 <!-- /apps -->
