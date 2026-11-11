@@ -3,7 +3,7 @@
   "name": "M.U.G.E.N",
   "version": "0.1.1",
   "description": "Plays your own MUGEN characters and stages (in App Files/M.U.G.E.N/game), with mugen-js. No game data included. Not affiliated with Elecbyte.",
-  "author": "Jonathan Ayala",
+  "author": "Ludeku",
   "category": "games",
   "sdk": "1.0",
   "entry": "index.html",
