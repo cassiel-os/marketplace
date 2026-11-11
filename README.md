@@ -1,6 +1,6 @@
-# M.U.G.E.N for Kino
+# M.U.G.E.N for Ludei
 
-Plays your own MUGEN characters and stages in Kino, with
+Plays your own MUGEN characters and stages in Ludei, with
 [mugen-js](https://github.com/yojona/mugen-js), a browser version of the MUGEN 1.1 engine.
 
 **No game data is included.** Copy what is inside your MUGEN folder (`data`, `chars`,
@@ -25,8 +25,8 @@ Plays your own MUGEN characters and stages in Kino, with
 `mugen.min.js` is the file from mugen-js's release (now v0.1.1).
 
 ```sh
-cd ~/apps/kino && scripts/pack-app.sh ~/apps/kino-mugen   # build/net.ludei.mugen.capp
-scripts/install-app.sh ~/apps/kino-mugen                     # into the dev desktop
+cd ~/apps/ludei && scripts/pack-app.sh ~/apps/ludei-mugen   # build/net.ludei.mugen.capp
+scripts/install-app.sh ~/apps/ludei-mugen                     # into the dev desktop
 ```
 
 ## Third parties
