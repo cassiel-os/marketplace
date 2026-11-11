@@ -25,7 +25,7 @@ Plays your own MUGEN characters and stages in Kino, with
 `mugen.min.js` is the file from mugen-js's release (now v0.1.1).
 
 ```sh
-cd ~/apps/kino && scripts/pack-app.sh ~/apps/kino-mugen   # build/run.kino.mugen.capp
+cd ~/apps/kino && scripts/pack-app.sh ~/apps/kino-mugen   # build/net.ludei.mugen.capp
 scripts/install-app.sh ~/apps/kino-mugen                     # into the dev desktop
 ```
 
