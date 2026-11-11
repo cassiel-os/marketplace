@@ -1,42 +1,65 @@
 {
   "apps": [
     {
-      "id": "run.cassiel.checkers",
+      "id": "net.ludei.checkers",
       "name": "Checkers",
       "version": "1.0.0",
       "description": "Play checkers against Cass.",
-      "author": "Cassiel",
+      "author": "Ludeku",
       "category": "games",
       "sdk": "1.0",
-      "icon": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/run.cassiel.checkers/icon.svg",
-      "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/run.cassiel.checkers/run.cassiel.checkers-1.0.0.capp",
-      "bytes": 12312,
-      "sha256": "d161a3735a7f98b901c6dcca35e6d382d94cab86eb746daa187ae373627fbc9e"
+      "icon": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.checkers/icon.svg",
+      "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.checkers/net.ludei.checkers-1.0.0.app",
+      "bytes": 12311,
+      "sha256": "bdfc806c0007dc57528bd0d7c0d1bef46bcdd0668ece678103f69d1ef1d14050"
     },
     {
-      "id": "run.cassiel.mugen",
+      "id": "net.ludei.msgr",
+      "name": "Live Chat Messenger",
+      "version": "1.0.0",
+      "description": "A chat messenger in the style of Windows Live Messenger 2009 that works with WhatsApp. Unofficial client: WhatsApp may restrict or ban accounts linked to unofficial apps; use it at your own risk. Messages go straight between this computer and WhatsApp, through no server of ours. Not affiliated with WhatsApp LLC or Meta Platforms, Inc.",
+      "author": "Ludeku",
+      "category": "internet",
+      "sdk": "1.21",
+      "icon": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.msgr/icon.png",
+      "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.msgr/net.ludei.msgr-1.0.0.app",
+      "bytes": 2021685,
+      "sha256": "ce614cbacd9c9e6925590a060813ff8d932c8ae35001543cd25d797718b15c61"
+    },
+    {
+      "id": "net.ludei.mugen",
       "name": "M.U.G.E.N",
       "version": "0.1.1",
       "description": "Plays your own MUGEN characters and stages (in App Files/M.U.G.E.N/game), with mugen-js. No game data included. Not affiliated with Elecbyte.",
-      "author": "Jonathan Ayala",
+      "author": "Ludeku",
       "category": "games",
       "sdk": "1.0",
-      "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/run.cassiel.mugen/run.cassiel.mugen-0.1.1.capp",
-      "bytes": 126091,
-      "sha256": "f6a4154309e7ef7b85d438ee57b1d018cda5629841f1aae46ebd9de58e995bdf"
+      "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.mugen/net.ludei.mugen-0.1.1.app",
+      "bytes": 126076,
+      "sha256": "8a752088fee27ad9e0c33e07c413c3b9f52be4239325fc32caa042f019e5d1e3"
     },
     {
-      "id": "run.cassiel.paint",
+      "id": "org.nodejs.node22",
+      "name": "Node.js 22",
+      "version": "22.23.4",
+      "description": "Shared Node.js runtime for Kino apps.",
+      "author": "Node.js contributors; packaged for Kino",
+      "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/org.nodejs.node22/org.nodejs.node22-22.23.4.app",
+      "bytes": 27520782,
+      "sha256": "fefb8911f276e45cf22816df4e8029ba59b4ab93fed885854d7d8e461a883e18"
+    },
+    {
+      "id": "net.ludei.paint",
       "name": "Paint",
       "version": "0.2.0",
       "description": "Draw, paint and edit pictures.",
-      "author": "Cassiel",
+      "author": "Ludeku",
       "category": "accessories",
       "sdk": "1.0",
-      "icon": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/run.cassiel.paint/icon.svg",
-      "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/run.cassiel.paint/run.cassiel.paint-0.2.0.capp",
-      "bytes": 229984,
-      "sha256": "b95b07d89965d47f0d2f43138c593ef891fa2e8705696bc678217072ff45f8c2"
+      "icon": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.paint/icon.svg",
+      "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.paint/net.ludei.paint-0.2.0.app",
+      "bytes": 229976,
+      "sha256": "30fa6ba4799324622526bfcb07ce1cec15fb0beb4751b30160369a121f3a82e7"
     }
   ]
 }

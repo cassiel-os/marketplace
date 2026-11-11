@@ -31,8 +31,8 @@ for (const a of catalog.apps ?? []) {
   if (a.sdk !== undefined && !SDK.test(a.sdk)) problem(`${where}: bad sdk`);
   if (a.category !== undefined && !CATEGORIES.includes(a.category)) problem(`${where}: unknown category`);
 
-  const file = join(ROOT, 'apps', a.id, `${a.id}-${a.version}.capp`);
-  if (a.package !== `${FILES}apps/${a.id}/${a.id}-${a.version}.capp`) problem(`${where}: package link is not apps/<id>/<id>-<version>.capp on main`);
+  const file = join(ROOT, 'apps', a.id, `${a.id}-${a.version}.app`);
+  if (a.package !== `${FILES}apps/${a.id}/${a.id}-${a.version}.app`) problem(`${where}: package link is not apps/<id>/<id>-<version>.app on main`);
   if (!existsSync(file)) {
     problem(`${where}: ${file.slice(ROOT.length)} is missing`);
     continue;

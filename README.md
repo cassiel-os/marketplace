@@ -1,7 +1,7 @@
 # Cassiel Marketplace
 
 The apps Cassiel's Marketplace offers. Cassiel reads [`catalog.json`](catalog.json)
-straight from this repository and installs an app by downloading its `.capp` package
+straight from this repository and installs an app by downloading its `.app` package
 from here; the Setup wizard shows what the app may do before it is installed.
 
 **Only what is on `main` is approved.** Every entry points at the package on the main
@@ -9,7 +9,7 @@ branch and carries its SHA-256: Cassiel lists only entries from here and refuses
 download that is not byte for byte the approved package.
 
 **Branches.** `main` holds only what is published: the catalog and the packages. Each
-app's source is a branch named after its id (`run.cassiel.paint`), where it is built
+app's source is a branch named after its id (`net.ludei.paint`), where it is built
 into the package that a pull request then brings to `main`.
 
 ## Apps
@@ -17,19 +17,21 @@ into the package that a pull request then brings to `main`.
 <!-- apps -->
 | | App | Version | By | |
 |---|---|---|---|---|
-| <img src="apps/run.cassiel.checkers/icon.svg" width="24" alt=""> | **Checkers** | 1.0.0 | Cassiel | Play checkers against Cass. |
-|  | **M.U.G.E.N** | 0.1.1 | Jonathan Ayala | Plays your own MUGEN characters and stages (in App Files/M.U.G.E.N/game), with mugen-js. No game data included. Not affiliated with Elecbyte. |
-| <img src="apps/run.cassiel.paint/icon.svg" width="24" alt=""> | **Paint** | 0.2.0 | Cassiel | Draw, paint and edit pictures. |
+| <img src="apps/net.ludei.checkers/icon.svg" width="24" alt=""> | **Checkers** | 1.0.0 | Ludeku | Play checkers against Cass. |
+| <img src="apps/net.ludei.msgr/icon.png" width="24" alt=""> | **Live Chat Messenger** | 1.0.0 | Ludeku | A chat messenger in the style of Windows Live Messenger 2009 that works with WhatsApp. Unofficial client: WhatsApp may restrict or ban accounts linked to unofficial apps; use it at your own risk. Messages go straight between this computer and WhatsApp, through no server of ours. Not affiliated with WhatsApp LLC or Meta Platforms, Inc. |
+|  | **M.U.G.E.N** | 0.1.1 | Ludeku | Plays your own MUGEN characters and stages (in App Files/M.U.G.E.N/game), with mugen-js. No game data included. Not affiliated with Elecbyte. |
+|  | **Node.js 22** | 22.23.4 | Node.js contributors; packaged for Kino | Shared Node.js runtime for Kino apps. |
+| <img src="apps/net.ludei.paint/icon.svg" width="24" alt=""> | **Paint** | 0.2.0 | Ludeku | Draw, paint and edit pictures. |
 <!-- /apps -->
 
 ## Publishing an app
 
 1. Keep the app's source in its own branch here, named after its id. Build the package
    from it (see Cassiel's `docs/app-sdk.md`): `scripts/pack-app.sh path/to/app` in the
-   Cassiel repo makes `build/<id>.capp`.
-2. Here: `node scripts/publish.mjs path/to/<id>.capp`. It checks the manifest (`id`,
+   Cassiel repo makes `build/<id>.app`.
+2. Here: `node scripts/publish.mjs path/to/<id>.app`. It checks the manifest (`id`,
    `name`, a `version` newer than the published one, `sdk`, `category`), copies the
-   package to `apps/<id>/<id>-<version>.capp`, takes out its icon, writes the catalog
+   package to `apps/<id>/<id>-<version>.app`, takes out its icon, writes the catalog
    entry from the package's own manifest with its checksum, and updates the list above.
 3. `node scripts/verify.mjs` checks that every entry matches its package byte for byte.
    It runs on every pull request too (GitHub Actions).
@@ -49,7 +51,7 @@ may still point at one.
 ```
 catalog.json                    { "apps": [ { id, name, version, description, author,
                                   category, sdk, icon, package, bytes, sha256 } ] }
-apps/<id>/<id>-<version>.capp   the package
+apps/<id>/<id>-<version>.app   the package
 apps/<id>/icon.svg              its icon (or icon.png)
 scripts/                        publish.mjs, verify.mjs
 ```

@@ -3,7 +3,7 @@ import { execFileSync } from 'node:child_process';
 
 /** Where approved packages live: the repository's main branch, served raw. */
 export const FILES = 'https://raw.githubusercontent.com/cassiel-os/marketplace/main/';
-/** A reverse domain and a name (run.cassiel.checkers), as Cassiel's agentd checks it. */
+/** A reverse domain and a name (net.ludei.checkers), as Kino's agentd checks it. */
 export const ID = /^(?=.{1,80}$)[a-z0-9]+(-[a-z0-9]+)*(\.[a-z0-9]+(-[a-z0-9]+)*){2,}$/;
 export const VERSION = /^\d+(\.\d+){0,3}$/;
 export const SDK = /^\d+\.\d+$/;
@@ -20,6 +20,6 @@ export const isNewer = (a, b) => {
   return false;
 };
 
-/** One file out of a .capp (a zip). unzip reads * ? [ ] in names as patterns: escaped. */
-export const unzip = (capp, file, encoding = 'utf8') =>
-  execFileSync('unzip', ['-p', capp, file.replace(/([*?[\]])/g, '\\$1')], { encoding, maxBuffer: 64 << 20 });
+/** One file out of a .app (a zip). unzip reads * ? [ ] in names as patterns: escaped. */
+export const unzip = (pkg, file, encoding = 'utf8') =>
+  execFileSync('unzip', ['-p', pkg, file.replace(/([*?[\]])/g, '\\$1')], { encoding, maxBuffer: 64 << 20 });
