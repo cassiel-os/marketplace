@@ -23,8 +23,8 @@
       "sdk": "1.21",
       "icon": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/com.kino.msgr/icon.png",
       "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/com.kino.msgr/com.kino.msgr-1.0.0.capp",
-      "bytes": 2501426,
-      "sha256": "a544c7f542e2ef94e67932c95eaec247a98bb7f3e9f2c7082276784acc3b2c7b"
+      "bytes": 2022175,
+      "sha256": "daada9472ddf0d808f065427cf56ec029ffc393c4d76d37ddaa6593f4006d9a6"
     },
     {
       "id": "run.cassiel.mugen",
