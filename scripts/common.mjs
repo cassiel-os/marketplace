@@ -20,6 +20,6 @@ export const isNewer = (a, b) => {
   return false;
 };
 
-/** One file out of a .capp (a zip). unzip reads * ? [ ] in names as patterns: escaped. */
-export const unzip = (capp, file, encoding = 'utf8') =>
-  execFileSync('unzip', ['-p', capp, file.replace(/([*?[\]])/g, '\\$1')], { encoding, maxBuffer: 64 << 20 });
+/** One file out of a .app (a zip). unzip reads * ? [ ] in names as patterns: escaped. */
+export const unzip = (pkg, file, encoding = 'utf8') =>
+  execFileSync('unzip', ['-p', pkg, file.replace(/([*?[\]])/g, '\\$1')], { encoding, maxBuffer: 64 << 20 });

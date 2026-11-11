@@ -1,7 +1,7 @@
 # Cassiel Marketplace
 
 The apps Cassiel's Marketplace offers. Cassiel reads [`catalog.json`](catalog.json)
-straight from this repository and installs an app by downloading its `.capp` package
+straight from this repository and installs an app by downloading its `.app` package
 from here; the Setup wizard shows what the app may do before it is installed.
 
 **Only what is on `main` is approved.** Every entry points at the package on the main
@@ -27,10 +27,10 @@ into the package that a pull request then brings to `main`.
 
 1. Keep the app's source in its own branch here, named after its id. Build the package
    from it (see Cassiel's `docs/app-sdk.md`): `scripts/pack-app.sh path/to/app` in the
-   Cassiel repo makes `build/<id>.capp`.
-2. Here: `node scripts/publish.mjs path/to/<id>.capp`. It checks the manifest (`id`,
+   Cassiel repo makes `build/<id>.app`.
+2. Here: `node scripts/publish.mjs path/to/<id>.app`. It checks the manifest (`id`,
    `name`, a `version` newer than the published one, `sdk`, `category`), copies the
-   package to `apps/<id>/<id>-<version>.capp`, takes out its icon, writes the catalog
+   package to `apps/<id>/<id>-<version>.app`, takes out its icon, writes the catalog
    entry from the package's own manifest with its checksum, and updates the list above.
 3. `node scripts/verify.mjs` checks that every entry matches its package byte for byte.
    It runs on every pull request too (GitHub Actions).
@@ -50,7 +50,7 @@ may still point at one.
 ```
 catalog.json                    { "apps": [ { id, name, version, description, author,
                                   category, sdk, icon, package, bytes, sha256 } ] }
-apps/<id>/<id>-<version>.capp   the package
+apps/<id>/<id>-<version>.app   the package
 apps/<id>/icon.svg              its icon (or icon.png)
 scripts/                        publish.mjs, verify.mjs
 ```
