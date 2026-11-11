@@ -5,13 +5,13 @@
       "name": "Checkers",
       "version": "1.0.0",
       "description": "Play checkers against Cass.",
-      "author": "Cassiel",
+      "author": "Ludeku",
       "category": "games",
       "sdk": "1.0",
       "icon": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/run.cassiel.checkers/icon.svg",
       "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/run.cassiel.checkers/run.cassiel.checkers-1.0.0.app",
-      "bytes": 12312,
-      "sha256": "d161a3735a7f98b901c6dcca35e6d382d94cab86eb746daa187ae373627fbc9e"
+      "bytes": 12318,
+      "sha256": "c595841e59f296d6cc19a3f5f5dd382afc6790a4d350da0e3a79b6d2259d5c17"
     },
     {
       "id": "com.kino.msgr",
@@ -43,13 +43,13 @@
       "name": "Paint",
       "version": "0.2.0",
       "description": "Draw, paint and edit pictures.",
-      "author": "Cassiel",
+      "author": "Ludeku",
       "category": "accessories",
       "sdk": "1.0",
       "icon": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/run.cassiel.paint/icon.svg",
       "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/run.cassiel.paint/run.cassiel.paint-0.2.0.app",
-      "bytes": 229984,
-      "sha256": "b95b07d89965d47f0d2f43138c593ef891fa2e8705696bc678217072ff45f8c2"
+      "bytes": 230387,
+      "sha256": "4ea34f466132f49b2bfe1589f31da333f15a7c6597f59e1984daf4566935f640"
     }
   ]
 }
