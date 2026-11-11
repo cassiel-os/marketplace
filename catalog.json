@@ -39,6 +39,16 @@
       "sha256": "80a8fa4f46c3e62297d93f5efabd07ea4bbe293b6995d0c3f1fb5e1b4ad78424"
     },
     {
+      "id": "org.nodejs.node22",
+      "name": "Node.js 22",
+      "version": "22.23.4",
+      "description": "Shared Node.js runtime for Kino apps.",
+      "author": "Node.js contributors; packaged for Kino",
+      "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/org.nodejs.node22/org.nodejs.node22-22.23.4.app",
+      "bytes": 27520782,
+      "sha256": "fefb8911f276e45cf22816df4e8029ba59b4ab93fed885854d7d8e461a883e18"
+    },
+    {
       "id": "net.ludei.paint",
       "name": "Paint",
       "version": "0.2.0",
