@@ -1,55 +1,55 @@
 {
   "apps": [
     {
-      "id": "run.cassiel.checkers",
+      "id": "net.ludei.checkers",
       "name": "Checkers",
       "version": "1.0.0",
       "description": "Play checkers against Cass.",
       "author": "Ludeku",
       "category": "games",
       "sdk": "1.0",
-      "icon": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/run.cassiel.checkers/icon.svg",
-      "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/run.cassiel.checkers/run.cassiel.checkers-1.0.0.app",
-      "bytes": 12318,
-      "sha256": "c595841e59f296d6cc19a3f5f5dd382afc6790a4d350da0e3a79b6d2259d5c17"
+      "icon": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.checkers/icon.svg",
+      "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.checkers/net.ludei.checkers-1.0.0.app",
+      "bytes": 12317,
+      "sha256": "03f57a69923241ba5378f4b71782b6ea06282018097a2a9220aaf9f0b4bc3dbb"
     },
     {
-      "id": "com.kino.msgr",
+      "id": "net.ludei.msgr",
       "name": "Live Chat Messenger",
       "version": "1.0.0",
       "description": "A chat messenger in the style of Windows Live Messenger 2009 that works with WhatsApp. Unofficial client: WhatsApp may restrict or ban accounts linked to unofficial apps; use it at your own risk. Messages go straight between this computer and WhatsApp, through no server of ours. Not affiliated with WhatsApp LLC or Meta Platforms, Inc.",
       "author": "Ludeku",
       "category": "internet",
       "sdk": "1.21",
-      "icon": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/com.kino.msgr/icon.png",
-      "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/com.kino.msgr/com.kino.msgr-1.0.0.app",
-      "bytes": 2022129,
-      "sha256": "682bc4cd39b1230636f84dcbcad226b265f5b03ba8f65ebe79460d4a89ca73fa"
+      "icon": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.msgr/icon.png",
+      "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.msgr/net.ludei.msgr-1.0.0.app",
+      "bytes": 2022140,
+      "sha256": "9167f7ecb901c66071aecf7625ecd0f85e773d24cd3ce3b812fbcbb07b1b1c7a"
     },
     {
-      "id": "run.cassiel.mugen",
+      "id": "net.ludei.mugen",
       "name": "M.U.G.E.N",
       "version": "0.1.1",
       "description": "Plays your own MUGEN characters and stages (in App Files/M.U.G.E.N/game), with mugen-js. No game data included. Not affiliated with Elecbyte.",
       "author": "Ludeku",
       "category": "games",
       "sdk": "1.0",
-      "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/run.cassiel.mugen/run.cassiel.mugen-0.1.1.app",
-      "bytes": 126086,
-      "sha256": "7519bf678160d511a78f7ec4b2ffd4b0cb134009598653f659a9ed39214b1817"
+      "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.mugen/net.ludei.mugen-0.1.1.app",
+      "bytes": 126084,
+      "sha256": "80a8fa4f46c3e62297d93f5efabd07ea4bbe293b6995d0c3f1fb5e1b4ad78424"
     },
     {
-      "id": "run.cassiel.paint",
+      "id": "net.ludei.paint",
       "name": "Paint",
       "version": "0.2.0",
       "description": "Draw, paint and edit pictures.",
       "author": "Ludeku",
       "category": "accessories",
       "sdk": "1.0",
-      "icon": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/run.cassiel.paint/icon.svg",
-      "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/run.cassiel.paint/run.cassiel.paint-0.2.0.app",
-      "bytes": 230387,
-      "sha256": "4ea34f466132f49b2bfe1589f31da333f15a7c6597f59e1984daf4566935f640"
+      "icon": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.paint/icon.svg",
+      "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.paint/net.ludei.paint-0.2.0.app",
+      "bytes": 230386,
+      "sha256": "2db047b9a1cde3e35c2aeca4d5f89c2775e8d6ed9afbb560a3cc70bb09921b43"
     }
   ]
 }
