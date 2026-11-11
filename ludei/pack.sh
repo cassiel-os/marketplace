@@ -1,13 +1,13 @@
 #!/bin/sh
 # Builds Paint for Ludei: only what it uses at run time, minified, into build/paint/
-# and build/paint.capp (a zip the Setup wizard installs). The sources stay as they are
+# and build/net.ludei.paint.app (a zip the Setup wizard installs). The sources stay as they are
 # (this is a fork of jspaint; the trimming happens here).
-#   ludei/pack.sh            → build/paint.capp
+#   ludei/pack.sh            → build/net.ludei.paint.app
 #   ludei/pack.sh --install  → also installs it in the dev desktop (ludei-dev)
 set -eu
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 OUT="$ROOT/build/paint"
-ESBUILD="${ESBUILD:-$HOME/apps/ludei/node_modules/.bin/esbuild}"
+ESBUILD="${ESBUILD:-$HOME/apps/kino/node_modules/.bin/esbuild}"
 rm -rf "$OUT" && mkdir -p "$OUT"
 cd "$ROOT"
 
@@ -93,8 +93,8 @@ find "$OUT" -type f -name '*.svg' -size +8k | while read -r f; do npx --yes svgo
 [ "${MINIFY:-1}" = 1 ] && find "$OUT" -type f -name '*.js' ! -name '*.min.js' ! -path "$OUT/bundle/*" | while read -r f; do "$ESBUILD" "$f" --minify --log-level=error --outfile="$f" --allow-overwrite; done
 [ "${MINIFY:-1}" = 1 ] && find "$OUT" -type f -name '*.css' | while read -r f; do "$ESBUILD" "$f" --minify --log-level=error --outfile="$f" --allow-overwrite; done
 
-(cd "$OUT" && rm -f "$ROOT/build/paint.capp" && zip -qr -9 -X "$ROOT/build/paint.capp" . -x '.*')
-du -sh "$OUT" "$ROOT/build/paint.capp"
+(cd "$OUT" && rm -f "$ROOT/build/net.ludei.paint.app" && zip -qr -9 -X "$ROOT/build/net.ludei.paint.app" . -x '.*')
+du -sh "$OUT" "$ROOT/build/net.ludei.paint.app"
 if [ "${1:-}" = "--install" ]; then
   ID="$(sed -n 's/.*"id": *"\([^"]*\)".*/\1/p' manifest.json | head -1)"
   docker exec ludei-dev sh -c "rm -rf /data/apps/$ID && mkdir -p /data/apps"
