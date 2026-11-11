@@ -91,7 +91,7 @@ const $status_size = $(E("div")).addClass("status-coordinates status-field inset
 window.$status_size = $status_size;
 
 $status_text.default = () => {
-	// Kino: no Help Topics, so no pointer to it.
+	// Ludei: no Help Topics, so no pointer to it.
 	$status_text.text("");
 };
 $status_text.default();
@@ -99,7 +99,7 @@ $status_text.default();
 // #endregion
 
 // #region Menu Bar
-// Kino draws the menu bar (under the window's title) with its own menus; Paint
+// Ludei draws the menu bar (under the window's title) with its own menus; Paint
 // describes them (menus.js) and keeps the actions. Paint's own key handling covers the
 // shortcuts, so the menus only show them. The status bar shows the description of the
 // item under the pointer, as in Paint.
@@ -107,20 +107,20 @@ $status_text.default();
  * @param {OSGUIMenuFragment[]} items
  * @returns {object[]}
  */
-const kino_menu_items = (items) => items.map((item) => item === MENU_DIVIDER ? "separator" : {
+const ludei_menu_items = (items) => items.map((item) => item === MENU_DIVIDER ? "separator" : {
 	label: item.label,
 	shortcut: item.shortcutLabel,
 	description: item.description,
 	enabled: item.enabled,
 	checked: item.checkbox?.check,
 	action: item.checkbox ? item.checkbox.toggle : item.action,
-	items: item.submenu && kino_menu_items(item.submenu),
+	items: item.submenu && ludei_menu_items(item.submenu),
 });
-window.kino.menu.set(
-	Object.entries(menus).map(([label, items]) => ({ label, items: kino_menu_items(items) })),
+window.ludei.menu.set(
+	Object.entries(menus).map(([label, items]) => ({ label, items: ludei_menu_items(items) })),
 	{ shortcuts: false },
 );
-window.kino.on("menuinfo", (description) => {
+window.ludei.on("menuinfo", (description) => {
 	if (description == null) {
 		$status_text.default();
 	} else {
@@ -628,7 +628,7 @@ localStore.get({
 // The file Paint was opened with (Files, Open with) comes with the SDK's ready. Not
 // awaited here: the rest of Paint (and every module importing this one) would wait
 // for the desktop's answer, and the window would show an unfinished Paint meanwhile.
-window.kino?.ready.then(({ props }) => {
+window.ludei?.ready.then(({ props }) => {
 	window.initial_system_file_handle = props?.path;
 	if (!window.initial_system_file_handle) return;
 	systemHooks.readBlobFromHandle(window.initial_system_file_handle).then((file) => {

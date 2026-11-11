@@ -1,10 +1,10 @@
-// Paint on Kino: opening, saving, dialogs, the window title, unsaved-work checks
-// and the wallpaper go through the Kino SDK (/sdk/kino.js), so Paint uses the
+// Paint on Ludei: opening, saving, dialogs, the window title, unsaved-work checks
+// and the wallpaper go through the Ludei SDK (/sdk/ludei.js), so Paint uses the
 // desktop's own file dialogs and message boxes, and reads and writes the person's
 // files. Loaded before the app's code: jspaint picks these hooks up as it starts.
-/* global kino, open_from_file, get_format_from_extension, are_you_sure, saved, show_error_message */
+/* global ludei, open_from_file, get_format_from_extension, are_you_sure, saved, show_error_message */
 (() => {
-	const sdk = window.kino;
+	const sdk = window.ludei;
 	// Paint's modules sit next to this script (a classic script's relative imports
 	// resolve against the page, not the script).
 	const here = document.currentScript.src;
@@ -26,7 +26,7 @@
 		const name = path.split("/").pop();
 		return new File([bytes], name, { type: MIME[extension(name)] ?? "application/octet-stream" });
 	};
-	// Kino's dialogs list types by extension; jspaint's formats carry them.
+	// Ludei's dialogs list types by extension; jspaint's formats carry them.
 	const typesOf = (formats) => formats.map((format) => ({ label: format.name, extensions: format.extensions }));
 	// A cancelled dialog: jspaint treats a promise that never settles as "nothing happened".
 	const never = () => new Promise(() => { });
@@ -84,7 +84,7 @@
 		sdk.onBeforeClose(edited ? () => new Promise((resolve) => are_you_sure(() => resolve(true), () => resolve(false))) : null);
 	};
 
-	// What Kino (the assistant) can do in Paint while it is open. Each returns a
+	// What Ludei (the assistant) can do in Paint while it is open. Each returns a
 	// short sentence the assistant reads back.
 	/* global main_canvas, file_name */
 	const register = async () => {
@@ -135,7 +135,7 @@
 			run: async ({ position }) => (setWallpaper(main_canvas, position === "tile" ? "tile" : "center"), "wallpaper set"),
 		});
 	};
-	const registerSafely = () => register().catch((error) => console.error("Paint: couldn't offer its actions to Kino", error));
+	const registerSafely = () => register().catch((error) => console.error("Paint: couldn't offer its actions to Ludei", error));
 	if (document.readyState === "complete") registerSafely();
 	else addEventListener("load", registerSafely, { once: true });
 

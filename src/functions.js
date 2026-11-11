@@ -915,7 +915,7 @@ function show_file_format_errors({ as_image_error }) {
 }
 
 function show_about_paint() {
-	window.kino.dialog.message({
+	window.ludei.dialog.message({
 		title: localize("About Paint"),
 		icon: "info",
 		text: "Paint 0.2\n\nBased on JS Paint by Isaiah Odhner.",
@@ -2313,18 +2313,18 @@ export {
 };
 // Temporary globals until all dependent code is converted to ES Modules
 window.make_history_node = make_history_node; // used by app-state.js
-window.open_from_file = open_from_file; // used by kino-integration.js
-window.are_you_sure = are_you_sure; // used by kino-integration.js
-window.show_error_message = show_error_message; // used by kino-integration.js
+window.open_from_file = open_from_file; // used by ludei-integration.js
+window.are_you_sure = are_you_sure; // used by ludei-integration.js
+window.show_error_message = show_error_message; // used by ludei-integration.js
 window.get_tool_by_id = get_tool_by_id; // used by app-state.js
 window.make_monochrome_palette = make_monochrome_palette; // used by app-state.js
 
-// #region Dialogs: the desktop's form dialogs (Kino's controls).
+// #region Dialogs: the desktop's form dialogs (Ludei's controls).
 
 const plain = (label) => AccessKeys.toText(localize(label));
 
 async function image_attributes() {
-	const result = await window.kino.dialog.form({
+	const result = await window.ludei.dialog.form({
 		title: plain("Attributes"),
 		fields: [
 			{ type: "info", label: plain("Resolution:"), value: "72 x 72 dots per inch" },
@@ -2352,7 +2352,7 @@ async function image_attributes() {
 }
 
 async function image_flip_and_rotate() {
-	const result = await window.kino.dialog.form({
+	const result = await window.ludei.dialog.form({
 		title: plain("Flip and Rotate"),
 		fields: [
 			{ type: "radio", name: "action", group: plain("Flip or rotate"), value: "flip-horizontal", options: [
@@ -2376,7 +2376,7 @@ async function image_flip_and_rotate() {
 }
 
 async function image_stretch_and_skew() {
-	const result = await window.kino.dialog.form({
+	const result = await window.ludei.dialog.form({
 		title: plain("Stretch and Skew"),
 		fields: [
 			{ type: "number", name: "stretch_x", label: plain("&Horizontal:"), value: 100, min: 1, max: 5000, unit: "%", group: plain("Stretch") },
@@ -2397,7 +2397,7 @@ async function image_stretch_and_skew() {
 }
 
 async function show_convert_to_black_and_white() {
-	const result = await window.kino.dialog.form({
+	const result = await window.ludei.dialog.form({
 		title: plain("Convert to Black and White"),
 		fields: [
 			{ type: "number", name: "threshold", label: plain("Threshold:"), value: 50, min: 0, max: 100, unit: "%" },
@@ -2412,7 +2412,7 @@ async function show_convert_to_black_and_white() {
 }
 
 async function show_custom_zoom_window() {
-	const result = await window.kino.dialog.form({
+	const result = await window.ludei.dialog.form({
 		title: plain("Custom Zoom"),
 		fields: [
 			{ type: "info", label: plain("Current zoom:"), value: `${magnification * 100}%` },

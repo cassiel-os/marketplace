@@ -1,5 +1,5 @@
 // @ts-check
-// Message boxes are the desktop's dialogs (kino.dialog.message): Paint asks with its
+// Message boxes are the desktop's dialogs (ludei.dialog.message): Paint asks with its
 // usual showMessageBox({ title, message, buttons, iconID }) and gets back the value of
 // the button clicked.
 
@@ -8,7 +8,7 @@
  * @returns {Promise<any>}
  */
 function showMessageBox({ title = "Paint", message, buttons = [{ label: "OK", value: "ok", default: true }], iconID = "warning" }) {
-	return window.kino.dialog.message({ title, text: message, icon: iconID === "nuke" ? "warning" : iconID, buttons });
+	return window.ludei.dialog.message({ title, text: message, icon: iconID === "nuke" ? "warning" : iconID, buttons });
 }
 
 export { showMessageBox };
