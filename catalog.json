@@ -18,25 +18,25 @@
       "name": "Live Chat Messenger",
       "version": "1.0.0",
       "description": "A chat messenger in the style of Windows Live Messenger 2009 that works with WhatsApp. Unofficial client: WhatsApp may restrict or ban accounts linked to unofficial apps; use it at your own risk. Messages go straight between this computer and WhatsApp, through no server of ours. Not affiliated with WhatsApp LLC or Meta Platforms, Inc.",
-      "author": "Kino",
+      "author": "Ludeku",
       "category": "internet",
       "sdk": "1.21",
       "icon": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/com.kino.msgr/icon.png",
       "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/com.kino.msgr/com.kino.msgr-1.0.0.app",
-      "bytes": 2022175,
-      "sha256": "daada9472ddf0d808f065427cf56ec029ffc393c4d76d37ddaa6593f4006d9a6"
+      "bytes": 2022129,
+      "sha256": "682bc4cd39b1230636f84dcbcad226b265f5b03ba8f65ebe79460d4a89ca73fa"
     },
     {
       "id": "run.cassiel.mugen",
       "name": "M.U.G.E.N",
       "version": "0.1.1",
       "description": "Plays your own MUGEN characters and stages (in App Files/M.U.G.E.N/game), with mugen-js. No game data included. Not affiliated with Elecbyte.",
-      "author": "Jonathan Ayala",
+      "author": "Ludeku",
       "category": "games",
       "sdk": "1.0",
       "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/run.cassiel.mugen/run.cassiel.mugen-0.1.1.app",
-      "bytes": 126091,
-      "sha256": "f6a4154309e7ef7b85d438ee57b1d018cda5629841f1aae46ebd9de58e995bdf"
+      "bytes": 126086,
+      "sha256": "7519bf678160d511a78f7ec4b2ffd4b0cb134009598653f659a9ed39214b1817"
     },
     {
       "id": "run.cassiel.paint",
