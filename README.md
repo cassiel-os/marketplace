@@ -9,7 +9,7 @@ branch and carries its SHA-256: Cassiel lists only entries from here and refuses
 download that is not byte for byte the approved package.
 
 **Branches.** `main` holds only what is published: the catalog and the packages. Each
-app's source is a branch named after its id (`run.cassiel.paint`), where it is built
+app's source is a branch named after its id (`net.ludei.paint`), where it is built
 into the package that a pull request then brings to `main`.
 
 ## Apps
