@@ -95,9 +95,4 @@ find "$OUT" -type f -name '*.svg' -size +8k | while read -r f; do npx --yes svgo
 
 (cd "$OUT" && rm -f "$ROOT/build/net.ludei.paint.app" && zip -qr -9 -X "$ROOT/build/net.ludei.paint.app" . -x '.*')
 du -sh "$OUT" "$ROOT/build/net.ludei.paint.app"
-if [ "${1:-}" = "--install" ]; then
-  ID="$(sed -n 's/.*"id": *"\([^"]*\)".*/\1/p' manifest.json | head -1)"
-  docker exec ludei-dev sh -c "rm -rf /data/apps/$ID && mkdir -p /data/apps"
-  docker cp "$OUT" "ludei-dev:/data/apps/$ID"
-  echo "Installed $ID; reload the desktop."
-fi
+[ "${1:-}" = "--install" ] && sh "$HOME/apps/kino/scripts/install-app.sh" "$OUT"
