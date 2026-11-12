@@ -18,10 +18,13 @@ into the package that a pull request then brings to `main`.
 | | App | Version | By | |
 |---|---|---|---|---|
 | <img src="apps/net.ludei.checkers/icon.svg" width="24" alt=""> | **Checkers** | 1.0.0 | Ludeku | Play checkers against Cass. |
+| <img src="apps/net.ludei.spreadsheet/icon.svg" width="24" alt=""> | **Excellent Sheet** | 0.1.1 | Ludeku | Workbooks in Excel XP's way: formulas, formatting, several sheets, .xlsx and .csv files. The grid is Univer's. |
 | <img src="apps/net.ludei.msgr/icon.png" width="24" alt=""> | **Live Chat Messenger** | 1.0.0 | Ludeku | A chat messenger in the style of Windows Live Messenger 2009 that works with WhatsApp. Unofficial client: WhatsApp may restrict or ban accounts linked to unofficial apps; use it at your own risk. Messages go straight between this computer and WhatsApp, through no server of ours. Not affiliated with WhatsApp LLC or Meta Platforms, Inc. |
 |  | **M.U.G.E.N** | 0.1.1 | Ludeku | Plays your own MUGEN characters and stages (in App Files/M.U.G.E.N/game), with mugen-js. No game data included. Not affiliated with Elecbyte. |
 |  | **Node.js 22** | 22.23.4 | Node.js contributors; packaged for Kino | Shared Node.js runtime for Kino apps. |
 | <img src="apps/net.ludei.paint/icon.svg" width="24" alt=""> | **Paint** | 0.2.0 | Ludeku | Draw, paint and edit pictures. |
+| <img src="apps/net.ludei.pointer/icon.svg" width="24" alt=""> | **Power Pointer** | 0.2.0 | Ludeku | Presentations in PowerPoint XP's way: slides with text, shapes, lines and pictures, transitions, a slide show, Slide Sorter, .pptx files. |
+| <img src="apps/net.ludei.words/icon.svg" width="24" alt=""> | **Words Document** | 0.1.0 | Ludeku | Documents in Word XP's way: fonts, styles and headings, lists, tables, .docx and .txt files. The pages are Univer's. |
 <!-- /apps -->
 
 ## Publishing an app
