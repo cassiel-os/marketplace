@@ -8,7 +8,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { CATEGORIES, FILES, ID, SDK, VERSION, unzip } from './common.mjs';
+import { CATEGORIES, ID, SDK, VERSION, unzip } from './common.mjs';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const problems = [];
@@ -32,7 +32,7 @@ for (const a of catalog.apps ?? []) {
   if (a.category !== undefined && !CATEGORIES.includes(a.category)) problem(`${where}: unknown category`);
 
   const file = join(ROOT, 'apps', a.id, `${a.id}-${a.version}.app`);
-  if (a.package !== `${FILES}apps/${a.id}/${a.id}-${a.version}.app`) problem(`${where}: package link is not apps/<id>/<id>-<version>.app on main`);
+  if (a.package !== `apps/${a.id}/${a.id}-${a.version}.app`) problem(`${where}: package is not apps/<id>/<id>-<version>.app`);
   if (!existsSync(file)) {
     problem(`${where}: ${file.slice(ROOT.length)} is missing`);
     continue;
@@ -53,9 +53,9 @@ for (const a of catalog.apps ?? []) {
   if (manifest.disc?.label !== a.disc) problem(`${where}: "disc" differs from the package's manifest`);
 
   if (a.icon !== undefined) {
-    const prefix = `${FILES}apps/${a.id}/`;
+    const prefix = `apps/${a.id}/`;
     const name = String(a.icon).slice(prefix.length);
-    if (!String(a.icon).startsWith(prefix) || !/^icon\.(svg|png)$/.test(name)) problem(`${where}: icon link is not apps/<id>/icon.svg|png on main`);
+    if (!String(a.icon).startsWith(prefix) || !/^icon\.(svg|png)$/.test(name)) problem(`${where}: icon is not apps/<id>/icon.svg|png`);
     else if (!existsSync(join(ROOT, 'apps', a.id, name))) problem(`${where}: its icon file is missing`);
   }
 }

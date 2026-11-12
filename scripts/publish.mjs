@@ -12,7 +12,7 @@ import { createHash } from 'node:crypto';
 import { copyFileSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { basename, extname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { CATEGORIES, FILES, ID, SDK, VERSION, isNewer, unzip } from './common.mjs';
+import { CATEGORIES, ID, SDK, VERSION, isNewer, unzip } from './common.mjs';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const CATALOG = join(ROOT, 'catalog.json');
@@ -59,7 +59,7 @@ if (removing) {
     if (icon && /\.(svg|png)$/i.test(icon)) {
       const file = `icon${extname(icon).toLowerCase()}`;
       writeFileSync(join(dir, file), unzip(pkg, icon, 'buffer'));
-      iconUrl = `${FILES}apps/${id}/${file}`;
+      iconUrl = `apps/${id}/${file}`;
     }
 
     const entry = {
@@ -73,7 +73,8 @@ if (removing) {
       // The original disc it plays from (the person brings an .iso of it): its label.
       disc: disc?.label,
       icon: iconUrl,
-      package: `${FILES}apps/${id}/${id}-${version}.app`,
+      // Relative to the catalog, so the repository's address is never written in it.
+      package: `apps/${id}/${id}-${version}.app`,
       bytes: statSync(pkg).size,
       sha256: createHash('sha256').update(readFileSync(pkg)).digest('hex'),
     };
