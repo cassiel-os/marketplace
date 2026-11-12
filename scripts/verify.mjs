@@ -50,6 +50,7 @@ for (const a of catalog.apps ?? []) {
   }
   for (const key of ['id', 'name', 'version', 'description', 'author', 'category', 'sdk'])
     if (manifest[key] !== a[key]) problem(`${where}: "${key}" differs from the package's manifest`);
+  if (manifest.disc?.label !== a.disc) problem(`${where}: "disc" differs from the package's manifest`);
 
   if (a.icon !== undefined) {
     const prefix = `${FILES}apps/${a.id}/`;
