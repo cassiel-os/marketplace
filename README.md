@@ -24,6 +24,7 @@ into the package that a pull request then brings to `main`.
 | <img src="apps/org.nodejs.node22/icon.svg" width="24" alt=""> | **Node.js 22** | 22.23.5.1 | Node.js | Shared Node.js runtime for Ludei apps. |
 | <img src="apps/net.ludei.paint/icon.svg" width="24" alt=""> | **Paint** | 0.2.0 | Ludeku | Draw, paint and edit pictures. |
 | <img src="apps/net.ludei.pointer/icon.svg" width="24" alt=""> | **Power Pointer** | 0.2.0 | Ludeku | Presentations in PowerPoint XP's way: slides with text, shapes, lines and pictures, transitions, a slide show, Slide Sorter, .pptx files. |
+| <img src="apps/net.ludei.code/icon.png" width="24" alt=""> | **Virtual Space Code** | 1.1.0 | Ludeku | A full code editor (based on Code - OSS) with your files, folders and extensions. |
 | <img src="apps/net.ludei.words/icon.svg" width="24" alt=""> | **Words Document** | 0.1.0 | Ludeku | Documents in Word XP's way: fonts, styles and headings, lists, tables, .docx and .txt files. The pages are Univer's. |
 <!-- /apps -->
 
