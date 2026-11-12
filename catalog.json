@@ -1,6 +1,34 @@
 {
   "apps": [
     {
+      "id": "net.ludei.4x4-evolution",
+      "name": "4x4 Evolution",
+      "version": "1.0.0",
+      "description": "4x4 Evolution (Terminal Reality / Gathering of Developers, 2000), the original game from your own CD, running in an x86 emulator.",
+      "author": "Terminal Reality, Gathering of Developers",
+      "category": "games",
+      "sdk": "1.2",
+      "disc": "4x4 Evolution",
+      "icon": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.4x4-evolution/icon.png",
+      "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.4x4-evolution/net.ludei.4x4-evolution-1.0.0.app",
+      "bytes": 101773,
+      "sha256": "95b8d7c83c0d7aaafe19ffc050737e1ab5bade01f91d10ed88bcc576192031e0"
+    },
+    {
+      "id": "net.ludei.beach-head-2002",
+      "name": "Beach Head 2002",
+      "version": "1.0.0",
+      "description": "Beach Head 2002 (Digital Fusion / Infogrames, 2002), the original game from your own CD, running in an x86 emulator.",
+      "author": "Digital Fusion, Infogrames",
+      "category": "games",
+      "sdk": "1.2",
+      "disc": "Beach Head 2002",
+      "icon": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.beach-head-2002/icon.png",
+      "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.beach-head-2002/net.ludei.beach-head-2002-1.0.0.app",
+      "bytes": 100212,
+      "sha256": "0bc4ae43d275417d2f1107e019ee2c15c2041643c73f2b2c7885ed9d6e52590f"
+    },
+    {
       "id": "net.ludei.checkers",
       "name": "Checkers",
       "version": "1.0.0",
@@ -51,6 +79,20 @@
       "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.mugen/net.ludei.mugen-0.1.2.app",
       "bytes": 191213,
       "sha256": "7cb156ff47706c701e5a0c60f71a674494b8c064dc30e07ea6be998b8c9dee8e"
+    },
+    {
+      "id": "net.ludei.monster-truck-madness-2",
+      "name": "Monster Truck Madness 2",
+      "version": "1.0.0",
+      "description": "Monster Truck Madness 2 (Terminal Reality / Microsoft, 1998), the original game from your own CD, running in an x86 emulator.",
+      "author": "Terminal Reality, Microsoft",
+      "category": "games",
+      "sdk": "1.2",
+      "disc": "Monster Truck Madness 2",
+      "icon": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.monster-truck-madness-2/icon.png",
+      "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.monster-truck-madness-2/net.ludei.monster-truck-madness-2-1.0.0.app",
+      "bytes": 102076,
+      "sha256": "59df5da11180937cc2364349190a7d5f14a3ddfdf4f77e0963faa2cd25836311"
     },
     {
       "id": "org.nodejs.node22",
