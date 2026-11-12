@@ -17,10 +17,13 @@ into the package that a pull request then brings to `main`.
 <!-- apps -->
 | | App | Version | By | |
 |---|---|---|---|---|
+| <img src="apps/net.ludei.4x4-evolution/icon.png" width="24" alt=""> | **4x4 Evolution** | 1.0.0 | Terminal Reality, Gathering of Developers | 4x4 Evolution (Terminal Reality / Gathering of Developers, 2000), the original game from your own CD, running in an x86 emulator. |
+| <img src="apps/net.ludei.beach-head-2002/icon.png" width="24" alt=""> | **Beach Head 2002** | 1.0.0 | Digital Fusion, Infogrames | Beach Head 2002 (Digital Fusion / Infogrames, 2002), the original game from your own CD, running in an x86 emulator. |
 | <img src="apps/net.ludei.checkers/icon.svg" width="24" alt=""> | **Checkers** | 1.0.0 | Ludeku | Play checkers against Cass. |
 | <img src="apps/net.ludei.spreadsheet/icon.svg" width="24" alt=""> | **Excellent Sheet** | 0.1.1 | Ludeku | Workbooks in Excel XP's way: formulas, formatting, several sheets, .xlsx and .csv files. The grid is Univer's. |
 | <img src="apps/net.ludei.msgr/icon.png" width="24" alt=""> | **Live Chat Messenger** | 1.0.1 | Ludeku | A chat messenger in the style of Windows Live Messenger 2009 that works with WhatsApp. Unofficial client: WhatsApp may restrict or ban accounts linked to unofficial apps; use it at your own risk. Messages go straight between this computer and WhatsApp, through no server of ours. Not affiliated with WhatsApp LLC or Meta Platforms, Inc. |
 | <img src="apps/net.ludei.mugen/icon.png" width="24" alt=""> | **M.U.G.E.N** | 0.1.2 | Ludeku | Plays your own MUGEN characters and stages (in App Files/M.U.G.E.N/game), with mugen-js. No game data included. Not affiliated with Elecbyte. |
+| <img src="apps/net.ludei.monster-truck-madness-2/icon.png" width="24" alt=""> | **Monster Truck Madness 2** | 1.0.0 | Terminal Reality, Microsoft | Monster Truck Madness 2 (Terminal Reality / Microsoft, 1998), the original game from your own CD, running in an x86 emulator. |
 | <img src="apps/org.nodejs.node22/icon.svg" width="24" alt=""> | **Node.js 22** | 22.23.5.1 | Node.js | Shared Node.js runtime for Ludei apps. |
 | <img src="apps/net.ludei.paint/icon.svg" width="24" alt=""> | **Paint** | 0.2.0 | Ludeku | Draw, paint and edit pictures. |
 | <img src="apps/net.ludei.pointer/icon.svg" width="24" alt=""> | **Power Pointer** | 0.2.0 | Ludeku | Presentations in PowerPoint XP's way: slides with text, shapes, lines and pictures, transitions, a slide show, Slide Sorter, .pptx files. |
