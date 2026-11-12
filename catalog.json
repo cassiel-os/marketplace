@@ -14,6 +14,19 @@
       "sha256": "bdfc806c0007dc57528bd0d7c0d1bef46bcdd0668ece678103f69d1ef1d14050"
     },
     {
+      "id": "net.ludei.spreadsheet",
+      "name": "Excellent Sheet",
+      "version": "0.1.1",
+      "description": "Workbooks in Excel XP's way: formulas, formatting, several sheets, .xlsx and .csv files. The grid is Univer's.",
+      "author": "Ludeku",
+      "category": "office",
+      "sdk": "1.5",
+      "icon": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.spreadsheet/icon.svg",
+      "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.spreadsheet/net.ludei.spreadsheet-0.1.1.app",
+      "bytes": 2138221,
+      "sha256": "1a3e5b32225cf2532c2393ade4cdefb4abd92d8a6df3e3c36eb95cd2f2b72a36"
+    },
+    {
       "id": "net.ludei.msgr",
       "name": "Live Chat Messenger",
       "version": "1.0.0",
@@ -60,6 +73,32 @@
       "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.paint/net.ludei.paint-0.2.0.app",
       "bytes": 229976,
       "sha256": "30fa6ba4799324622526bfcb07ce1cec15fb0beb4751b30160369a121f3a82e7"
+    },
+    {
+      "id": "net.ludei.pointer",
+      "name": "Power Pointer",
+      "version": "0.2.0",
+      "description": "Presentations in PowerPoint XP's way: slides with text, shapes, lines and pictures, transitions, a slide show, Slide Sorter, .pptx files.",
+      "author": "Ludeku",
+      "category": "office",
+      "sdk": "1.5",
+      "icon": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.pointer/icon.svg",
+      "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.pointer/net.ludei.pointer-0.2.0.app",
+      "bytes": 650648,
+      "sha256": "e1b54a07ea8f72e0c409f1b4c81bf8b037246bc8f5c46411fe0ca003e32bf06b"
+    },
+    {
+      "id": "net.ludei.words",
+      "name": "Words Document",
+      "version": "0.1.0",
+      "description": "Documents in Word XP's way: fonts, styles and headings, lists, tables, .docx and .txt files. The pages are Univer's.",
+      "author": "Ludeku",
+      "category": "office",
+      "sdk": "1.5",
+      "icon": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.words/icon.svg",
+      "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.words/net.ludei.words-0.1.0.app",
+      "bytes": 1594069,
+      "sha256": "5da90539d24105d6812b5d54ee3031f1829935b0519ee281388e02281cf7b1bd"
     }
   ]
 }
