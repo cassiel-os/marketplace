@@ -29,15 +29,15 @@
     {
       "id": "net.ludei.msgr",
       "name": "Live Chat Messenger",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "description": "A chat messenger in the style of Windows Live Messenger 2009 that works with WhatsApp. Unofficial client: WhatsApp may restrict or ban accounts linked to unofficial apps; use it at your own risk. Messages go straight between this computer and WhatsApp, through no server of ours. Not affiliated with WhatsApp LLC or Meta Platforms, Inc.",
       "author": "Ludeku",
       "category": "internet",
       "sdk": "1.21",
       "icon": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.msgr/icon.png",
-      "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.msgr/net.ludei.msgr-1.0.0.app",
-      "bytes": 2021685,
-      "sha256": "ce614cbacd9c9e6925590a060813ff8d932c8ae35001543cd25d797718b15c61"
+      "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/net.ludei.msgr/net.ludei.msgr-1.0.1.app",
+      "bytes": 2212561,
+      "sha256": "773daf3da0426f8172104b8d07579c10c02ca28ca3e93bdff002c38086d21d21"
     },
     {
       "id": "net.ludei.mugen",
