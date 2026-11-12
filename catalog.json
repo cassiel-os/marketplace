@@ -55,13 +55,13 @@
     {
       "id": "org.nodejs.node22",
       "name": "Node.js 22",
-      "version": "22.23.4",
+      "version": "22.23.5.1",
       "description": "Shared Node.js runtime for Ludei apps.",
       "author": "Node.js",
       "icon": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/org.nodejs.node22/icon.svg",
-      "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/org.nodejs.node22/org.nodejs.node22-22.23.4.app",
-      "bytes": 27521499,
-      "sha256": "378ac6c90744b1284ca64fc55cf87b24cf2952e279ee4f0fb17f67bbccee1152"
+      "package": "https://raw.githubusercontent.com/cassiel-os/marketplace/main/apps/org.nodejs.node22/org.nodejs.node22-22.23.5.1.app",
+      "bytes": 31024561,
+      "sha256": "f9445056395450ee47b726b3c560638c27a0dd4032b342b04fea83c457f828ab"
     },
     {
       "id": "net.ludei.paint",
