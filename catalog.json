@@ -42,6 +42,19 @@
       "sha256": "bdfc806c0007dc57528bd0d7c0d1bef46bcdd0668ece678103f69d1ef1d14050"
     },
     {
+      "id": "net.lax1dude.eaglercraft",
+      "name": "Eaglercraft 1.8.8",
+      "version": "1.8.8",
+      "description": "Explore a procedurally generated world with virtually infinite terrain made up of three-dimensional blocks represented as voxels. EaglercraftX 1.8 (WASM-GC build of 10/17/2026). Not affiliated with Mojang or Microsoft.",
+      "author": "lax1dude",
+      "category": "games",
+      "sdk": "1.23",
+      "icon": "apps/net.lax1dude.eaglercraft/icon.png",
+      "package": "apps/net.lax1dude.eaglercraft/net.lax1dude.eaglercraft-1.8.8.app",
+      "bytes": 11860315,
+      "sha256": "113bc36fb75fe4fcae50af025c98f871c472dfdc0c0bd9435acaa25e1cbd7ba7"
+    },
+    {
       "id": "net.ludei.spreadsheet",
       "name": "Excellent Sheet",
       "version": "0.1.1",
