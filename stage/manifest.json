@@ -1,9 +1,9 @@
 {
-  "id": "net.ludei.eaglercraft",
-  "name": "Minecraft - Eaglercraft 1.8.8",
+  "id": "net.lax1dude.eaglercraft",
+  "name": "Eaglercraft 1.8.8",
   "version": "1.8.8",
   "description": "Explore a procedurally generated world with virtually infinite terrain made up of three-dimensional blocks represented as voxels. EaglercraftX 1.8 (WASM-GC build of 10/17/2026). Not affiliated with Mojang or Microsoft.",
-  "author": "lax1dude, ayunami2000",
+  "author": "lax1dude",
   "category": "games",
   "sdk": "1.23",
   "icon": "icon.png",
