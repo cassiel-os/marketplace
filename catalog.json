@@ -96,15 +96,15 @@
     {
       "id": "net.ludeku.player",
       "name": "Media Player",
-      "version": "0.1.3",
+      "version": "0.1.4",
       "description": "Play music and video, organize your playlists and enjoy your media files with a classic, smooth design.",
       "author": "Ludeku",
       "category": "multimedia",
       "sdk": "1.23",
       "icon": "apps/net.ludeku.player/icon.png",
-      "package": "apps/net.ludeku.player/net.ludeku.player-0.1.3.app",
-      "bytes": 292087,
-      "sha256": "768659807f57d5b0737b5b324250ace2b6ec0e88fdaa029b6abc1c4c5c633961"
+      "package": "apps/net.ludeku.player/net.ludeku.player-0.1.4.app",
+      "bytes": 292362,
+      "sha256": "c16644f779080370a26c626a77ccc5530a1f42c539aff92546db6fa3e1b0066a"
     },
     {
       "id": "net.ludei.monster-truck-madness-2",
